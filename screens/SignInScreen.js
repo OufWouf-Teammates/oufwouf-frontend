@@ -24,7 +24,7 @@ export default function SignInScreen ({ navigation, route}) {
     const {connectToAccount} = route.params
 
     const handleConnection = () => {
-      connectToAccount(email, password)
+      connectToAccount({email, password});
     };
 
     

@@ -8,12 +8,17 @@ import {
 } from '@expo-google-fonts/lexend';
 import AppLoading from 'expo-app-loading';
 
+import { useDispatch } from 'react-redux';
+import { connectUser } from '../reducers/user';
+
 import GoogleSignInButton from '../components/GoogleSignInButton';
 import AppleSignInButton from '../components/appleConnect';
 
 import { NEXT_PUBLIC_BACKEND_URL } from "@env";
 
 export default function ConnexionScreen({ navigation }) {
+
+  const dispatch = useDispatch();
   //Nécessaire pour la configuration des fonts 
   const [fontsLoaded] = useFonts({
     Lexend_400Regular,
@@ -24,6 +29,28 @@ export default function ConnexionScreen({ navigation }) {
   }
 
   const connectToAccount = (objConn) => {
+
+
+  console.log(`${NEXT_PUBLIC_BACKEND_URL}users/signin`);
+    
+    fetch(`${NEXT_PUBLIC_BACKEND_URL}users/signin`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: objConn.email, password: objConn.password }),
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+    if (data.result) {
+      dispatch(connectUser({ email: data.email, token: data.token }));
+      navigation.navigate('Map');
+    }else{
+      alert(data.error);
+    }
+    })
+  .catch(error => console.error(error));
+
+
 
     console.log(objConn);
   }
