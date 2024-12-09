@@ -1481,19 +1481,17 @@
   dependencies:
     merge-options "^3.0.4"
 
-<<<<<<< HEAD
+"@react-native-community/checkbox@^0.5.17":
+  version "0.5.17"
+  resolved "https://registry.yarnpkg.com/@react-native-community/checkbox/-/checkbox-0.5.17.tgz#80dd335ca5c61ac2ca4525a21d8fef3f7a021ef7"
+  integrity sha512-ZZx/eOH3SIxBg+hvA2zRd7lX5zPQEWcZU8C8Dn7WLdpJkiTkPmIUDFHWrmzxCnwZcyoD+BIt6gUZPKGGb9WmeQ==
+
 "@react-native-community/datetimepicker@^8.2.0":
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/@react-native-community/datetimepicker/-/datetimepicker-8.2.0.tgz#f62ac4fc12bd527fbbe93934e6c1cfbb7ba570f3"
   integrity sha512-qrUPhiBvKGuG9Y+vOqsc56RPFcHa1SU2qbAMT0hfGkoFIj3FodE0VuPVrEa8fgy7kcD5NQmkZIKgHOBLV0+hWg==
   dependencies:
     invariant "^2.2.4"
-=======
-"@react-native-community/checkbox@^0.5.17":
-  version "0.5.17"
-  resolved "https://registry.yarnpkg.com/@react-native-community/checkbox/-/checkbox-0.5.17.tgz#80dd335ca5c61ac2ca4525a21d8fef3f7a021ef7"
-  integrity sha512-ZZx/eOH3SIxBg+hvA2zRd7lX5zPQEWcZU8C8Dn7WLdpJkiTkPmIUDFHWrmzxCnwZcyoD+BIt6gUZPKGGb9WmeQ==
->>>>>>> ba4cc482a91db1a2fc94e0648d63bfdc0aef49ca
 
 "@react-native-google-signin/google-signin@^13.1.0":
   version "13.1.0"
@@ -2946,15 +2944,6 @@ expo-asset@~11.0.1:
     invariant "^2.2.4"
     md5-file "^3.2.3"
 
-<<<<<<< HEAD
-expo-camera@~16.0.9:
-  version "16.0.9"
-  resolved "https://registry.yarnpkg.com/expo-camera/-/expo-camera-16.0.9.tgz#e00448c7df18cdb8e5f4e1e31ccab8f9761d4452"
-  integrity sha512-zyjnv1UfSBU/FFqozAI4yWHjEun4Ex2tkN45TcdNWYb26xU+Ab+is7CLEk3bau/awP7W/xBgSpkI+Lz86hmBqQ==
-  dependencies:
-    invariant "^2.2.4"
-
-=======
 expo-auth-session@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/expo-auth-session/-/expo-auth-session-6.0.1.tgz#5360e0698053feb258db98b68f2fa0323589b581"
@@ -2967,12 +2956,18 @@ expo-auth-session@^6.0.1:
     expo-web-browser "~14.0.0"
     invariant "^2.2.4"
 
+expo-camera@~16.0.9:
+  version "16.0.9"
+  resolved "https://registry.yarnpkg.com/expo-camera/-/expo-camera-16.0.9.tgz#e00448c7df18cdb8e5f4e1e31ccab8f9761d4452"
+  integrity sha512-zyjnv1UfSBU/FFqozAI4yWHjEun4Ex2tkN45TcdNWYb26xU+Ab+is7CLEk3bau/awP7W/xBgSpkI+Lz86hmBqQ==
+  dependencies:
+    invariant "^2.2.4"
+
 expo-checkbox@~4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/expo-checkbox/-/expo-checkbox-4.0.0.tgz#beceea701896d67e68b8383b3d54135b1a89e074"
   integrity sha512-kgmdau1cmlztRVEdjAQkdBCBSvI3W1Z6B+gTTr5ickbItxz07qt3j6dQEB3VDL69/bnIN/h9/iwNLVxuSn/C2Q==
 
->>>>>>> ba4cc482a91db1a2fc94e0648d63bfdc0aef49ca
 expo-constants@~17.0.0, expo-constants@~17.0.3:
   version "17.0.3"
   resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-17.0.3.tgz#a05b38e0417d59759ece1642b4d483889e04dbda"
@@ -3007,12 +3002,6 @@ expo-keep-awake@~14.0.1:
   resolved "https://registry.yarnpkg.com/expo-keep-awake/-/expo-keep-awake-14.0.1.tgz#77c38feefa95c494aa167e6df5a6eacd17af2358"
   integrity sha512-c5mGCAIk2YM+Vsdy90BlEJ4ZX+KG5Au9EkJUIxXWlpnuKmDAJ3N+5nEZ7EUO1ZTheqoSBeAo4jJ8rTWPU+JXdw==
 
-<<<<<<< HEAD
-expo-media-library@~17.0.3:
-  version "17.0.3"
-  resolved "https://registry.yarnpkg.com/expo-media-library/-/expo-media-library-17.0.3.tgz#4ee3e6a8a2544887d910a72eaf2a15858b78cc0e"
-  integrity sha512-vo8AqWxv1C8+U8dA5W43qs8+3dgD3VZDvcCkZBQTBnGr/2Rs7x6nNQD5s7UfYyr6qmW6102JB3+OUKHpkwEssg==
-=======
 expo-linking@~7.0.0:
   version "7.0.3"
   resolved "https://registry.yarnpkg.com/expo-linking/-/expo-linking-7.0.3.tgz#307851288ec65e1c533bcc70b57dfb6372f9679e"
@@ -3020,7 +3009,11 @@ expo-linking@~7.0.0:
   dependencies:
     expo-constants "~17.0.0"
     invariant "^2.2.4"
->>>>>>> ba4cc482a91db1a2fc94e0648d63bfdc0aef49ca
+
+expo-media-library@~17.0.3:
+  version "17.0.3"
+  resolved "https://registry.yarnpkg.com/expo-media-library/-/expo-media-library-17.0.3.tgz#4ee3e6a8a2544887d910a72eaf2a15858b78cc0e"
+  integrity sha512-vo8AqWxv1C8+U8dA5W43qs8+3dgD3VZDvcCkZBQTBnGr/2Rs7x6nNQD5s7UfYyr6qmW6102JB3+OUKHpkwEssg==
 
 expo-modules-autolinking@2.0.3:
   version "2.0.3"
@@ -5025,11 +5018,7 @@ prompts@^2.3.2:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-<<<<<<< HEAD
-prop-types@15.8.1, prop-types@^15.5.10, prop-types@^15.7.2, prop-types@^15.8.1:
-=======
-prop-types@^15.5.7, prop-types@^15.7.2, prop-types@^15.8.1:
->>>>>>> ba4cc482a91db1a2fc94e0648d63bfdc0aef49ca
+prop-types@15.8.1, prop-types@^15.5.10, prop-types@^15.5.7, prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -5116,7 +5105,11 @@ react-is@^18.0.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.3.1.tgz#e83557dc12eae63a99e003a46388b1dcbb44db7e"
   integrity sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==
 
-<<<<<<< HEAD
+react-native-apple-authentication@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-apple-authentication/-/react-native-apple-authentication-2.0.0.tgz#519a769fc1cb8ebc0093a5881d7f0ffec02275ca"
+  integrity sha512-7SZJ5Gl+9C0Dztu/hFag2j2ET2yhI9wf6Q0liiEwFWPbrP7Jd5/XfMNxDGJerrV/yv949h3bxiVTl4Ce0Xb8lg==
+
 react-native-calendars@^1.1307.0:
   version "1.1307.0"
   resolved "https://registry.yarnpkg.com/react-native-calendars/-/react-native-calendars-1.1307.0.tgz#2cb8c5abd322037e9b3ef5605afa86f25347068f"
@@ -5131,11 +5124,6 @@ react-native-calendars@^1.1307.0:
     xdate "^0.8.0"
   optionalDependencies:
     moment "^2.29.4"
-=======
-react-native-apple-authentication@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/react-native-apple-authentication/-/react-native-apple-authentication-2.0.0.tgz#519a769fc1cb8ebc0093a5881d7f0ffec02275ca"
-  integrity sha512-7SZJ5Gl+9C0Dztu/hFag2j2ET2yhI9wf6Q0liiEwFWPbrP7Jd5/XfMNxDGJerrV/yv949h3bxiVTl4Ce0Xb8lg==
 
 react-native-check-box@^2.1.7:
   version "2.1.7"
@@ -5143,7 +5131,6 @@ react-native-check-box@^2.1.7:
   integrity sha512-dPVOoz4jKs2je2HSHp7+XJXNyZFq8Kij7IHutigrQKzB550Dko6ZAQu/1mG1FzdUMFxxkZ2nX59KmbR0Co0T8Q==
   dependencies:
     prop-types "^15.5.7"
->>>>>>> ba4cc482a91db1a2fc94e0648d63bfdc0aef49ca
 
 react-native-dotenv@^3.4.11:
   version "3.4.11"
@@ -5177,12 +5164,11 @@ react-native-screens@~4.1.0:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
-<<<<<<< HEAD
 react-native-swipe-gestures@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/react-native-swipe-gestures/-/react-native-swipe-gestures-1.0.5.tgz#a172cb0f3e7478ccd681fd36b8bfbcdd098bde7c"
   integrity sha512-Ns7Bn9H/Tyw278+5SQx9oAblDZ7JixyzeOczcBK8dipQk2pD7Djkcfnf1nB/8RErAmMLL9iXgW0QHqiII8AhKw==
-=======
+
 react-native-vector-icons@^10.2.0:
   version "10.2.0"
   resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-10.2.0.tgz#f438f2ca16f7d6be658fd6ec8f0d2b7e2132b91c"
@@ -5190,7 +5176,6 @@ react-native-vector-icons@^10.2.0:
   dependencies:
     prop-types "^15.7.2"
     yargs "^16.1.1"
->>>>>>> ba4cc482a91db1a2fc94e0648d63bfdc0aef49ca
 
 react-native@0.76.3:
   version "0.76.3"
