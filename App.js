@@ -1,9 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 
-import { BACKEND_URL } from "@env";
+import { NEXT_PUBLIC_BACKEND_URL } from "@env";
 
-console.log("Backend URL:", BACKEND_URL);
+console.log("Backend URL:", NEXT_PUBLIC_BACKEND_URL);
 
 export default function App() {
   return (
