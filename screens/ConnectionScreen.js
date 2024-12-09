@@ -15,27 +15,28 @@ import GoogleSignInButton from '../components/GoogleSignInButton';
 import AppleSignInButton from '../components/appleConnect';
 import { useDispatch, useSelector } from 'react-redux';
 import  {useEffect } from 'react'
-import { useIsFocused } from '@react-navigation/native';
+
 import { NEXT_PUBLIC_BACKEND_URL } from "@env";
 
 export default function ConnectionScreen({ navigation }) {
 
   const dispatch = useDispatch();
-  const userToken = useSelector((state) => state.user.token); 
+  const userToken = useSelector((state) => state.user.value.token); 
 
 
   
 
   const isConnectedOrNot = () => {
     // Fetch pour vérifier le token côté backend
+    if(userToken) {
     fetch(`${NEXT_PUBLIC_BACKEND_URL}users/isConnectedOrNot`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${userToken}`,
+        Authorization: `Bearer ${userToken}`,
       },
     })
-      .then((response) => console.log(response.json()))
+      .then((response) => response.json())
       .then((data) => {
         console.log(data);
         if (data.result) {
@@ -48,7 +49,7 @@ export default function ConnectionScreen({ navigation }) {
         console.error('Erreur lors de la vérification de connexion :', error);
         dispatch(disconnectUser());
       });
-    
+    }
   };
 
 
@@ -112,7 +113,7 @@ export default function ConnectionScreen({ navigation }) {
           <Text style={styles.textButtonSignIn}>Se connecter</Text>
           <FontAwesome name='arrow-right' size={25} color='#F5F5F5'/>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Sign Up')} style={styles.buttonSignUp} activeOpacity={0.8}>
+        <TouchableOpacity onPress={() => navigation.navigate('Sign Up', {connectToAccount})} style={styles.buttonSignUp} activeOpacity={0.8}>
           <Text style={styles.textButtonSignUp}>S'inscrire</Text>
           <FontAwesome name='arrow-right' size={25} color='#0639DB'/>
         </TouchableOpacity>
