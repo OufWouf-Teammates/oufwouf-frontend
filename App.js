@@ -1,7 +1,3 @@
-import { NEXT_PUBLIC_BACKEND_URL } from "@env";
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -48,5 +44,7 @@ export default function App() {
             <Stack.Screen name="Map" component="MapScreen" options={{ headerShown: false }} />
             <Stack.Screen name="Bookmarks" component="BookmarksScreen" options={{ headerShown: false }} />
             <Stack.Screen name="Hotspots" component="HotspotsScreen" options={{ headerShown: false }} />
+            <Stack.Screen name="TakePicture" component="TakePictureScreen" options={{ headerShown: false }} />
+            <Stack.Screen name="Gallery" component="GalleryScreen" options={{ headerShown: false }} />
   */
 }
