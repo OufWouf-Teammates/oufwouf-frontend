@@ -36,7 +36,7 @@ export default function ConnexionScreen({ navigation }) {
       <SafeAreaView style={styles.innerContainer}>
         <Image style={styles.image} source={require('../assets/logo_oufwouf_couleur.png')} />
         <Text style={styles.title}>Pour woufer la vie à pleins crocs !</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Sign In')} style={styles.buttonSignIn} activeOpacity={0.8}>
+        <TouchableOpacity onPress={() => navigation.navigate('Sign In', {connectToAccount})} style={styles.buttonSignIn} activeOpacity={0.8}>
           <Text style={styles.textButtonSignIn}>Se connecter</Text>
           <FontAwesome name='arrow-right' size={25} color='#F5F5F5'/>
         </TouchableOpacity>
