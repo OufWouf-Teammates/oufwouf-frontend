@@ -7,6 +7,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+import ConnectionScreen from './screens/ConnectionScreen';
+import SignInScreen from './screens/SignInScreen';
+import SignUpScreen from './screens/SignUpScreen';
 
 import { persistStore, persistReducer } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -31,14 +34,17 @@ export default function App() {
             <Stack.Screen name="Connection" component={ConnectionScreen} options={{ headerShown: false }} />
             <Stack.Screen name="Sign In" component={SignInScreen}  options={{ headerShown: false }}/>
             <Stack.Screen name="Sign Up" component={SignUpScreen} options={{ headerShown: false }} />
-            <Stack.Screen name="Dog Info Form" component="DogInfoFormScreen" options={{ headerShown: false }} />
-            <Stack.Screen name="Dog Profile" component="DogProfileScreen" options={{ headerShown: false }} />
-            <Stack.Screen name="Map" component="MapScreen" options={{ headerShown: false }} />
-            <Stack.Screen name="Bookmarks" component="BookmarksScreen" options={{ headerShown: false }} />
-            <Stack.Screen name="Hotspots" component="HotspotsScreen" options={{ headerShown: false }} />
             </Stack.Navigator>
         </NavigationContainer>
       </PersistGate>
     </Provider>
   );
+
+  /*
+            <Stack.Screen name="Dog Info Form" component="DogInfoFormScreen" options={{ headerShown: false }} />
+            <Stack.Screen name="Dog Profile" component="DogProfileScreen" options={{ headerShown: false }} />
+            <Stack.Screen name="Map" component="MapScreen" options={{ headerShown: false }} />
+            <Stack.Screen name="Bookmarks" component="BookmarksScreen" options={{ headerShown: false }} />
+            <Stack.Screen name="Hotspots" component="HotspotsScreen" options={{ headerShown: false }} />
+  */
 }
