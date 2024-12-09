@@ -6,11 +6,11 @@ import { NEXT_PUBLIC_BACKEND_URL } from "@env";
 export default function SignUpScreen () {
     return (
         <ImageBackground
-            source={require('../assets/logo_oufwouf_couleur.png')}
+            source={require('../assets/BG_App.png')}
             style={styles.container}
         >
           <SafeAreaView style={styles.innerContainer}>
-            {/* Contenu de votre écran */}
+            <Text>Sign Up</Text>
           </SafeAreaView>
         </ImageBackground>
       );
