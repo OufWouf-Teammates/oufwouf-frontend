@@ -34,7 +34,7 @@ export default function SignInScreen ({ navigation, route}) {
             source={require('../assets/BG_App.png')}
             style={styles.container}
         >
-          <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+          <KeyboardAvoidingView style={styles.innerContainer} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
             <Image style={styles.image} source={require('../assets/logo_oufwouf_couleur.png')} />
             <Text style={styles.title}>Se connecter</Text>
             <View style={styles.boxInputEmail}>
@@ -84,15 +84,14 @@ export default function SignInScreen ({ navigation, route}) {
         justifyContent: 'center',
       },
       image: {
-        width: '100%',
-        height: '20%', 
+        width: '70%',
+        height: '20%',  
       },
       title: {
         width: '80%',
         fontSize: 24, 
         fontFamily: 'Lexend_700Bold',
-        alignSelf: 'flex-start',
-        marginBottom: 10,
+        marginVertical: 10,
       },
       inputEmail: {
         color: '#F5F5F5',

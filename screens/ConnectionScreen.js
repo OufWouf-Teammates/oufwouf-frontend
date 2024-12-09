@@ -67,7 +67,7 @@ export default function ConnexionScreen({ navigation }) {
           <Text style={styles.textButtonSignIn}>Se connecter</Text>
           <FontAwesome name='arrow-right' size={25} color='#F5F5F5'/>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Sign Up')} style={styles.buttonSignUp} activeOpacity={0.8}>
+        <TouchableOpacity onPress={() => navigation.navigate('Sign Up', {connectToAccount})} style={styles.buttonSignUp} activeOpacity={0.8}>
           <Text style={styles.textButtonSignUp}>S'inscrire</Text>
           <FontAwesome name='arrow-right' size={25} color='#0639DB'/>
         </TouchableOpacity>
