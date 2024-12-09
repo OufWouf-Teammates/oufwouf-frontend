@@ -16,6 +16,8 @@ import { PersistGate } from 'redux-persist/integration/react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Provider } from 'react-redux';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
+
+import user from './reducers/user.js';
 const reducers = combineReducers({ user });
 const persistConfig = { key: 'oufwouf', storage: AsyncStorage };
 const store = configureStore({
