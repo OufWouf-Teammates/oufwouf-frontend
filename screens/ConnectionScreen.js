@@ -8,21 +8,66 @@ import {
 } from '@expo-google-fonts/lexend';
 import AppLoading from 'expo-app-loading';
 
-import { useDispatch } from 'react-redux';
-import { connectUser } from '../reducers/user';
+
+import { connectUser, disconnectUser } from '../reducers/user';
 
 import GoogleSignInButton from '../components/GoogleSignInButton';
 import AppleSignInButton from '../components/appleConnect';
+import { useDispatch, useSelector } from 'react-redux';
+import  {useEffect } from 'react'
+
 import { NEXT_PUBLIC_BACKEND_URL } from "@env";
 
-export default function ConnexionScreen({ navigation }) {
+export default function ConnectionScreen({ navigation }) {
 
   const dispatch = useDispatch();
+  const userToken = useSelector((state) => state.user.value.token); 
+
+
+  
+
+  const isConnectedOrNot = () => {
+    // Fetch pour vérifier le token côté backend
+    if(userToken) {
+    fetch(`${NEXT_PUBLIC_BACKEND_URL}users/isConnectedOrNot`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userToken}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.result) {
+          navigation.navigate('MapScreen');
+        } else {
+          dispatch(disconnectUser());
+        }
+      })
+      .catch((error) => {
+        console.error('Erreur lors de la vérification de connexion :', error);
+        dispatch(disconnectUser());
+      });
+    }
+  };
+
+
+
+  useEffect(() => {
+    isConnectedOrNot();
+}, []);
+
   //Nécessaire pour la configuration des fonts 
   const [fontsLoaded] = useFonts({
     Lexend_400Regular,
     Lexend_700Bold,
   });
+
+
+
+
+
   if (!fontsLoaded) {
     return <AppLoading />;
   }
@@ -54,6 +99,8 @@ export default function ConnexionScreen({ navigation }) {
     console.log(objConn);
   }
 
+  
+    
   return (
     <ImageBackground
       source={require('../assets/BG_App.png')}
