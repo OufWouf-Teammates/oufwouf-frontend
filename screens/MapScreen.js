@@ -1,10 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, ImageBackground } from 'react-native';
 
-export default function MapScreen () {
+import TabBar from '../components/TabBar.js';
+
+export default function MapScreen ({navigation}) {
     return (
         
-            <Text>Map Screen</Text>
+            <TabBar/>
       );
     }
     
