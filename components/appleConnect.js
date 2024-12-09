@@ -3,8 +3,10 @@ import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import AppleAuthentication from '@invertase/react-native-apple-authentication';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-const AppleConnect = () => {
+const AppleConnect = (props) => {
   const handleAppleLogin = async () => {
+
+    /*
     try {
       // Demander l'authentification via Apple
       const appleAuthRequestResponse = await AppleAuthentication.signInAsync({
@@ -47,10 +49,13 @@ const AppleConnect = () => {
     } catch (error) {
       console.error('Erreur lors de la connexion avec Apple', error);
     }
+      */
+
+    props.connectToAccount({email: "admin", password: "admin"});
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.containerHere}>
       {/* Créer un bouton personnalisé avec l'icône Apple */}
       <TouchableOpacity
         style={styles.button}
@@ -66,9 +71,10 @@ const AppleConnect = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  containerHere: {
     alignItems: 'center',
     marginTop: 20,
+    width:"100%",
   },
   button: {
     backgroundColor: 'transparent', 
@@ -80,6 +86,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     flexDirection: 'row',
     alignItems: 'center',  // Centrer verticalement l'icône et le texte
+    width:"80%",
   },
   icon: {
     marginRight: 10, 

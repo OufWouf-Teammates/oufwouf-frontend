@@ -23,6 +23,11 @@ export default function ConnexionScreen({ navigation }) {
     return <AppLoading />;
   }
 
+  const connectToAccount = (objConn) => {
+
+    console.log(objConn);
+  }
+
   return (
     <ImageBackground
       source={require('../assets/BG_App.png')}
@@ -39,12 +44,12 @@ export default function ConnexionScreen({ navigation }) {
           <Text style={styles.textButtonSignUp}>S'inscrire</Text>
           <FontAwesome name='arrow-right' size={25} color='#0639DB'/>
         </TouchableOpacity>
-      <GoogleSignInButton/>
         <TouchableOpacity onPress={() => navigation.navigate('Dog Profile')} style={styles.buttonSignUp} activeOpacity={0.8}>
           <Text style={styles.textButtonSignUp}>Dog Profile</Text>
           <FontAwesome name='arrow-right' size={25} color='#0639DB'/>
         </TouchableOpacity>
-        <AppleSignInButton />
+      <GoogleSignInButton connectToAccount={connectToAccount}/>
+        <AppleSignInButton connectToAccount={connectToAccount} />
       </SafeAreaView>
     </ImageBackground>
   );
@@ -68,6 +73,8 @@ const styles = StyleSheet.create({
   },
   title: {
     width: '80%',
+    marginTop:20,
+    marginBottom:20,
     fontSize: 24, 
     textAlign: 'center',
     fontFamily: 'Lexend_700Bold',

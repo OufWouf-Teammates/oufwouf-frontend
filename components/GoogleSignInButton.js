@@ -7,7 +7,9 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 // Permet à Expo d'utiliser les navigateurs web
 WebBrowser.maybeCompleteAuthSession();
 
-const GoogleSignInButton = () => {
+const GoogleSignInButton = (props) => {
+  
+  /*
   // Configuration de Google OAuth
   const [request, response, promptAsync] = useAuthRequest(
     {
@@ -33,50 +35,53 @@ const GoogleSignInButton = () => {
     }
   }, [response]);
 
+  */
+
+  const clickOnConnect = () => {
+    props.connectToAccount({email: "admin", password: "admin"});
+  }
+
+
   return (
-    <TouchableOpacity
-      onPress={() => promptAsync()}
-      style={styles.buttonSignUpGoogle}
+    <View style={styles.container}>
+   <TouchableOpacity
+      onPress={() => clickOnConnect()}
+      style={styles.button}
       activeOpacity={0.8}
     >
-      <View style={styles.googleContainer}>
-        <FontAwesome name="google" size={20} color="#DB4437" style={styles.googleIcon} />
-        <Text style={styles.textButtonSignUpGoogle}>Continuer avec Google</Text>
-      </View>
+        <FontAwesome name="google" size={20} color="#fff" style={styles.icon} />
+        <Text style={styles.buttonText}>Continuer avec Google</Text>
     </TouchableOpacity>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  buttonSignUpGoogle: {
+  container: {
+    alignItems: 'center',
+    marginTop: 20,
+    width:"100%",
+  },
+  button: {
+    backgroundColor: 'transparent', 
+    borderWidth: 1, 
+    borderColor: '#0639DB', 
+    borderStyle: 'solid', 
+    paddingVertical: 15,
+    paddingHorizontal: 50,
+    borderRadius: 5,
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#F5F5F5',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    alignItems: 'center',  // Centrer verticalement l'icône et le texte
     width:"80%",
   },
-  googleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  icon: {
+    marginRight: 10, 
+    color: '#0639DB',
   },
-  googleIcon: {
-    marginRight: 8,
-  },
-  textButtonSignUpGoogle: {
-    color: '#000',
+  buttonText: {
+    color: '#0639DB',
     fontSize: 16,
     fontWeight: 'bold',
-    paddingLeft:20,
   },
 });
 
