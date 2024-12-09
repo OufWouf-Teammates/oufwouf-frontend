@@ -9,6 +9,7 @@ import {
 import AppLoading from 'expo-app-loading';
 
 import GoogleSignInButton from '../components/GoogleSignInButton';
+import AppleSignInButton from '../components/appleConnect';
 
 import { NEXT_PUBLIC_BACKEND_URL } from "@env";
 
@@ -43,6 +44,7 @@ export default function ConnexionScreen({ navigation }) {
           <Text style={styles.textButtonSignUp}>Dog Profile</Text>
           <FontAwesome name='arrow-right' size={25} color='#0639DB'/>
         </TouchableOpacity>
+        <AppleSignInButton />
       </SafeAreaView>
     </ImageBackground>
   );
