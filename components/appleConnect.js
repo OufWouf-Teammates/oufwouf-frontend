@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import AppleAuthentication from '@invertase/react-native-apple-authentication';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
@@ -24,7 +24,6 @@ const AppleConnect = () => {
         console.log('User Email:', email);
 
         // Vous pouvez maintenant envoyer ce token au serveur pour validation
-        // Exemple d'appel vers le serveur
         fetch('https://votre-api.com/auth/apple', {
           method: 'POST',
           headers: {
