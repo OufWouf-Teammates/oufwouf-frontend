@@ -10,10 +10,14 @@ import AppLoading from 'expo-app-loading';
 
 import GoogleSignInButton from '../components/GoogleSignInButton';
 import AppleSignInButton from '../components/appleConnect';
+import { useDispatch } from 'react-redux';
+import { connectUser } from '../reducers/user';
 
 import { NEXT_PUBLIC_BACKEND_URL } from "@env";
 
 export default function ConnexionScreen({ navigation }) {
+  const dispatch = useDispatch();
+
   //Nécessaire pour la configuration des fonts 
   const [fontsLoaded] = useFonts({
     Lexend_400Regular,
@@ -23,10 +27,34 @@ export default function ConnexionScreen({ navigation }) {
     return <AppLoading />;
   }
 
-  const connectToAccount = (objConn) => {
+  const connectToAccount = async (objConn) => {
+    const EMAIL_REGEX = /\b[\w.-]+@[\w.-]+.\w{2,4}\b/gi;
+    if (!EMAIL_REGEX.test(objConn.email)) {
+      console.error('Adresse email invalide');
+      return;
+    }
+    try {
+      // Faire la requête pour me connecter
+      const response = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/users/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(objConn), 
+      });
 
-    console.log(objConn);
-  }
+      if (response.ok) {
+        const data = await response.json();
+        const { email, token } = data; 
+        dispatch(connectUser({ email, token }));
+        console.log(email, token)
+      } else {
+        console.log('Erreur lors de la connexion');
+      }
+    } catch (error) {
+      console.error('Erreur de connexion:', error);
+    }
+  };
 
   return (
     <ImageBackground
