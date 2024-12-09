@@ -8,6 +8,7 @@ import {
 } from '@expo-google-fonts/lexend';
 import AppLoading from 'expo-app-loading';
 
+import GoogleSignInButton from '../components/GoogleSignInButton';
 
 import { NEXT_PUBLIC_BACKEND_URL } from "@env";
 
@@ -37,10 +38,7 @@ export default function ConnexionScreen({ navigation }) {
           <Text style={styles.textButtonSignUp}>S'inscrire</Text>
           <FontAwesome name='arrow-right' size={25} color='#0639DB'/>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Dog Info Form')} style={styles.buttonSignUp} activeOpacity={0.8}>
-          <Text style={styles.textButtonSignUp}>Dog Info Form</Text>
-          <FontAwesome name='arrow-right' size={25} color='#0639DB'/>
-        </TouchableOpacity>
+      <GoogleSignInButton/>
         <TouchableOpacity onPress={() => navigation.navigate('Dog Profile')} style={styles.buttonSignUp} activeOpacity={0.8}>
           <Text style={styles.textButtonSignUp}>Dog Profile</Text>
           <FontAwesome name='arrow-right' size={25} color='#0639DB'/>
@@ -107,5 +105,5 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#0639DB',
     fontFamily: 'Lexend_400Regular',
-  }
+  },
 });
