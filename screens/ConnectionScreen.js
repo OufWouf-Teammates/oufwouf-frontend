@@ -30,11 +30,19 @@ export default function ConnexionScreen({ navigation }) {
         <Text style={styles.title}>Pour woufer la vie à pleins crocs !</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Sign In')} style={styles.buttonSignIn} activeOpacity={0.8}>
           <Text style={styles.textButtonSignIn}>Se connecter</Text>
-          <FontAwesome name='arrow-right' onPress={() => handleRemove(data.name)} size={25} color='#F5F5F5'/>
+          <FontAwesome name='arrow-right' size={25} color='#F5F5F5'/>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Sign Up')} style={styles.buttonSignUp} activeOpacity={0.8}>
           <Text style={styles.textButtonSignUp}>S'inscrire</Text>
-          <FontAwesome name='arrow-right' onPress={() => handleRemove(data.name)} size={25} color='#0639DB'/>
+          <FontAwesome name='arrow-right' size={25} color='#0639DB'/>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Dog Info Form')} style={styles.buttonSignUp} activeOpacity={0.8}>
+          <Text style={styles.textButtonSignUp}>Dog Info Form</Text>
+          <FontAwesome name='arrow-right' size={25} color='#0639DB'/>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Dog Profile')} style={styles.buttonSignUp} activeOpacity={0.8}>
+          <Text style={styles.textButtonSignUp}>Dog Profile</Text>
+          <FontAwesome name='arrow-right' size={25} color='#0639DB'/>
         </TouchableOpacity>
       </SafeAreaView>
     </ImageBackground>
