@@ -6,7 +6,7 @@ import { NEXT_PUBLIC_BACKEND_URL } from "@env";
 export default function ConnexionScreen({ navigation }) {
   return (
     <ImageBackground
-      source={require('./BG_App.png')}
+      source={require('../assets/logo_oufwouf_couleur.png')}
       style={styles.container}
     >
       <SafeAreaView style={styles.innerContainer}>
