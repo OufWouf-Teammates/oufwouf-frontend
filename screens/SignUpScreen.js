@@ -47,6 +47,9 @@ export default function SignUpScreen ({ navigation, route}) {
             style={styles.container}
         >
           <KeyboardAvoidingView style={styles.innerContainer} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back} activeOpacity={0.8}>
+                <FontAwesome name='arrow-left' size={25} color='#0639DB'/>
+            </TouchableOpacity>
             <Image style={styles.image} source={require('../assets/logo_oufwouf_couleur.png')} />
             <Text style={styles.title}>S'inscrire</Text>
             <View style={styles.boxInputEmail}>
@@ -197,5 +200,8 @@ export default function SignUpScreen ({ navigation, route}) {
         fontSize: 16,
         width: '70%',
         fontFamily: 'Lexend_400Regular',
+      },
+      back: {
+        width: "90%",
       }
     });

@@ -35,6 +35,9 @@ export default function SignInScreen ({ navigation, route}) {
             style={styles.container}
         >
           <KeyboardAvoidingView style={styles.innerContainer} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back} activeOpacity={0.8}>
+                <FontAwesome name='arrow-left' size={25} color='#0639DB'/>
+            </TouchableOpacity>
             <Image style={styles.image} source={require('../assets/logo_oufwouf_couleur.png')} />
             <Text style={styles.title}>Se connecter</Text>
             <View style={styles.boxInputEmail}>
@@ -59,9 +62,6 @@ export default function SignInScreen ({ navigation, route}) {
                     autoCapitalize="none" // Évite la capitalisation automatique
                 />
             </View>
-            <TouchableOpacity onPress={() => {}} style={styles.mdp} activeOpacity={0.8}>
-                <Text style={styles.textMdp}>Mot de passe oublié ?</Text>
-            </TouchableOpacity>
             <TouchableOpacity onPress={() => handleConnection()} style={styles.button} activeOpacity={0.8}>
                 <Text style={styles.textButton}>Me connecter</Text>
                 <FontAwesome name='arrow-right' size={25} color='#F5F5F5'/>
@@ -134,15 +134,6 @@ export default function SignInScreen ({ navigation, route}) {
         padding: 20,
         borderRadius: 5,
       },
-      mdp: {
-        width: '80%',
-        flexDirection: 'row',
-        justifyContent: 'flex-end',
-      },
-      textMdp: {
-        fontFamily: 'Lexend_400Regular',
-        textDecorationLine: 'underline',
-      },
       button: {
         backgroundColor: '#0639DB',
         width: '80%',
@@ -158,5 +149,8 @@ export default function SignInScreen ({ navigation, route}) {
         fontSize: 16,
         width: '70%',
         fontFamily: 'Lexend_400Regular',
+      },
+      back: {
+        width: "90%",
       }
     });
