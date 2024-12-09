@@ -1,4 +1,3 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, SafeAreaView, ImageBackground, Image, TextInput, Platform, KeyboardAvoidingView, TouchableOpacity,} from 'react-native';
 import Checkbox from 'expo-checkbox';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -6,10 +5,6 @@ import {useFonts, Lexend_400Regular, Lexend_700Bold,} from '@expo-google-fonts/l
 import AppLoading from 'expo-app-loading';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { connectUser } from '../reducers/user';
-
-
-import { NEXT_PUBLIC_BACKEND_URL } from "@env";
 
 export default function SignUpScreen ({ navigation, route}) {
     const dispatch = useDispatch();
@@ -30,14 +25,18 @@ export default function SignUpScreen ({ navigation, route}) {
     const {connectToAccount} = route.params
 
     const handleConnection = () => {
-        if (password === confirmPassword && isChecked) {
-            connectToAccount({email, password});
+        if (isChecked){
+            if (password === confirmPassword) {
+                connectToAccount({email, password});
+            }else{
+                setPassword('')
+                setConfirmPassworrd('')
+                alert('Les mots de passe ne correspondent pas')
+            }
         }else{
-            setPassword('')
-            setConfirmPassworrd('')
-            alert('Les mots de passe ne correspondent pas')
+            alert('Vous devez accepter les CGU')
         }
-      
+        
     };
 
     
