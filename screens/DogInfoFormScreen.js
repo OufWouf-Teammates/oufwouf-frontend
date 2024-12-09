@@ -248,6 +248,9 @@ const DogInfoFormScreen = () => {
             </View>
           )}
         </View>
+        <TouchableOpacity>
+         <Text> Soumettre </Text>
+        </TouchableOpacity>
       </SafeAreaView>
     </ImageBackground>
   );
