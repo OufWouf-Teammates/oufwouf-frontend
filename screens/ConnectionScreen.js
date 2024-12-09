@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
     width: '70%',
     borderBottomWidth: 1,
     borderBottomColor: '#F5F5F5',
+    fontFamily: 'Lexend_400Regular',
   }, 
   textButtonSignUp: {
     color: '#0639DB',
@@ -96,5 +97,6 @@ const styles = StyleSheet.create({
     width: '70%',
     borderBottomWidth: 1,
     borderBottomColor: '#0639DB',
+    fontFamily: 'Lexend_400Regular',
   }
 });
