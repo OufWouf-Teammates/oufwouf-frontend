@@ -12,6 +12,7 @@ import AppLoading from 'expo-app-loading';
 import { NEXT_PUBLIC_BACKEND_URL } from "@env";
 
 export default function ConnexionScreen({ navigation }) {
+  //Nécessaire pour la configuration des fonts 
   const [fontsLoaded] = useFonts({
     Lexend_400Regular,
     Lexend_700Bold,
