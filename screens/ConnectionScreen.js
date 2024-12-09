@@ -8,6 +8,9 @@ import {
 } from '@expo-google-fonts/lexend';
 import AppLoading from 'expo-app-loading';
 
+import { useDispatch } from 'react-redux';
+import { connectUser } from '../reducers/user';
+
 import GoogleSignInButton from '../components/GoogleSignInButton';
 import AppleSignInButton from '../components/appleConnect';
 import { useDispatch } from 'react-redux';
@@ -16,8 +19,8 @@ import { connectUser } from '../reducers/user';
 import { NEXT_PUBLIC_BACKEND_URL } from "@env";
 
 export default function ConnexionScreen({ navigation }) {
-  const dispatch = useDispatch();
 
+  const dispatch = useDispatch();
   //Nécessaire pour la configuration des fonts 
   const [fontsLoaded] = useFonts({
     Lexend_400Regular,
@@ -27,34 +30,32 @@ export default function ConnexionScreen({ navigation }) {
     return <AppLoading />;
   }
 
-  const connectToAccount = async (objConn) => {
-    const EMAIL_REGEX = /\b[\w.-]+@[\w.-]+.\w{2,4}\b/gi;
-    if (!EMAIL_REGEX.test(objConn.email)) {
-      console.error('Adresse email invalide');
-      return;
-    }
-    try {
-      // Faire la requête pour me connecter
-      const response = await fetch(`${NEXT_PUBLIC_BACKEND_URL}/users/signup`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(objConn), 
-      });
+  const connectToAccount = (objConn) => {
 
-      if (response.ok) {
-        const data = await response.json();
-        const { email, token } = data; 
-        dispatch(connectUser({ email, token }));
-        console.log(email, token)
-      } else {
-        console.log('Erreur lors de la connexion');
-      }
-    } catch (error) {
-      console.error('Erreur de connexion:', error);
+
+  console.log(`${NEXT_PUBLIC_BACKEND_URL}users/signin`);
+    
+    fetch(`${NEXT_PUBLIC_BACKEND_URL}users/signin`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: objConn.email, password: objConn.password }),
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+    if (data.result) {
+      dispatch(connectUser({ email: data.email, token: data.token }));
+      navigation.navigate('Map');
+    }else{
+      alert(data.error);
     }
-  };
+    })
+  .catch(error => console.error(error));
+
+
+
+    console.log(objConn);
+  }
 
   return (
     <ImageBackground
@@ -64,7 +65,7 @@ export default function ConnexionScreen({ navigation }) {
       <SafeAreaView style={styles.innerContainer}>
         <Image style={styles.image} source={require('../assets/logo_oufwouf_couleur.png')} />
         <Text style={styles.title}>Pour woufer la vie à pleins crocs !</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Sign In')} style={styles.buttonSignIn} activeOpacity={0.8}>
+        <TouchableOpacity onPress={() => navigation.navigate('Sign In', {connectToAccount})} style={styles.buttonSignIn} activeOpacity={0.8}>
           <Text style={styles.textButtonSignIn}>Se connecter</Text>
           <FontAwesome name='arrow-right' size={25} color='#F5F5F5'/>
         </TouchableOpacity>
