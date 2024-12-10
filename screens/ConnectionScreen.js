@@ -117,7 +117,7 @@ export default function ConnectionScreen({ navigation }) {
           <Text style={styles.textButtonSignUp}>S'inscrire</Text>
           <FontAwesome name='arrow-right' size={25} color='#0639DB'/>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Dog Profile')} style={styles.buttonSignUp} activeOpacity={0.8}>
+        <TouchableOpacity onPress={() => navigation.navigate('Dog Info Form')} style={styles.buttonSignUp} activeOpacity={0.8}>
           <Text style={styles.textButtonSignUp}>Dog Profile</Text>
           <FontAwesome name='arrow-right' size={25} color='#0639DB'/>
         </TouchableOpacity>

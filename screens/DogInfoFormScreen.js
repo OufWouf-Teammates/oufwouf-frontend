@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { StatusBar } from 'expo-status-bar';
 import {
   StyleSheet,
   Text,
@@ -13,8 +12,7 @@ import {
 } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { Picker } from "@react-native-picker/picker";
-import { launchCamera, launchImageLibrary } from "react-native-image-picker";
-import { useCameraPermissions } from "expo-camera";
+import * as ImagePicker from "expo-image-picker";
 import * as MediaLibrary from "expo-media-library";
 import {
   ActionSheetProvider,
@@ -22,9 +20,10 @@ import {
 } from "@expo/react-native-action-sheet";
 
 const DogInfoFormScreen = () => {
-  const [imageUri, setImageUri] = useState(
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_fBhxwxhu_RCuje9dlhLYtPotRfn4E5UN3A&s"
-  );
+
+  // toutes les données du chien //
+
+  const [imageUri, setImageUri] = useState(null);
   const [name, setName] = useState("");
   const [info, setInfo] = useState("");
   const [robe, setRobe] = useState("");
@@ -37,65 +36,133 @@ const DogInfoFormScreen = () => {
   const [selectedVaccin, setSelectedVaccin] = useState("");
   const [selectedGender, setSelectedGender] = useState("mâle");
   const [selectedRappel, setSelectedRappel] = useState("Non");
-  const { hasPermission, requestPermission } = useCameraPermissions();
+
+  // gestion de la couleur des inputs //
+  
+  const [focusedField, setFocusedField] = useState(null);
+
   const { showActionSheetWithOptions } = useActionSheet();
 
-  useEffect(() => {
-    if (hasPermission === false) {
-      requestPermission();
-    }
-  }, [hasPermission]);
+  // permissions pour utiser l'appareil photo et la galerie //
 
-  // Fonction pour fermer le clavier //
+  useEffect(() => {
+    const askPermissions = async () => {
+      const cameraPermission =
+        await ImagePicker.requestCameraPermissionsAsync();
+      const mediaPermission = await MediaLibrary.requestPermissionsAsync();
+
+      if (
+        cameraPermission.status !== "granted" ||
+        mediaPermission.status !== "granted"
+      ) {
+        alert("Permission to access camera or media library is required");
+      }
+    };
+
+    askPermissions();
+  }, []);
+
+  // fonction pour faire disparaitre le clavier //
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };
 
-  // selection de date //
+  // Fonction pour changer la couleur de l'input quand il est focus //
+
+  const handleFocus = (field) => {
+    setFocusedField(field);
+  };
+
+  // Fonction pour gérer la perte de focus //
+
+  const handleBlur = () => {
+    setFocusedField(null);
+  };
+
+  // modale calendrier anniversaire //
 
   const handleBirthday = (date) => {
     setSelectedBirthday(date.dateString);
     setIsBirthday(false);
   };
+  // modale calendrier vaccin //
 
   const handleVaccin = (date) => {
     setSelectedVaccin(date.dateString);
     setIsVaccin(false);
   };
 
-  // choix de selection de photo de profil //
+  // selection du choix de prise de photo de profil (appareil ou galerie) //
 
   const handleChooseImage = () => {
-    const options = ["Prenez une photo", "Séléctionnez une photo", "Annuler"];
+    const options = ["Prenez une photo", "Sélectionnez une photo", "Annuler"];
     const cancelButtonIndex = options.length - 1;
 
     showActionSheetWithOptions(
       { options, cancelButtonIndex },
       (buttonIndex) => {
         if (buttonIndex === 0) {
-          launchCamera(
-            { mediaType: "photo", saveToPhotos: true },
-            handleImageSelection
-          );
+          ImagePicker.launchCameraAsync({
+            mediaType: "photo",
+            saveToPhotos: true,
+          }).then(handleImageSelection);
         } else if (buttonIndex === 1) {
-          launchImageLibrary(
-            { mediaType: "photo", quality: 1, selectionLimit: 1 },
-            handleImageSelection
-          );
+          ImagePicker.launchImageLibraryAsync({
+            mediaType: "photo",
+            quality: 1,
+            selectionLimit: 1,
+          }).then(handleImageSelection);
         }
       }
     );
   };
 
- // recup de la photo de profil //
+  // reception de la photo de profil //
 
   const handleImageSelection = (response) => {
-    if (response.assets && response.assets[0].uri) {
+    if (response.didCancel) {
+      console.log("User cancelled image picker");
+    } else if (response.errorCode) {
+      console.error("Error:", response.errorMessage);
+    } else if (response.assets && response.assets[0].uri) {
       setImageUri(response.assets[0].uri);
     } else {
-      console.error("Aucune image sélectionnée ou une erreur est survenue");
+      console.error("No image selected or error occurred");
     }
+  };
+
+  // bouton submit et gestion des données soumises //
+
+  const handleSubmit = () => {
+    if (!name || !race || !selectedBirthday || !selectedGender) {
+      alert("Hep hep hep ! Vous n'avez pas rempli les champs obligatoires !");
+      return;
+    }
+
+    console.log({
+      name,
+      race,
+      robe,
+      vaccination,
+      selectedBirthday,
+      selectedVaccin,
+      selectedGender,
+      selectedRappel,
+      info,
+      personnality,
+      imageUri,
+    });
+
+    setName("");
+    setRace("");
+    setRobe("");
+    setVaccination("");
+    setInfo("");
+    setPersonnality("");
+    setSelectedBirthday("");
+    setSelectedVaccin("");
+    setImageUri(null);
   };
 
   return (
@@ -110,14 +177,18 @@ const DogInfoFormScreen = () => {
         <View style={styles.form}>
           <Text>Nom du chien*</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, focusedField==='name' && styles.inputFocused]}
+            onFocus={() => handleFocus("name")}
+            onBlur={handleBlur}
             onChangeText={(value) => setName(value)}
             value={name}
           />
 
           <Text>Race du chien*</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, focusedField==='race' && styles.inputFocused]}
+            onFocus={() => handleFocus("race")}
+            onBlur={handleBlur}
             onChangeText={(value) => setRace(value)}
             value={race}
           />
@@ -133,24 +204,30 @@ const DogInfoFormScreen = () => {
 
           <Text>Date de naissance*</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, focusedField==='anniv' && styles.inputFocused]}
+            onBlur={handleBlur}
             placeholder="Choisissez une date"
             value={selectedBirthday}
             onFocus={() => {
               dismissKeyboard();
               setIsBirthday(true);
+              handleFocus('anniv');
             }}
           />
 
           <Text>Couleur de robe du chien</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, focusedField==='robe' && styles.inputFocused]}
+            onFocus={() => handleFocus("robe")}
+            onBlur={handleBlur}
             onChangeText={(value) => setRobe(value)}
             value={robe}
           />
           <Text>Vaccinations du chien</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, focusedField==='Vaccination' && styles.inputFocused]}
+            onFocus={() => handleFocus("Vaccination")}
+            onBlur={handleBlur}
             onChangeText={(value) => setVaccination(value)}
             value={vaccination}
           />
@@ -166,28 +243,37 @@ const DogInfoFormScreen = () => {
 
           <Text>Date de vaccination</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, focusedField==='vaccins' && styles.inputFocused]}
+            onBlur={handleBlur}
             placeholder="Choisissez une date"
             value={selectedVaccin}
             onFocus={() => {
               dismissKeyboard();
               setIsVaccin(true);
+              handleFocus('vaccins');
             }}
           />
 
           <Text>Information général </Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, focusedField==='info' && styles.inputFocused]}
+            onFocus={() => handleFocus("info")}
+            onBlur={handleBlur}
             onChangeText={(value) => setInfo(value)}
             value={info}
           />
 
           <Text>Traits de personalité</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, focusedField==='personnality' && styles.inputFocused]}
+            onFocus={() => handleFocus("personnality")}
+            onBlur={handleBlur}
             onChangeText={(value) => setPersonnality(value)}
             value={personnality}
           />
+
+          {/* modale calendrier anniv */}
+
           {isBirthday && (
             <View style={styles.calendarContainer}>
               <Calendar
@@ -217,6 +303,8 @@ const DogInfoFormScreen = () => {
               />
             </View>
           )}
+
+          {/* modale calendrier vaccins */}
 
           {isVaccin && (
             <View style={styles.calendarContainer}>
@@ -248,8 +336,8 @@ const DogInfoFormScreen = () => {
             </View>
           )}
         </View>
-        <TouchableOpacity>
-         <Text> Soumettre </Text>
+        <TouchableOpacity onPress={() => handleSubmit()}>
+          <Text> Soumettre </Text>
         </TouchableOpacity>
       </SafeAreaView>
     </ImageBackground>
@@ -272,10 +360,15 @@ const styles = StyleSheet.create({
   input: {
     height: 40,
     borderColor: "#4D4D4D",
+    backgroundColor: "#4D4D4D",
     borderWidth: 1,
     marginBottom: 15,
     paddingLeft: 10,
     borderRadius: 5,
+  },
+  inputFocused: {
+    backgroundColor: "#F3E882",
+    borderColor: "#FBBC05"
   },
   image: {
     width: 100,
@@ -287,7 +380,7 @@ const styles = StyleSheet.create({
   },
   calendarContainer: {
     position: "absolute",
-    top: 80,
+    top: 150,
     zIndex: 1000,
     width: "100%",
     backgroundColor: "white",
@@ -299,7 +392,8 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   picker: {
-    height: 50,
+    height: 60,
+    marginBottom: 15,
   },
 });
 
@@ -308,4 +402,3 @@ export default () => (
     <DogInfoFormScreen />
   </ActionSheetProvider>
 );
-
