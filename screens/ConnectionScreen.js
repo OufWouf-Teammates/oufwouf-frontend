@@ -16,8 +16,6 @@ import AppleSignInButton from '../components/appleConnect';
 import { useDispatch, useSelector } from 'react-redux';
 import  {useEffect } from 'react'
 
-import { NEXT_PUBLIC_BACKEND_URL } from "@env";
-
 export default function ConnectionScreen({ navigation }) {
 
   const dispatch = useDispatch();
@@ -29,7 +27,7 @@ export default function ConnectionScreen({ navigation }) {
   const isConnectedOrNot = () => {
     // Fetch pour vérifier le token côté backend
     if(userToken) {
-    fetch(`${NEXT_PUBLIC_BACKEND_URL}users/isConnectedOrNot`, {
+    fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}users/isConnectedOrNot`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -75,9 +73,9 @@ export default function ConnectionScreen({ navigation }) {
   const connectToAccount = (objConn) => {
 
 
-  console.log(`${NEXT_PUBLIC_BACKEND_URL}users/signin`);
+  console.log(`${process.env.EXPO_PUBLIC_BACKEND_URL}users/signin`);
     
-    fetch(`${NEXT_PUBLIC_BACKEND_URL}users/signin`, {
+    fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}users/signin`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: objConn.email, password: objConn.password }),
@@ -103,9 +101,9 @@ export default function ConnectionScreen({ navigation }) {
   const createAccount = (objConn) => {
 
 
-    console.log(`${NEXT_PUBLIC_BACKEND_URL}users/signup`);
+    console.log(`${process.env.EXPO_PUBLIC_BACKEND_URL}users/signup`);
       
-      fetch(`${NEXT_PUBLIC_BACKEND_URL}users/signup`, {
+      fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}users/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: objConn.email, password: objConn.password }),

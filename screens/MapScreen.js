@@ -1,74 +1,59 @@
-import { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 
-import TabBar from '../components/TabBar.js';
-
-export default function MapScreen({ navigation }) {
+export default function MapScreen() {
   const [currentPosition, setCurrentPosition] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
-    const requestLocationPermissions = async () => {
+    (async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
-      
+
       if (status !== 'granted') {
-        setErrorMessage('Permission to access location was denied');
+        setErrorMessage('Permission de localisation refusée');
         return;
       }
-      
-      const locationSubscription = await Location.watchPositionAsync(
-        { distanceInterval: 10 },
-        (location) => {
-          setCurrentPosition(location);
-        }
-      );
 
-      return () => locationSubscription.remove(); // Cleanup on unmount
-    };
-
-    requestLocationPermissions();
-    
+      const location = await Location.getCurrentPositionAsync({});
+      setCurrentPosition(location);
+    })();
   }, []);
 
-  let marker = currentPosition?.coords && (
-    <Marker coordinate={currentPosition?.coords} title="My position" pinColor="#fecb2d" />
-  );
-
   return (
-    <View style={{ flex: 1 }}>
-      <MapView style={styles.map}>
-        {currentPosition && marker}
-      </MapView>
-
-      {errorMessage && (
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorMessage}>{errorMessage}</Text>
-        </View>
+    <View style={styles.container}>
+      {currentPosition ? (
+        <MapView
+          style={styles.map}
+          initialRegion={{
+            latitude: currentPosition.coords.latitude,
+            longitude: currentPosition.coords.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        >
+          <Marker
+            coordinate={{
+              latitude: currentPosition.coords.latitude,
+              longitude: currentPosition.coords.longitude,
+            }}
+            title="Ma position"
+            pinColor="#fecb2d"
+          />
+        </MapView>
+      ) : (
+        <Text>{errorMessage || "Chargement de la position..."}</Text>
       )}
-
-      <TabBar navigation={navigation} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  map: {
+  container: {
     flex: 1,
   },
-  errorContainer: {
-    position: 'absolute',
-    top: 20,
-    left: 0,
-    right: 0,
-    padding: 10,
-    backgroundColor: 'red',
-    alignItems: 'center',
-    zIndex: 1,
-  },
-  errorMessage: {
-    color: 'white',
-    fontSize: 16,
+  map: {
+    flex: 1,
   },
 });
