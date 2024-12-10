@@ -6,6 +6,9 @@ import AppLoading from 'expo-app-loading';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
+import GoogleSignInButton from '../components/GoogleSignInButton';
+import AppleSignInButton from '../components/appleConnect';
+
 export default function SignUpScreen ({ navigation, route}) {
     const dispatch = useDispatch();
     const [email, setEmail] = useState('');
@@ -22,12 +25,12 @@ export default function SignUpScreen ({ navigation, route}) {
     if (!fontsLoaded) {
         return <AppLoading />;
     }
-    const {connectToAccount} = route.params
+    const {createAccount} = route.params;
 
-    const handleConnection = () => {
+    const handleInscription = () => {
         if (isChecked){
             if (password === confirmPassword) {
-                connectToAccount({email, password});
+                createAccount({email, password});
             }else{
                 setPassword('')
                 setConfirmPassworrd('')
@@ -39,7 +42,9 @@ export default function SignUpScreen ({ navigation, route}) {
         
     };
 
-    
+    const signUpToAccount = (objInsc) => {
+      createAccount(objInsc);
+    }
 
     return (
         <ImageBackground
@@ -105,10 +110,12 @@ export default function SignUpScreen ({ navigation, route}) {
                 <Text style={styles.label}>J'accepte de recevoir les offres promotionnelles des partenaires de OufWouf !</Text>
             </View>
 
-            <TouchableOpacity onPress={() => handleConnection()} style={styles.button} activeOpacity={0.8}>
+            <TouchableOpacity onPress={() => handleInscription()} style={styles.button} activeOpacity={0.8}>
                 <Text style={styles.textButton}>M'inscrire</Text>
                 <FontAwesome name='arrow-right' size={25} color='#F5F5F5'/>
             </TouchableOpacity>
+      <GoogleSignInButton title="Sign up with Google" signUpToAccount={signUpToAccount}/>
+        <AppleSignInButton title="Sign up with Apple" signUpToAccount={signUpToAccount} />
           </KeyboardAvoidingView>
         </ImageBackground>
       );

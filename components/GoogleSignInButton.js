@@ -38,7 +38,14 @@ const GoogleSignInButton = (props) => {
   */
 
   const clickOnConnect = () => {
-    props.connectToAccount({email: "admin", password: "admin"});
+    if(props.connectToAccount) {
+      props.connectToAccount({email: "admin", password: "admin"});
+    } else {
+      if(props.signUpToAccount) {
+        const random = Math.random();
+        props.signUpToAccount({email: "adminInsc"+random+"@gmail.com", password: "adminInsc"});
+      }
+    }
   }
 
 
@@ -50,7 +57,7 @@ const GoogleSignInButton = (props) => {
       activeOpacity={0.8}
     >
         <FontAwesome name="google" size={20} color="#fff" style={styles.icon} />
-        <Text style={styles.buttonText}>Continuer avec Google</Text>
+        <Text style={styles.buttonText}>{props.title}</Text>
     </TouchableOpacity>
     </View>
   );
