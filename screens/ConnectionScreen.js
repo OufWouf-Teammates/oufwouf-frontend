@@ -86,7 +86,7 @@ export default function ConnectionScreen({ navigation }) {
   .then(data => {
     console.log(data);
     if (data.result) {
-      dispatch(connectUser({ email: data.email, token: data.token }));
+      dispatch(connectUser({ email: data.result.email, token: data.result.token }));
       navigation.navigate('Map');
     }else{
       alert(data.error);
@@ -99,6 +99,33 @@ export default function ConnectionScreen({ navigation }) {
     console.log(objConn);
   }
 
+
+  const createAccount = (objConn) => {
+
+
+    console.log(`${NEXT_PUBLIC_BACKEND_URL}users/signup`);
+      
+      fetch(`${NEXT_PUBLIC_BACKEND_URL}users/signup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: objConn.email, password: objConn.password }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      if (data.result) {
+        dispatch(connectUser({ email: data.result.email, token: data.result.token }));
+        navigation.navigate('Map');
+      }else{
+        alert(data.error);
+      }
+      })
+    .catch(error => console.error(error));
+  
+  
+  
+      console.log(objConn);
+    }
   
     
   return (
@@ -109,11 +136,11 @@ export default function ConnectionScreen({ navigation }) {
       <SafeAreaView style={styles.innerContainer}>
         <Image style={styles.image} source={require('../assets/logo_oufwouf_couleur.png')} />
         <Text style={styles.title}>Pour woufer la vie à pleins crocs !</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Sign In', {connectToAccount})} style={styles.buttonSignIn} activeOpacity={0.8}>
+        <TouchableOpacity onPress={() => navigation.navigate('Sign In', {connectToAccount, createAccount})} style={styles.buttonSignIn} activeOpacity={0.8}>
           <Text style={styles.textButtonSignIn}>Se connecter</Text>
           <FontAwesome name='arrow-right' size={25} color='#F5F5F5'/>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Sign Up', {connectToAccount})} style={styles.buttonSignUp} activeOpacity={0.8}>
+        <TouchableOpacity onPress={() => navigation.navigate('Sign Up', {connectToAccount, createAccount})} style={styles.buttonSignUp} activeOpacity={0.8}>
           <Text style={styles.textButtonSignUp}>S'inscrire</Text>
           <FontAwesome name='arrow-right' size={25} color='#0639DB'/>
         </TouchableOpacity>
@@ -121,8 +148,8 @@ export default function ConnectionScreen({ navigation }) {
           <Text style={styles.textButtonSignUp}>Dog Profile</Text>
           <FontAwesome name='arrow-right' size={25} color='#0639DB'/>
         </TouchableOpacity>
-      <GoogleSignInButton connectToAccount={connectToAccount}/>
-        <AppleSignInButton connectToAccount={connectToAccount} />
+      <GoogleSignInButton title="Connect with Google" connectToAccount={connectToAccount}/>
+        <AppleSignInButton title="Connect with Apple" connectToAccount={connectToAccount} />
       </SafeAreaView>
     </ImageBackground>
   );

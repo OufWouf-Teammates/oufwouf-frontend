@@ -51,7 +51,14 @@ const AppleConnect = (props) => {
     }
       */
 
-    props.connectToAccount({email: "admin", password: "admin"});
+    if(props.connectToAccount) {
+      props.connectToAccount({email: "admin", password: "admin"});
+    } else {
+      if(props.signUpToAccount) {
+        const random = Math.random();
+        props.signUpToAccount({email: "adminInsc"+random+"@gmail.com", password: "adminInsc"});
+      }
+    }
   };
 
   return (
@@ -64,7 +71,7 @@ const AppleConnect = (props) => {
       >
         {/* Icône Apple à gauche */}
         <FontAwesome name="apple" size={20} color="#fff" style={styles.icon} />
-        <Text style={styles.buttonText}>Connexion via Apple</Text>
+        <Text style={styles.buttonText}>{props.title}</Text>
       </TouchableOpacity>
     </View>
   );
