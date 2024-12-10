@@ -2287,7 +2287,7 @@
   dependencies:
     "@babel/types" "^7.20.7"
 
-"@types/geojson@^7946.0.13":
+"@types/geojson@^7946.0.8":
   version "7946.0.15"
   resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.15.tgz#f9d55fd5a0aa2de9dc80b1b04e437538b7298868"
   integrity sha512-9oSxFzDCT2Rj6DfcHF8G++jxBKS7mBqXl5xrRW+Kbvjry6Uduya2iiwqHPhVXpasAVMBYKkEPGgKhd3+/HZ6xA==
@@ -3632,7 +3632,7 @@ expo-linking@~7.0.0:
     expo-constants "~17.0.0"
     invariant "^2.2.4"
 
-expo-location@~18.0.3:
+expo-location@^18.0.3:
   version "18.0.3"
   resolved "https://registry.yarnpkg.com/expo-location/-/expo-location-18.0.3.tgz#ef6eb442bb18f75165caaf344be0c19a45820048"
   integrity sha512-QwdPzbWWAqhTjUDMwbcnMnOpkNAZMjw//c345Fxf3BEKMPc9z1Tg4tMFUbnYGFaCrPcNYa2A13u4mtV1ha7wwQ==
@@ -6037,6 +6037,7 @@ react-native-image-picker@^7.2.3:
   resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-7.2.3.tgz#9c402591462af256cdd9aed796c28083a48f90cd"
   integrity sha512-zKIZUlQNU3EtqizsXSH92zPeve4vpUrsqHu2kkpCxWE9TZhJFZBb+irDsBOY8J21k0+Edgt06TMQGJ+iPUIXyA==
 
+<<<<<<< HEAD
 react-native-maps-directions@^1.9.0:
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/react-native-maps-directions/-/react-native-maps-directions-1.9.0.tgz#63ae8e8b36499042a658e43cd4836ac89aab8b7d"
@@ -6049,8 +6050,14 @@ react-native-maps@1.18.0:
   version "1.18.0"
   resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-1.18.0.tgz#48d253041a9baa5606b4f3647043d660a93b3b01"
   integrity sha512-S17nYUqeMptgIPaAZuVRo+eRelPreBBYQWw6jsxU7qQ12p+THSfFaqabcNn7fBmsXhT3T27iIl8ek8v1H8BaGw==
+=======
+react-native-maps@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-1.0.0.tgz#a6a461326815771f7eee2a1c5908f440a101bbf9"
+  integrity sha512-OCIehkHcCofqUL9lhzWH6E4Gzv6+Wmo9J8G0znPruyFOMerpgI8VYrwh6sneh1SRf7U/QhbJaXJsBnJ028uslw==
+>>>>>>> b54e7166c42b76809a20cae3039e94b8431a5114
   dependencies:
-    "@types/geojson" "^7946.0.13"
+    "@types/geojson" "^7946.0.8"
 
 react-native-modal-datetime-picker@^18.0.0:
   version "18.0.0"

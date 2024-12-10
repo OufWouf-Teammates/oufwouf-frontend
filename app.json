@@ -33,12 +33,16 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
+<<<<<<< HEAD
         "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"],
         "backgroundColor": "#ffffff",
         "supportsTablet": true,
         "config": {
           "googleMapsApiKey": "AIzaSyBSQzGQfgR1VmOHpO0CY_S1tadFwViMQc8"
         }
+=======
+        "backgroundColor": "#ffffff"
+>>>>>>> b54e7166c42b76809a20cae3039e94b8431a5114
       },
       "permissions": [
         "CAMERA",
