@@ -72,7 +72,7 @@ export default function ConnectionScreen({ navigation }) {
 
   const connectToAccount = (objConn) => {
 
-
+if(objConn.email && objConn.password) {
   console.log(`${process.env.EXPO_PUBLIC_BACKEND_URL}users/signin`);
     
     fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}users/signin`, {
@@ -95,6 +95,7 @@ export default function ConnectionScreen({ navigation }) {
 
 
     console.log(objConn);
+  }
   }
 
 
