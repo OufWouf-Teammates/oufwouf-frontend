@@ -335,7 +335,7 @@ const DogInfoFormScreen = () => {
               />
             </TouchableOpacity>
             <View style={styles.form}>
-              <Text>Nom du chien*</Text>
+              <Text>Nom du chien<Text style={{ color: 'red' }}>*</Text></Text>
               <TextInput
                 style={[
                   styles.input,
@@ -347,7 +347,7 @@ const DogInfoFormScreen = () => {
                 value={name}
               />
 
-              <Text>Race du chien*</Text>
+              <Text>Race du chien<Text style={{ color: 'red' }}>*</Text></Text>
               <TextInput
                 style={[
                   styles.input,
@@ -374,7 +374,7 @@ const DogInfoFormScreen = () => {
                   )}
                 />
               )}
-              <Text>ID*</Text>
+              <Text>ID<Text style={{ color: 'red' }}>*</Text></Text>
               <TextInput
                 style={[
                   styles.input,
@@ -385,7 +385,7 @@ const DogInfoFormScreen = () => {
                 onChangeText={(value) => setDogId(value)}
                 value={dogId}
               />
-              <Text>Sexe du chien*</Text>
+              <Text>Sexe du chien<Text style={{ color: 'red' }}>*</Text></Text>
               <Picker
                 selectedValue={selectedGender}
                 onValueChange={(itemValue) => setSelectedGender(itemValue)}
@@ -395,7 +395,7 @@ const DogInfoFormScreen = () => {
                 <Picker.Item label="Femelle" value="femelle" />
               </Picker>
 
-              <Text>Date de naissance*</Text>
+              <Text>Date de naissance<Text style={{ color: 'red' }}>*</Text></Text>
               <TextInput
                 style={[
                   styles.input,
@@ -635,6 +635,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     paddingLeft: 10,
     borderRadius: 5,
+    opacity: 0.6,
   },
   inputFocused: {
     backgroundColor: "#F3E882",

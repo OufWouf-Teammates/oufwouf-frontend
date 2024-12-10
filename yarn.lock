@@ -2274,7 +2274,7 @@
   dependencies:
     "@babel/types" "^7.20.7"
 
-"@types/geojson@^7946.0.8":
+"@types/geojson@^7946.0.13":
   version "7946.0.15"
   resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.15.tgz#f9d55fd5a0aa2de9dc80b1b04e437538b7298868"
   integrity sha512-9oSxFzDCT2Rj6DfcHF8G++jxBKS7mBqXl5xrRW+Kbvjry6Uduya2iiwqHPhVXpasAVMBYKkEPGgKhd3+/HZ6xA==
