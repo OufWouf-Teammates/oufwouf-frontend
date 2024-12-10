@@ -101,86 +101,88 @@ export default function MapScreen({ navigation }) {
   }
 
   return (
-    <SafeAreaProvider>
-      <StatusBar
-        hidden={false}
-        barStyle="light-content"
-        backgroundColor="transparent"
-      />
-      <View style={styles.container}>
-        <MapView
-          style={styles.map}
-          initialRegion={{
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-            latitudeDelta: 0.005, // Réduire ces valeurs pour un zoom plus élevé
-            longitudeDelta: 0.005,
-          }}
-          rotateEnabled={false}
-          showsPointsOfInterest={false}
-          showsBuildings={false}
-          showsTraffic={false}
-          pitchEnabled={false}
-          loadingEnabled={false}
-          ref={(ref) => setMapRef(ref)} // Assurez-vous que setMapRef est appelé ici
-        >
-          {/* Cercle indiquant la précision */}
-          {
-            <Circle
-              center={{
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-              }}
-              radius={location.coords.accuracy} // Précision fournie par Expo Location
-              strokeColor="rgba(0, 122, 255, 0.5)" // Couleur du contour
-              fillColor="rgba(0, 122, 255, 0.2)" // Couleur de remplissage
-            />
-          }
-
-          {/* Point bleu pour indiquer la position */}
-          {
-            <Marker
-              coordinate={{
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-              }}
-              anchor={{ x: 0.5, y: 0.5 }} // Centre le marker
-            >
-              <View style={styles.marker}>
-                <View style={styles.markerCore} />
-              </View>
-            </Marker>
-          }
-          {redMarker && (
-            <Marker
-              coordinate={{
-                latitude: redMarker.lat,
-                longitude: redMarker.lng,
-              }}
-              anchor={{ x: 0.5, y: 0.5 }}
-            >
-              <View style={styles.redMarker}>
-                <View style={styles.redMarkerCore} />
-              </View>
-            </Marker>
-          )}
+    <View style={styles.container}>
+      <SafeAreaProvider>
+        <StatusBar
+          hidden={false}
+          barStyle="dark-content"
+          backgroundColor="transparent"
+        />
+        <View style={styles.container1}>
           <View style={styles.searchBar}>
             <SearchBar
               gotToLatLng={gotToLatLng}
               createRedPoint={createRedPoint}
             />
           </View>
-
           <TouchableOpacity style={styles.button} onPress={centerOnUser}>
             <View style={styles.buttonIcon}>
               <View style={styles.buttonIconCore} />
             </View>
           </TouchableOpacity>
+          <MapView
+            style={styles.map}
+            initialRegion={{
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude,
+              latitudeDelta: 0.005, // Réduire ces valeurs pour un zoom plus élevé
+              longitudeDelta: 0.005,
+            }}
+            rotateEnabled={false}
+            showsPointsOfInterest={false}
+            showsBuildings={false}
+            showsTraffic={false}
+            pitchEnabled={false}
+            loadingEnabled={false}
+            ref={(ref) => setMapRef(ref)} // Assurez-vous que setMapRef est appelé ici
+          >
+            {/* Cercle indiquant la précision */}
+            {
+              <Circle
+                center={{
+                  latitude: location.coords.latitude,
+                  longitude: location.coords.longitude,
+                }}
+                radius={location.coords.accuracy} // Précision fournie par Expo Location
+                strokeColor="rgba(0, 122, 255, 0.5)" // Couleur du contour
+                fillColor="rgba(0, 122, 255, 0.2)" // Couleur de remplissage
+              />
+            }
 
+            {/* Point bleu pour indiquer la position */}
+            {
+              <Marker
+                coordinate={{
+                  latitude: location.coords.latitude,
+                  longitude: location.coords.longitude,
+                }}
+                anchor={{ x: 0.5, y: 0.5 }} // Centre le marker
+              >
+                <View style={styles.marker}>
+                  <View style={styles.markerCore} />
+                </View>
+              </Marker>
+            }
+            {
+              <Marker
+                coordinate={{
+                  latitude: redMarker?.lat,
+                  longitude: redMarker?.lng,
+                }}
+                anchor={{ x: 0.5, y: 0.5 }}
+              >
+                <View style={styles.redMarker}>
+                  <View style={styles.redMarkerCore} />
+                </View>
+              </Marker>
+            }
+          </MapView>
+        </View>
+        <View style={styles.container2}>
           <TabBar />
-        </MapView>
-      </View>
-    </SafeAreaProvider>
+        </View>
+      </SafeAreaProvider>
+    </View>
   )
 }
 
@@ -188,8 +190,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  container1: {
+    flex: 0.87,
+  },
+  container2: {
+    flex: 0.13,
+  },
   map: {
     flex: 1,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: height,
   },
   marker: {
     height: 24,
@@ -206,8 +219,10 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 122, 255, 1)", // Point bleu central
   },
   searchBar: {
-    flex: 1,
-    paddingTop: 70,
+    position: "absolute",
+    marginTop: 70,
+    width: "100%",
+    zIndex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -218,7 +233,8 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25, // Bouton circulaire
     position: "absolute",
-    bottom: 120,
+    zIndex: 1,
+    bottom: 40,
     left: 15,
     alignItems: "center",
     justifyContent: "center",
