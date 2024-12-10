@@ -175,15 +175,12 @@ if(objConn.email && objConn.password) {
           <Text style={styles.textButtonSignUp}>Camera</Text>
           <FontAwesome name="arrow-right" size={25} color="#0639DB" />
         </TouchableOpacity>
-
-        <GoogleSignInButton
-          title="Connect with Google"
-          connectToAccount={connectToAccount}
-        />
-        <AppleSignInButton
-          title="Connect with Apple"
-          connectToAccount={connectToAccount}
-        />
+        <TouchableOpacity onPress={() => navigation.navigate('Interest')} style={styles.buttonSignUp} activeOpacity={0.8}>
+          <Text style={styles.textButtonSignUp}>interest</Text>
+          <FontAwesome name='arrow-right' size={25} color='#0639DB'/>
+        </TouchableOpacity>
+      <GoogleSignInButton title="Connect with Google" connectToAccount={connectToAccount}/>
+        <AppleSignInButton title="Connect with Apple" connectToAccount={connectToAccount} />
       </SafeAreaView>
     </ImageBackground>
   )
