@@ -70,12 +70,9 @@ export default function ConnectionScreen({ navigation }) {
   const connectToAccount = (objConn) => {
     console.log(`${process.env.EXPO_PUBLIC_BACKEND_URL}users/signin`)
 
-<<<<<<< HEAD
-=======
 if(objConn.email && objConn.password) {
   console.log(`${process.env.EXPO_PUBLIC_BACKEND_URL}users/signin`);
     
->>>>>>> f5fa02c99521bb34b28a6c56e5ecac3c5f65cf35
     fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}users/signin`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
