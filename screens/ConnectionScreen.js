@@ -41,7 +41,7 @@ export default function ConnectionScreen({ navigation }) {
         .then((data) => {
           console.log(data)
           if (data.result) {
-            navigation.navigate("MapScreen")
+            navigation.navigate("Map")
           } else {
             dispatch(disconnectUser())
           }
