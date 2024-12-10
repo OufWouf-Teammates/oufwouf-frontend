@@ -114,7 +114,7 @@ export default function MapScreen({ navigation }) {
   ref={(ref) => setMapRef(ref)} // Assurez-vous que setMapRef est appelé ici
 >
   {/* Cercle indiquant la précision */}
-{/*  <Circle
+{<Circle
         center={{
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
@@ -122,10 +122,10 @@ export default function MapScreen({ navigation }) {
         radius={location.coords.accuracy} // Précision fournie par Expo Location
         strokeColor="rgba(0, 122, 255, 0.5)" // Couleur du contour
         fillColor="rgba(0, 122, 255, 0.2)" // Couleur de remplissage
-      />*/}
+      />}
 
       {/* Point bleu pour indiquer la position */}
-      {/*<Marker
+      {<Marker
         coordinate={{
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
@@ -135,8 +135,8 @@ export default function MapScreen({ navigation }) {
         <View style={styles.marker}>
           <View style={styles.markerCore} />
         </View>
-      </Marker>*/}
-      {/*{redMarker && (
+      </Marker>}
+      {redMarker && (
           <Marker
             coordinate={{
               latitude: redMarker.lat,
@@ -148,7 +148,7 @@ export default function MapScreen({ navigation }) {
               <View style={styles.redMarkerCore} />
             </View>
           </Marker>
-        )}*/}
+        )}
         <View  style={styles.searchBar}><SearchBar gotToLatLng={gotToLatLng} createRedPoint={createRedPoint}/></View>
 
 <TouchableOpacity style={styles.button} onPress={centerOnUser}>
