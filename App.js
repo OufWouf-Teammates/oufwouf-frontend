@@ -11,6 +11,7 @@ import DogProfileScreen from "./screens/DogProfileScreen"
 import MapScreen from "./screens/MapScreen"
 import TakePictureScreen from "./screens/TakePictureScreen"
 import GalleryScreen from "./screens/GalleryScreen"
+import InterestPoint from "./screens/InterestPoint"
 
 import { persistStore, persistReducer } from "redux-persist"
 import { PersistGate } from "redux-persist/integration/react"
@@ -72,6 +73,11 @@ export default function App() {
             <Stack.Screen
               name="Gallery"
               component={GalleryScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Interest"
+              component={InterestPoint}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>
