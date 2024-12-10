@@ -10,7 +10,7 @@ export default function TabBar ({navigation}) {
                     <View style={styles.containerInside}>
                         <View style={styles.containerOneButtonLeft}>
                         <TouchableOpacity>
-                            <FontAwesome name="heart-o" size={30} color="#1738D3" />
+                            <FontAwesome name="heart" size={30} color="#1738D3" />
                         </TouchableOpacity>
                         </View>
                         <View style={styles.containerOneButtonTop}>
