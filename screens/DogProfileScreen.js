@@ -11,8 +11,6 @@ import {
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-import { NEXT_PUBLIC_BACKEND_URL } from "@env";
-
 export default function DogProfileScreen({ navigation }) {
   const token = useSelector((state) => state.user.value?.accessToken);
   const [dog, setDog] = useState({
@@ -32,7 +30,7 @@ export default function DogProfileScreen({ navigation }) {
 
   useEffect(() => {
     (async () => {
-      const response = await fetch(NEXT_PUBLIC_BACKEND_URL + `?token=${token}`);
+      const response = await fetch(process.env.EXPO_PUBLIC_BACKEND_URL + `?token=${token}`);
 
       const data = await response.json();
 

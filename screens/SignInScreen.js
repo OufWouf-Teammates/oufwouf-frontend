@@ -7,8 +7,6 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { connectUser } from '../reducers/user';
 
-import { NEXT_PUBLIC_BACKEND_URL } from "@env";
-
 export default function SignInScreen ({ navigation, route}) {
     const dispatch = useDispatch();
     const [email, setEmail] = useState('');
