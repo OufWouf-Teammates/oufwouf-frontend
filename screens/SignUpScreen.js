@@ -124,7 +124,7 @@ export default function SignUpScreen ({ navigation, route}) {
         flex: 1,
         width: '100%',
         alignItems: 'center',
-        justifyContent: 'center',
+        marginTop: 50,
       },
       image: {
         width: '70%',
