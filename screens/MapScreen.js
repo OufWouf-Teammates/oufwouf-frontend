@@ -90,14 +90,21 @@ export default function MapScreen({ navigation }) {
   }
 
   return (
+    <View style={styles.container}>
     <SafeAreaProvider>
     <StatusBar
   hidden={false} 
-  barStyle="light-content" 
+  barStyle="dark-content" 
   backgroundColor="transparent" 
 />
-    <View style={styles.container}>
-    <MapView
+<View style={styles.container1}>
+<View  style={styles.searchBar}><SearchBar gotToLatLng={gotToLatLng} createRedPoint={createRedPoint}/></View>
+<TouchableOpacity style={styles.button} onPress={centerOnUser}>
+        <View style={styles.buttonIcon}>
+          <View style={styles.buttonIconCore} />
+        </View>
+</TouchableOpacity>
+<MapView
   style={styles.map}
   initialRegion={{
     latitude: location.coords.latitude,
@@ -136,11 +143,11 @@ export default function MapScreen({ navigation }) {
           <View style={styles.markerCore} />
         </View>
       </Marker>}
-      {redMarker && (
+      {
           <Marker
             coordinate={{
-              latitude: redMarker.lat,
-              longitude: redMarker.lng,
+              latitude: redMarker?.lat,
+              longitude: redMarker?.lng,
             }}
             anchor={{ x: 0.5, y: 0.5 }}
           >
@@ -148,20 +155,14 @@ export default function MapScreen({ navigation }) {
               <View style={styles.redMarkerCore} />
             </View>
           </Marker>
-        )}
-        <View  style={styles.searchBar}><SearchBar gotToLatLng={gotToLatLng} createRedPoint={createRedPoint}/></View>
-
-<TouchableOpacity style={styles.button} onPress={centerOnUser}>
-        <View style={styles.buttonIcon}>
-          <View style={styles.buttonIconCore} />
-        </View>
-      </TouchableOpacity>
-
-      <TabBar/>
+        }
       </MapView>
-
+</View>
+      <View style={styles.container2}>
+      <TabBar/>
     </View>
     </SafeAreaProvider>
+      </View>
   );
 }
 
@@ -169,8 +170,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  container1: {
+    flex: 0.87,
+  },
+  container2: {
+    flex: 0.13,
+  },
   map: {
     flex: 1,
+    position:"absolute",
+    top:0,
+    left:0,
+    width:"100%",
+    height:height,
   },
   marker: {
     height: 24,
@@ -187,8 +199,10 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 122, 255, 1)", // Point bleu central
   },
   searchBar: {
-    flex:1,
-    paddingTop:70,
+    position:"absolute",
+    marginTop:70,
+    width:"100%",
+    zIndex:1,
     justifyContent:"center",
     alignItems:"center",
   },
@@ -199,7 +213,8 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25, // Bouton circulaire
     position: "absolute",
-    bottom: 120,
+    zIndex:1,
+    bottom: 40,
     left: 15,
     alignItems: "center",
     justifyContent: "center",

@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: -20, // Décale à gauche pour élargir la courbure
         right: -20, // Décale à droite pour élargir la courbure
-        height: "26%", // Ajustez la hauteur pour jouer avec la courbure
+        height: "100%", // Ajustez la hauteur pour jouer avec la courbure
         backgroundColor: '#FFFFFF',
         borderTopLeftRadius: 150, // Rayon plus grand pour arrondir davantage
         borderTopRightRadius: 150,
