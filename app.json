@@ -4,11 +4,11 @@
     "slug": "oufwouf",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo_oufwouf_couleur.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/logo_oufwouf_couleur.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -23,14 +23,26 @@
           }
         ],
         "NSCameraUsageDescription": "Cette application a besoin d'accéder à votre woof caméra.",
-        "NSPhotoLibraryUsageDescription": "Cette application a besoin d'accéder à votre woof gallery."
+        "NSPhotoLibraryUsageDescription": "Cette application a besoin d'accéder à votre woof gallery.",
+      "supportsTablet": true,
+      "config": {
+        "googleMapsApiKey": "AIzaSyBSQzGQfgR1VmOHpO0CY_S1tadFwViMQc8"
+      }
       }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
+<<<<<<< HEAD
         "permissions": ["ACCESS_FINE_LOCATION", "ACCESS_COARSE_LOCATION"],
+        "backgroundColor": "#ffffff",
+        "supportsTablet": true,
+        "config": {
+          "googleMapsApiKey": "AIzaSyBSQzGQfgR1VmOHpO0CY_S1tadFwViMQc8"
+        }
+=======
         "backgroundColor": "#ffffff"
+>>>>>>> b54e7166c42b76809a20cae3039e94b8431a5114
       },
       "permissions": [
         "CAMERA",
