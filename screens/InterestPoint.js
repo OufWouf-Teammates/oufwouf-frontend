@@ -6,44 +6,65 @@ import {
   Image,
   TouchableOpacity,
   Text,
+  ImageBackground
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
+import {
+  useFonts,
+  Lexend_400Regular,
+  Lexend_700Bold,
+} from "@expo-google-fonts/lexend"
+import AppLoading from "expo-app-loading"
 export default function InterestPoint({ navigation }) {
+
+    //Nécessaire pour la configuration des fonts
+    const [fontsLoaded] = useFonts({
+      Lexend_400Regular,
+      Lexend_700Bold,
+    })
+    if (!fontsLoaded) {
+      return <AppLoading />
+    }
+
   // Icônes de patte
   const paw = [];
   for (let i = 0; i < 5; i++) {
-    paw.push(<FontAwesome key={i} name="paw" size={25} color="#ec6e5b" />);
+    paw.push(<FontAwesome key={i} name="paw" size={20} color="#0639DB" />);
   }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <ImageBackground
+    source={require("../assets/BG_App.png")}
+    style={styles.container}
+    >
+    <View style={styles.container}>
       {/* Image du profil */}
       <View>
-        <FontAwesome
-          name="arrow"
-          size={25}
-          color="#ec6e5b"
-        />
         <Image
-          source={{
-            uri: 'https://images.app.goo.gl/kTi6B8MgeRTUv3oRA',
-          }}
+          source={require('../assets/dog_example.webp')}
           style={styles.profilPic}
+        />
+        <FontAwesome
+          name="arrow-left"
+          size={25}
+          color="#0639DB"
+          style={styles.iconBack}
+          onPress={() => navigation.goBack()}
         />
       </View>
 
       {/* Informations */}
       <View style={styles.infoContainer}>
         {/* Titre */}
-        <Text style={styles.title}>Docteur La Peluche</Text>
+        <View style={styles.infoTitre}>
+          <Text style={styles.title}>Docteur La Peluche</Text>
 
-        {/* Ouverture */}
-        <View style={styles.openContainer}>
-          <Text style={styles.open}>OUVERT</Text>
-          <FontAwesome name="bookmark" size={25} color="#ec6e5b" />
+          {/* Ouverture */}
+          <View style={styles.openContainer}>
+            <Text style={styles.open}>OUVERT</Text>
+            <FontAwesome name="bookmark" size={35} color="#EAD32A" />
+          </View>
         </View>
-
         {/* Note */}
         <View style={styles.noteAverage}>
           {paw}
@@ -56,13 +77,13 @@ export default function InterestPoint({ navigation }) {
 
           {/* Téléphone */}
           <View style={styles.row}>
-            <FontAwesome name="phone" size={15} color="#ec6e5b" />
+            <FontAwesome name="phone" size={15} color="#EAD32A" />
             <Text style={styles.phone}>06 12 15 23 69</Text>
           </View>
 
           {/* Horaires */}
           <View style={styles.row}>
-            <FontAwesome name="clock-o" size={15} color="#ec6e5b" />
+            <FontAwesome name="clock-o" size={15} color="#EAD32A" />
             <Text style={styles.text}>Horaires d'ouverture</Text>
           </View>
           <Text style={styles.hours}>Aujourd'hui : 8h30 - 20h30</Text>
@@ -76,34 +97,42 @@ export default function InterestPoint({ navigation }) {
           </TouchableOpacity>
         </View>
       </View>
-    </SafeAreaView>
+    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    backgroundColor: '#fff',
   },
   profilPic: {
     width: '100%',
-    height: 200,
+    height: 300,
     marginBottom: 10,
+
+  },
+  iconBack: {
+    padding: 20,
+    position: 'absolute',
+    top: 40
   },
   infoContainer: {
-    padding: 10,
+    padding: 20,
   },
   title: {
-    fontSize: 24,
+    fontSize: 42,
     fontWeight: 'bold',
     marginBottom: 10,
     color: '#0639DB',
   },
   openContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginVertical: 20,
+  },
+  infoTitre: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
   open: {
     fontSize: 18,
@@ -112,7 +141,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: '#0639DB',
     borderWidth: 1,
-    paddingHorizontal: 5,
+    marginBottom: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
   },
   noteAverage: {
     flexDirection: 'row',
@@ -128,7 +159,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   adresse: {
-    fontSize: 16,
+    fontSize: 20,
     marginBottom: 10,
   },
   row: {
@@ -138,12 +169,12 @@ const styles = StyleSheet.create({
   },
   phone: {
     marginLeft: 10,
-    fontSize: 16,
+    fontSize: 20,
     color: '#4D4D4D',
   },
   text: {
     marginLeft: 10,
-    fontSize: 16,
+    fontSize: 20,
   },
   hours: {
     fontSize: 14,
@@ -151,14 +182,17 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   reserve: {
-    backgroundColor: '#ec6e5b',
+    backgroundColor: '#0639DB',
+    width: '70%',
     borderRadius: 5,
     padding: 10,
+    marginTop: 30,
     alignItems: 'center',
+    alignSelf: 'center',
   },
   reserveText: {
     color: 'white',
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 22
   },
 });
