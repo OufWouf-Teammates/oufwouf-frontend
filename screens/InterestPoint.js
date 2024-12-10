@@ -83,10 +83,12 @@ export default function InterestPoint({ navigation, route }) {
       <View style={styles.container}>
         {/* Image du profil */}
         <View>
-          <Image
-            source={{ uri: placeData.photos ? placeData.photos[0].photo_reference : 'default-image-url' }}
-            style={styles.profilPic}
-          />
+        <Image
+          source={{
+            uri: placeData.photos ? placeData.photos[0].photo_reference : require('../assets/dog_example.webp')
+          }}
+          style={styles.profilPic}
+        />
           <FontAwesome
             name="arrow-left"
             size={25}
