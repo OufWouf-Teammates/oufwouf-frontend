@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text,TextInput,StatusBar,Image,Alert,Linking,Modal,Platform } from 'react-native';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
-
-  provider={PROVIDER_GOOGLE}
-
 import MapView, { Marker, Circle,  PROVIDER_GOOGLE } from 'react-native-maps';
 import * as Location from 'expo-location';
 
@@ -169,6 +166,9 @@ export default function MapScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   map: {
     flex: 1,
   },
