@@ -4,10 +4,14 @@ import { CameraView, Camera, FlashMode } from "expo-camera";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 export default function TakePictureScreen({ navigation }) {
+  const apiPicture = `${process.env.EXPO_PUBLIC_BACKEND_URL}personalPicture`;
+  const userToken = "6vznLSAKeYGpHSgEy74PMwrfuSNWGFpU";
+
   const [hasPermission, setHasPermission] = useState(false);
   const [flashStatus, setflashStatus] = useState("off");
   const [facing, setFacing] = useState("back");
   const cameraRef = useRef(null);
+
   useEffect(() => {
     (async () => {
       const result = await Camera.requestCameraPermissionsAsync();
@@ -30,8 +34,8 @@ export default function TakePictureScreen({ navigation }) {
           "data",
           JSON.stringify({
             description: data.description,
-            latitude: data.latitude,
-            longitude: data.longitude,
+            latitude: 3000,
+            longitude: 456677,
           })
         );
 
@@ -41,10 +45,19 @@ export default function TakePictureScreen({ navigation }) {
           type: "image/jpeg",
         });
 
-        await fetch("http://192.168.100.105:3000/personalPic", {
+        const response = await fetch(apiPicture, {
           method: "POST",
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+
           body: formData,
         });
+
+        const responseData = await response.json()
+        console.log(responseData)
+      } else {
+        console.log("pas de nouvelle photo")
       }
     } catch {
       console.error(error.message);

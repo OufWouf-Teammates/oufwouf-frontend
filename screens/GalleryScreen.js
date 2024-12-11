@@ -18,23 +18,12 @@ import {
 } from "@expo-google-fonts/lexend";
 import AppLoading from "expo-app-loading";
 
-
-import { useEffect, useState } from "react"
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { useEffect, useState } from "react";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 function Gallery() {
-
-  // Nécessaire pour la configuration des fonts
-  const [fontsLoaded] = useFonts({
-    Lexend_400Regular,
-    Lexend_700Bold,
-  });
-  if (!fontsLoaded) {
-    return <AppLoading />;
-  }
-  
   const apiPicture = `${process.env.EXPO_PUBLIC_BACKEND_URL}personalPicture`;
   // const userToken = useSelector((state) => state.value.token);
-  const userToken = "HYG44QCUa6YAlUavvkHQYqBGlAVJUNfp";
+  const userToken = "6vznLSAKeYGpHSgEy74PMwrfuSNWGFpU";
 
   const [galerie, setGalerie] = useState([]);
 
@@ -61,8 +50,6 @@ function Gallery() {
   //   },
   // ])
 
-
-
   useEffect(() => {
     const fetchGalerie = async () => {
       try {
@@ -83,13 +70,21 @@ function Gallery() {
     fetchGalerie();
   }, []);
 
+  // Nécessaire pour la configuration des fonts
+  const [fontsLoaded] = useFonts({
+    Lexend_400Regular,
+    Lexend_700Bold,
+  });
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
   return (
     <ImageBackground
       source={require("../assets/BG_App.png")}
       style={styles.container}
     >
       <SafeAreaView style={styles.content}>
-          <FontAwesome
+        <FontAwesome
           name="arrow-left"
           size={25}
           color="#0639DB"
@@ -105,7 +100,7 @@ function Gallery() {
                   style={styles.image}
                   resizeMode="cover"
                 />
-                <View  style={styles.cardInfo}>
+                <View style={styles.cardInfo}>
                   <TouchableOpacity>
                     <Text style={styles.textFont}>{e.city}</Text>
                   </TouchableOpacity>
@@ -122,11 +117,11 @@ function Gallery() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },  
+    alignItems: "center",
+    justifyContent: "center",
+  },
   iconBack: {
-    marginBottom: 50
+    marginBottom: 50,
   },
   image: {
     width: 350,
@@ -145,8 +140,7 @@ const styles = StyleSheet.create({
   textFont: {
     fontSize: 18,
     fontFamily: "Lexend_400Regular",
-  }
-})
-
+  },
+});
 
 export default Gallery;
