@@ -88,8 +88,8 @@ export default function ConnectionScreen({ navigation }) {
           if (data.result) {
             dispatch(
               connectUser({
-                email: data.result.email,
-                token: data.result.token,
+                email: data.data.email,
+                token: data.data.token,
               })
             )
             navigation.navigate("Map")
