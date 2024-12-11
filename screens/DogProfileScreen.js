@@ -7,6 +7,7 @@ import {
   Image,
   TextInput,
 } from "react-native"
+import FontAwesome from "react-native-vector-icons/FontAwesome"
 
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
@@ -42,17 +43,20 @@ export default function DogProfileScreen({ navigation }) {
       style={styles.container}
     >
       <SafeAreaView style={styles.innerContainer}>
-        <Text style={styles.arrow} onPress={() => navigation.goBack()}>
-          arrow
-        </Text>
+        <FontAwesome
+          name="arrow-left"
+          size={30}
+          color="blue"
+          style={styles.arrow}
+          onPress={() => navigation.goBack()}
+        />
         <Image
           source={{
             uri: dog.uri,
           }}
           style={styles.dogPic}
-          resizeMode="stretch"
         />
-        <Text>{dog.name}</Text>
+        <Text style={styles.name}>{dog.name}</Text>
         {/* Infos du carnet */}
         <View style={styles.infos}>
           {/* ID */}
@@ -156,5 +160,10 @@ const styles = StyleSheet.create({
   },
   vaccins: {
     gap: 15,
+  },
+  name: {
+    fontWeight: "bold",
+    fontSize: 30,
+    marginTop: -50,
   },
 })
