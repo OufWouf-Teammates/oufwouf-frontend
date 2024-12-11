@@ -161,9 +161,9 @@ export default function MapScreen({ navigation }) {
             // Traite les données reçues
             const res = data.data.elements.map((element) => {
               return {
-                name: element?.tags?.name || "Inconnu", // Assure une valeur par défaut
-                latitude: element?.lat,
-                longitude: element?.lon,
+                name: element?.tags?.name || "Inconnu", // Nom par défaut si non défini
+                latitude: element?.lat ?? 0,           // Valeur par défaut pour la latitude
+                longitude: element?.lon ?? 0,         // Valeur par défaut pour la longitude
               };
             });
         

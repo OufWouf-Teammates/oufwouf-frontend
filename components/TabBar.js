@@ -16,7 +16,10 @@ export default function TabBar() {
           </View>
           <View style={styles.containerOneButtonTop}>
             <View>
-              <TouchableOpacity style={styles.button} onPress={() => navigation?.navigate("Dog Profile")}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => navigation?.navigate("TakePicture")}
+              >
                 <FontAwesome name="paw" size={30} color="#F5F5F5" />
               </TouchableOpacity>
             </View>
