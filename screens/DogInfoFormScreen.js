@@ -75,7 +75,7 @@ const DogInfoFormScreen = () => {
   // user token //
 
   // userToken = useSelector((state) => state.value.token);
-  userToken = 'TfkTySvjjNbWqZGn9v9pX0OdpUuqR7tQ'
+  userToken = "TfkTySvjjNbWqZGn9v9pX0OdpUuqR7tQ";
   // permissions pour utiser l'appareil photo et la galerie //
 
   useEffect(() => {
@@ -281,25 +281,26 @@ const DogInfoFormScreen = () => {
           personality: personnality,
         })
       );
-
-      if(data.imageUri){
-        formData.append('photoFromFront', {
+      if (data.imageUri) {
+        formData.append("photoFromFront", {
           uri: data.imageUri,
-          type: 'image/jpeg',
-          name:'dog_image.jpg'
-        })
+          type: "image/jpeg",
+          name: "dog_image.jpg",
+        });
       }
-
+      console.log(formData);
+      
       const response = await fetch(apiNewDog, {
         method: "POST",
         headers: {
-          'Authorization' : `Bearer ${userToken}`,
+          Authorization: `Bearer ${userToken}`,
         },
-
-        body: formData
+        
+        body: formData,
       });
       const responseData = await response.json();
-
+      console.log(responseData);
+      
       if (responseData.result) {
         const vaccinResponse = await fetch(apiNewVaccins, {
           method: "POST",
@@ -504,6 +505,7 @@ const DogInfoFormScreen = () => {
                 selectedValue={selectedRappel}
                 onValueChange={(itemValue) => setSelectedRappel(itemValue)}
                 style={styles.picker}
+                mode={Platform.OS === 'ios' ? 'dropdown' : 'dialog'}
               >
                 <Picker.Item label="Non" value="Non" />
                 <Picker.Item label="Oui" value="Oui" />
@@ -646,8 +648,8 @@ const DogInfoFormScreen = () => {
                 </View>
               )}
             </View>
-            <TouchableOpacity onPress={() => handleSubmit()}>
-              <Text> Soumettre </Text>
+            <TouchableOpacity style={styles.submit} onPress={() => handleSubmit()}>
+              <Text style={styles.textSubmit}> Soumettre </Text>
             </TouchableOpacity>
           </SafeAreaView>
         </KeyboardAvoidingView>
@@ -674,23 +676,25 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   text: {
+    color: '#263238',
     fontFamily: "Lexend_400Regular",
     fontSize: 16,
+    marginBottom: 10,
   },
+  
   input: {
     height: 50,
     borderColor: "#4D4D4D",
     backgroundColor: "#4D4D4D",
     borderWidth: 1,
-    marginBottom: 15,
+    marginBottom: 20,
     paddingLeft: 10,
-    borderRadius: 5,
-    opacity: 0.6,
+    borderRadius: 20,
+    opacity: 0.4,
     color: "black",
     fontSize: 16,
     width: "100%",
     borderBottomWidth: 1,
-    borderBottomColor: "#F5F5F5",
     fontFamily: "Lexend_400Regular",
   },
   inputFocused: {
@@ -720,7 +724,7 @@ const styles = StyleSheet.create({
   },
   picker: {
     height: 60,
-    marginBottom: 15,
+    paddingBottom: 200,
   },
   loading: {
     fontFamily: "Lexend_400Regular",
@@ -732,11 +736,28 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: "#eee",
+    marginBottom: 20,
   },
   suggestionText: {
+    color: '#9E9E9E',
     fontFamily: "Lexend_400Regular",
     fontSize: 16,
   },
+  submit: {
+    height: 50,
+    width: 200,
+    borderColor: "#0639DB",
+    backgroundColor: "#0639DB",
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center'
+   
+  },
+  textSubmit:{
+    color: "#F5F5F5",
+    fontSize: 16,
+    fontFamily: "Lexend_400Regular",
+  }
 });
 
 export default () => (
