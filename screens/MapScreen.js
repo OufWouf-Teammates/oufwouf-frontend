@@ -164,6 +164,7 @@ export default function MapScreen({ navigation }) {
                 name: element?.tags?.name || "Inconnu", // Nom par défaut si non défini
                 latitude: element?.lat ?? 0,           // Valeur par défaut pour la latitude
                 longitude: element?.lon ?? 0,         // Valeur par défaut pour la longitude
+                type: endpoint,
               };
             });
         
@@ -174,6 +175,10 @@ export default function MapScreen({ navigation }) {
         .catch((error) => console.error("Erreur lors de la requête :", error));
     }
   };
+  const icons = {
+    boutiques: require('../assets/os.png'),
+    veterinaires: require('../assets/veterinaire.png')
+  }
   const onMarkerSelect = (markerData) =>{
     navigation.navigate("Interest", {markerData})
   }
@@ -183,25 +188,34 @@ export default function MapScreen({ navigation }) {
       key={i}
       coordinate={{ latitude: data.latitude, longitude: data.longitude }}
     >
+      <Image
+        source={icons[data.type]}
+        style={{width: 28, height: 28}}
+      />
     <Callout
         tooltip={false} // Désactive la bulle de tooltip par défaut
         alphaHitTest={false} // Active ou désactive les clics sur les zones transparentes
         onPress={()=>onMarkerSelect(data)}
       >
        <View 
-          style={{ 
+          style={{
+            maxWidth: '100%', 
+            minWidth: 200,
+            maxHeight: 100,
             padding: 10, 
             justifyContent: 'center', // Centre verticalement
             alignItems: 'center',    // Centre horizontalement
           }}
         >
-          <Text 
-            style={{
-              width: '100%', 
-              textAlign: 'center',
-              fontFamily: "Lexend_400Regular",
-              fontSize: 16,
-            }}>{data.name}</Text>
+          <View style={{width: '100%', justifyContent: 'center', alignItems: 'center', }}>
+            <Text 
+              style={{
+                width: '90%', 
+                textAlign: 'center',
+                fontFamily: "Lexend_400Regular",
+                fontSize: 16,
+              }}>{data.name}</Text>   
+            </View>
           <Text 
             style={{
               margin: 5,
