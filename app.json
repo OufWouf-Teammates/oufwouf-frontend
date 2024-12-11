@@ -28,7 +28,9 @@
       "config": {
         "googleMapsApiKey": "AIzaSyBSQzGQfgR1VmOHpO0CY_S1tadFwViMQc8"
       }
-      }
+      },
+      "bundleIdentifier": "com.lacapsule.oufwouf",
+      "usesAppleSignIn": true
     },
     "android": {
       "adaptiveIcon": {

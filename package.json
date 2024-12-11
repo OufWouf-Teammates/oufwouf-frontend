@@ -25,6 +25,7 @@
     "dotenv": "^16.4.7",
     "expo": "~52.0.7",
     "expo-app-loading": "^2.1.1",
+    "expo-apple-authentication": "^7.1.2",
     "expo-auth-session": "^6.0.1",
     "expo-camera": "^16.0.9",
     "expo-checkbox": "~4.0.0",

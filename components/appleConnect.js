@@ -1,79 +1,124 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import AppleAuthentication from '@invertase/react-native-apple-authentication';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import * as AppleAuthentication from 'expo-apple-authentication';
+import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from "react-redux"
+import { connectUser } from "../reducers/user"
 
 const AppleConnect = (props) => {
+  const dispatch = useDispatch();
+  const navigation = props.navigation || useNavigation();
+
   const handleAppleLogin = async () => {
-
-    /*
-    try {
-      // Demander l'authentification via Apple
-      const appleAuthRequestResponse = await AppleAuthentication.signInAsync({
-        requestedScopes: [
-          AppleAuthentication.Scope.FULL_NAME,
-          AppleAuthentication.Scope.EMAIL,
-        ],
-      });
-
-      // Récupérer le token d'authentification
-      const { identityToken, fullName, email } = appleAuthRequestResponse;
-
-      if (identityToken) {
-        // Envoyer le token au serveur pour validation
-        console.log('Apple Identity Token:', identityToken);
-        console.log('User Full Name:', fullName);
-        console.log('User Email:', email);
-
-        // Vous pouvez maintenant envoyer ce token au serveur pour validation
-        fetch('https://votre-api.com/auth/apple', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ token: identityToken }),
-        })
-        .then(response => response.json())
-        .then(data => {
-          if (data.result) {
-            // L'utilisateur a été authentifié avec succès
-            console.log('Authentification réussie', data);
-          } else {
-            console.log('Erreur d\'authentification', data);
-          }
-        })
-        .catch(error => {
-          console.error('Erreur lors de l\'authentification via Apple', error);
-        });
-      }
-    } catch (error) {
-      console.error('Erreur lors de la connexion avec Apple', error);
-    }
-      */
-
     if(props.connectToAccount) {
-      props.connectToAccount({email: "admin", password: "admin"});
+
+        try {
+          const credential = await AppleAuthentication.signInAsync({
+            requestedScopes: [
+              AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+              AppleAuthentication.AppleAuthenticationScope.EMAIL,
+            ],
+          });
+    
+
+          fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}users/api/auth/apple`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(credential),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data?.result) {
+                dispatch(
+                  connectUser({
+                    email: data.result.email,
+                    token: data.result.token,
+                  })
+                )
+                navigation.navigate("Map")
+              } else {
+                alert(data.error)
+              }
+            })
+            .catch((error) => console.error(error))
+
+          //props.connectToAccount({email: "admin", password: "admin"});
+        } catch (error) {
+          if (error.code === 'ERR_CANCELED') {
+            console.error('Apple Sign-In annulé.');
+          } else {
+            console.error('Erreur Apple Sign-In:', error);
+          }
+        }
+
+    
     } else {
       if(props.signUpToAccount) {
-        const random = Math.random();
-        props.signUpToAccount({email: "adminInsc"+random+"@gmail.com", password: "adminInsc"});
+
+        try {
+          const credential = await AppleAuthentication.signInAsync({
+            requestedScopes: [
+              AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+              AppleAuthentication.AppleAuthenticationScope.EMAIL,
+            ],
+          });
+    
+
+          fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}users/api/auth/apple`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(credential),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data?.result) {
+                dispatch(
+                  connectUser({
+                    email: data.result.email,
+                    token: data.result.token,
+                  })
+                )
+                navigation.navigate("Map")
+              } else {
+                alert(data.error)
+              }
+            })
+            .catch((error) => console.error(error))
+
+          //props.connectToAccount({email: "admin", password: "admin"});
+        } catch (error) {
+          if (error.code === 'ERR_CANCELED') {
+            console.error('Apple Sign-Up annulé.');
+          } else {
+            console.error('Erreur Apple Sign-Up:', error);
+          }
+        }
+
+
+
+
+
+
+
       }
     }
   };
 
   return (
     <View style={styles.containerHere}>
-      {/* Créer un bouton personnalisé avec l'icône Apple */}
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handleAppleLogin}
-        activeOpacity={0.8}
-      >
-        {/* Icône Apple à gauche */}
-        <FontAwesome name="apple" size={20} color="#fff" style={styles.icon} />
-        <Text style={styles.buttonText}>{props.title}</Text>
-      </TouchableOpacity>
-    </View>
+      {AppleAuthentication.isAvailableAsync() && (
+            <TouchableOpacity
+              style={styles.button}
+              onPress={handleAppleLogin}
+              activeOpacity={0.8}
+            >
+              {/* Icône Apple à gauche */}
+              <FontAwesome name="apple" size={20} color="#fff" style={styles.icon} />
+              <Text style={styles.buttonText}>{props.title}</Text>
+            </TouchableOpacity>
+      )}
+          </View>
   );
 };
 
@@ -81,7 +126,7 @@ const styles = StyleSheet.create({
   containerHere: {
     alignItems: 'center',
     marginTop: 20,
-    width:"100%",
+    width:"80%",
   },
   button: {
     backgroundColor: 'transparent', 
@@ -93,7 +138,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     flexDirection: 'row',
     alignItems: 'center',  // Centrer verticalement l'icône et le texte
-    width:"80%",
+    width:"100%",
   },
   icon: {
     marginRight: 10, 
