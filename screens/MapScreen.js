@@ -398,7 +398,7 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     position: "absolute",
-    marginTop: 70,
+    marginTop: 65,
     width: "100%",
     zIndex: 1,
     justifyContent: "center",
@@ -510,8 +510,9 @@ const styles = StyleSheet.create({
   },
   ScrollView: {
     zIndex: 1,
-    width: "100%",
+    width: "90%",
     marginTop: 120,
+    alignSelf: 'center',
   },
   filters: {
     display: "flex",
@@ -521,8 +522,8 @@ const styles = StyleSheet.create({
   },
   buttonFilter: {
     paddingVertical: 5,
-    paddingHorizontal: 10,
-    marginHorizontal: 10,
+    paddingHorizontal: 5,
+    marginRight: 10,
     borderRadius: 25,
   },
   textButtonFilter: {

@@ -2,12 +2,27 @@ import React, { useState } from "react";
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, FlatList } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {
+  useFonts,
+  Lexend_400Regular,
+  Lexend_700Bold,
+} from "@expo-google-fonts/lexend"
+import AppLoading from "expo-app-loading"
 
 const GOOGLE_MAP_PLATEFORM_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAP_PLATEFORM_API_KEY;
 
 const SearchBar = ({gotToLatLng, createRedPoint}) => {
     const [query, setQuery] = useState("");
     const [results, setResults] = useState([]);
+
+    //Nécessaire pour la configuration des fonts
+  const [fontsLoaded] = useFonts({
+    Lexend_400Regular,
+    Lexend_700Bold,
+  })
+  if (!fontsLoaded) {
+    return <AppLoading />
+  }
 
     const choseAddress = async (addressDetails) => {
         const placeId = addressDetails?.place_id;
@@ -84,7 +99,7 @@ const SearchBar = ({gotToLatLng, createRedPoint}) => {
         style={styles.button}
         onPress={() => gotToAddress()}
       >
-        <Text style={styles.buttonText}>Aller</Text>
+        <FontAwesome name="search" size={16} color="#0639DB" style={styles.icon} />
       </TouchableOpacity>
     </View>
   );
@@ -94,13 +109,17 @@ const styles = StyleSheet.create({
     search: {
         width: "90%", // Prenez tout l'espace disponible
         flex:1,
+        justifyContent: 'center',
+        alignContent: 'center',
       },
   input: {
-    width: "100%",
-    padding: 10,
-    borderWidth: 2,
-    borderRadius: 20,
-    borderColor:"#CFD0D3",
+    width: "87%",
+    fontSize: 16,
+    height: 45,
+    paddingHorizontal: 10,
+    borderRadius: 25,
+    color:"#0639DB",
+    fontFamily: "Lexend_400Regular",
     backgroundColor: "#fff",
     elevation: 2, // Équivaut à box-shadow en React Native
   },
@@ -126,25 +145,24 @@ const styles = StyleSheet.create({
     backgroundColor: "#ddd",
   },
   button: {
-    backgroundColor: "#101626",
-    borderWidth: 1,
-    paddingVertical: 12.5,
-    paddingHorizontal: 20,
-    borderRadius: 20,
+    backgroundColor: "#FFF",
+    height: 45,
+    width: '10%',
+    borderRadius: 25,
     position: "absolute",
+    display: 'flex',
+    justifyContent: 'center',
+    alignContent: 'center',
     right: 0,
     elevation: 2, // Équivaut à box-shadow en React Native
-  },
-  buttonText: {
-    color: "#fff", // Couleur du texte
-    fontSize: 12, // Taille du texte
-    textAlign: "center", // Centre horizontalement le texte
-    fontWeight:"bold",
   },
   buttonHover: {
     transform: [{ scale: 1.1 }],
     backgroundColor: "blue",
   },
+  icon: {
+    alignSelf: 'center',
+  }
 });
 
 export default SearchBar;
