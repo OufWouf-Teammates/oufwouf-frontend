@@ -1,43 +1,40 @@
 import React from 'react';
 import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
-import { useAuthRequest, makeRedirectUri } from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
+import * as Google from 'expo-auth-session/providers/google';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
+import { makeRedirectUri } from 'expo-auth-session';
+
+const redirectUri = makeRedirectUri({
+  useProxy: true, // Utilise l'URL proxy d'Expo
+});
 // Permet à Expo d'utiliser les navigateurs web
 WebBrowser.maybeCompleteAuthSession();
 
 const GoogleSignInButton = (props) => {
   
-  /*
-  // Configuration de Google OAuth
-  const [request, response, promptAsync] = useAuthRequest(
-    {
-      clientId: process.env.ID_IOS_GOOGLE_SIGNIN,
-      redirectUri: makeRedirectUri({
-        useProxy: true,
-      }),
-      scopes: ['openid', 'email', 'profile'], // Scopes pour récupérer des informations utilisateur
-    },
-    {
-      authorizationEndpoint: 'https://accounts.google.com/o/oauth2/v2/auth',
-      tokenEndpoint: 'https://oauth2.googleapis.com/token',
-      revocationEndpoint: 'https://oauth2.googleapis.com/revoke',
-    }
-  );
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    clientId: '940302423711-diep1ijqc9d94j1pc6868kjeic5234n1.apps.googleusercontent.com',
+    redirectUri: redirectUri,
+  });
 
-  // Gestion des réponses après Google Sign-In
+  // Gestion des réponses de l'authentification
   React.useEffect(() => {
     if (response?.type === 'success') {
-      //const { authentication } = response;
-      console.log(response);
-      // Envoyer le token à votre backend pour une authentification sécurisée
+      const { authentication } = response;
+      Alert.alert('Connecté avec succès', JSON.stringify(authentication));
+      // Vous pouvez utiliser l'objet "authentication" pour récupérer un token ou d'autres données.
     }
   }, [response]);
 
-  */
-
   const clickOnConnect = () => {
+
+
+
+
+
+    
     if(props.connectToAccount) {
       props.connectToAccount({email: "admin", password: "admin"});
     } else {
@@ -52,7 +49,12 @@ const GoogleSignInButton = (props) => {
   return (
     <View style={styles.container}>
    <TouchableOpacity
-      onPress={() => clickOnConnect()}
+      onPress={() => {
+        if (request) {
+          promptAsync();
+        } else {
+          Alert.alert('Erreur', 'La demande de connexion Google n’est pas prête.');
+        }}}
       style={styles.button}
       activeOpacity={0.8}
     >

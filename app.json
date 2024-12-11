@@ -20,14 +20,19 @@
             "CFBundleURLSchemes": [
               "com.googleusercontent.apps.940302423711-jmue55vlpv1kait48ubgarif7g3e0ml9"
             ]
+          },
+          {
+            "CFBundleURLSchemes": [
+              "com.googleusercontent.apps.940302423711-jmue55vlpv1kait48ubgarif7g3e0ml9"
+            ]
           }
         ],
         "NSCameraUsageDescription": "Cette application a besoin d'accéder à votre woof caméra.",
         "NSPhotoLibraryUsageDescription": "Cette application a besoin d'accéder à votre woof gallery.",
-      "supportsTablet": true,
-      "config": {
-        "googleMapsApiKey": "AIzaSyBSQzGQfgR1VmOHpO0CY_S1tadFwViMQc8"
-      }
+        "supportsTablet": true,
+        "config": {
+          "googleMapsApiKey": "AIzaSyBSQzGQfgR1VmOHpO0CY_S1tadFwViMQc8"
+        }
       },
       "bundleIdentifier": "com.lacapsule.oufwouf",
       "usesAppleSignIn": true
@@ -46,12 +51,30 @@
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE",
         "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION"
       ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-font"]
+    "plugins": [
+      "expo-font"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "523a502f-3e2e-4187-ade4-64537f6a76ca"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/523a502f-3e2e-4187-ade4-64537f6a76ca"
+    }
   }
 }
