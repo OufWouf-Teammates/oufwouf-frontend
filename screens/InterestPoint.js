@@ -32,11 +32,16 @@ export default function InterestPoint({ navigation, route }) {
     return <AppLoading />;
   }
 
-  // Icônes de patte
+
   const paw = [];
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 10; i++) {
+    let style = {};
+    if (i < props.voteAverage - 1) {
+      style = { 'color': '#B5C6FF' };
+    }
     paw.push(<FontAwesome key={i} name="paw" size={20} color="#0639DB" />);
   }
+
 
   useEffect(() => {
     const fetchPlaceData = async () => {
@@ -106,7 +111,9 @@ export default function InterestPoint({ navigation, route }) {
 
             {/* Ouverture */}
             <View style={styles.openContainer}>
-              <Text style={styles.open}>{placeData.opening_hours ? 'OUVERT' : 'FERMÉ'}</Text>
+            <Text style={placeData.opening_hours ? styles.open : styles.close}>
+              {placeData.opening_hours ? 'OUVERT' : 'FERMÉ'}
+            </Text>
               <FontAwesome name="bookmark" size={35} color="#EAD32A" />
             </View>
           </View>
@@ -193,6 +200,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     borderRadius: 5,
     borderColor: '#0639DB',
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  close: {
+    fontSize: 18,
+    color: '#FC4F52',
+    fontWeight: 'bold',
+    borderRadius: 5,
+    borderColor: '#FC4F52',
     borderWidth: 1,
     marginBottom: 10,
     paddingVertical: 10,
