@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView, ImageBackground, Image, TextInput, Platform, KeyboardAvoidingView, TouchableOpacity,} from 'react-native';
+import { ScrollView,StyleSheet, Text, View, SafeAreaView, ImageBackground, Image, TextInput, Platform, KeyboardAvoidingView, TouchableOpacity,} from 'react-native';
 import Checkbox from 'expo-checkbox';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useFonts, Lexend_400Regular, Lexend_700Bold,} from '@expo-google-fonts/lexend';
@@ -52,7 +52,8 @@ export default function SignUpScreen ({ navigation, route}) {
             style={styles.container}
         >
           <KeyboardAvoidingView style={styles.innerContainer} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back} activeOpacity={0.8}>
+          <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back} activeOpacity={0.8}>
                 <FontAwesome name='arrow-left' size={25} color='#0639DB'/>
             </TouchableOpacity>
             <Image style={styles.image} source={require('../assets/logo_oufwouf_couleur.png')} />
@@ -116,6 +117,7 @@ export default function SignUpScreen ({ navigation, route}) {
             </TouchableOpacity>
       <GoogleSignInButton title="Sign up with Google" signUpToAccount={signUpToAccount}/>
         <AppleSignInButton title="Sign up with Apple" signUpToAccount={signUpToAccount} />
+        </ScrollView>
           </KeyboardAvoidingView>
         </ImageBackground>
       );
@@ -123,15 +125,16 @@ export default function SignUpScreen ({ navigation, route}) {
     
     const styles = StyleSheet.create({
       container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
+        flexGrow: 1,
       },
       innerContainer: {
-        flex: 1,
-        width: '100%',
-        alignItems: 'center',
-        marginTop: 50,
+        flexGrow: 1,
+      },
+      scrollContainer: {
+        flexGrow: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 20,
       },
       image: {
         width: '70%',
@@ -141,7 +144,6 @@ export default function SignUpScreen ({ navigation, route}) {
         width: '80%',
         fontSize: 24, 
         fontFamily: 'Lexend_700Bold',
-        marginVertical: 10,
       },
       inputEmail: {
         color: '#F5F5F5',
