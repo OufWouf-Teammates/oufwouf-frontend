@@ -17,11 +17,14 @@ export default function DogProfileScreen({ navigation }) {
 
   useEffect(() => {
     ;(async () => {
-      const response = await fetch(process.env.EXPO_PUBLIC_BACKEND_URL, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_BACKEND_URL}dogs`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
 
       const data = await response.json()
 
@@ -31,7 +34,6 @@ export default function DogProfileScreen({ navigation }) {
 
   useEffect(() => {
     console.log(dog)
-    console.log(token)
   }, [dog])
 
   return (
@@ -55,7 +57,7 @@ export default function DogProfileScreen({ navigation }) {
         <View style={styles.infos}>
           {/* ID */}
           <View style={styles.infoBox}>
-            <Text>ID: {dog.id} </Text>
+            <Text>ID: {dog.ID} </Text>
           </View>
           {/* Race */}
           <View style={styles.infoBox}>
@@ -69,7 +71,7 @@ export default function DogProfileScreen({ navigation }) {
             </View>
             {/* Anniversaire */}
             <View style={styles.infoDemiBox}>
-              <Text> {dog.anniversaire} </Text>
+              <Text> {dog.birthday} </Text>
             </View>
           </View>
 
@@ -96,7 +98,7 @@ export default function DogProfileScreen({ navigation }) {
 
           {/* Infos général */}
           <View style={styles.infoBox}>
-            <Text>Informations général: {dog.infosGeneral}</Text>
+            <Text>Informations général: {dog.infos}</Text>
           </View>
           {/* Personnalité */}
           <View style={styles.infoBox}>
