@@ -15,6 +15,12 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
+import {
+  useFonts,
+  Lexend_400Regular,
+  Lexend_700Bold,
+} from "@expo-google-fonts/lexend";
+import AppLoading from "expo-app-loading";
 import { Calendar } from "react-native-calendars";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
@@ -23,6 +29,7 @@ import {
   ActionSheetProvider,
   useActionSheet,
 } from "@expo/react-native-action-sheet";
+import { useSelector } from "react-redux";
 
 const DogInfoFormScreen = () => {
   // lien des fetchs //
@@ -65,6 +72,10 @@ const DogInfoFormScreen = () => {
 
   const { showActionSheetWithOptions } = useActionSheet();
 
+  // user token //
+
+  // userToken = useSelector((state) => state.value.token);
+  userToken = "TfkTySvjjNbWqZGn9v9pX0OdpUuqR7tQ";
   // permissions pour utiser l'appareil photo et la galerie //
 
   useEffect(() => {
@@ -84,6 +95,13 @@ const DogInfoFormScreen = () => {
     askPermissions();
   }, []);
 
+  const [fontsLoaded] = useFonts({
+    Lexend_400Regular,
+    Lexend_700Bold,
+  });
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
   // fonction pour fetch les suggestions de vaccin et race //
 
   const fetchSuggestionsVaccins = async (query) => {
@@ -248,10 +266,11 @@ const DogInfoFormScreen = () => {
         return;
       }
 
-      const response = await fetch(apiNewDog, {
-        method: "POST",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify({
+      const formData = new FormData();
+
+      formData.append(
+        "data",
+        JSON.stringify({
           imageUri: imageUri,
           name: name,
           ID: dogId,
@@ -260,12 +279,30 @@ const DogInfoFormScreen = () => {
           birthday: selectedBirthday,
           infos: info,
           personality: personnality,
-        }),
+        })
+      );
+      if (data.imageUri) {
+        formData.append("photoFromFront", {
+          uri: data.imageUri,
+          type: "image/jpeg",
+          name: "dog_image.jpg",
+        });
+      }
+      console.log(formData);
+      
+      const response = await fetch(apiNewDog, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+        
+        body: formData,
       });
-      const data = await response.json();
-
-      if (data.result) {
-        const response = await fetch(apiNewVaccins, {
+      const responseData = await response.json();
+      console.log(responseData);
+      
+      if (responseData.result) {
+        const vaccinResponse = await fetch(apiNewVaccins, {
           method: "POST",
           headers: { "Content-type": "application/json" },
           body: JSON.stringify({
@@ -275,9 +312,9 @@ const DogInfoFormScreen = () => {
           }),
         });
 
-        const date = await response.json();
+        const data = await vaccinResponse.json();
 
-        if (date.result) {
+        if (data.result) {
           console.log("YAY new vaccins");
         } else {
           console.log("nauuur no new vaccins");
@@ -295,7 +332,7 @@ const DogInfoFormScreen = () => {
         setDogId("");
         setImageUri(null);
       } else {
-        console.log("Naaauur");
+        console.log("Naaauur no new dog");
       }
 
       console.log({
@@ -335,7 +372,9 @@ const DogInfoFormScreen = () => {
               />
             </TouchableOpacity>
             <View style={styles.form}>
-              <Text>Nom du chien*</Text>
+              <Text style={styles.text}>
+                Nom du chien<Text style={{ color: "red" }}>*</Text>
+              </Text>
               <TextInput
                 style={[
                   styles.input,
@@ -347,7 +386,9 @@ const DogInfoFormScreen = () => {
                 value={name}
               />
 
-              <Text>Race du chien*</Text>
+              <Text style={styles.text}>
+                Race du chien<Text style={{ color: "red" }}>*</Text>
+              </Text>
               <TextInput
                 style={[
                   styles.input,
@@ -374,7 +415,9 @@ const DogInfoFormScreen = () => {
                   )}
                 />
               )}
-              <Text>ID*</Text>
+              <Text style={styles.text}>
+                ID<Text style={{ color: "red" }}>*</Text>
+              </Text>
               <TextInput
                 style={[
                   styles.input,
@@ -385,7 +428,9 @@ const DogInfoFormScreen = () => {
                 onChangeText={(value) => setDogId(value)}
                 value={dogId}
               />
-              <Text>Sexe du chien*</Text>
+              <Text style={styles.text}>
+                Sexe du chien<Text style={{ color: "red" }}>*</Text>
+              </Text>
               <Picker
                 selectedValue={selectedGender}
                 onValueChange={(itemValue) => setSelectedGender(itemValue)}
@@ -395,7 +440,9 @@ const DogInfoFormScreen = () => {
                 <Picker.Item label="Femelle" value="femelle" />
               </Picker>
 
-              <Text>Date de naissance*</Text>
+              <Text style={styles.text}>
+                Date de naissance<Text style={{ color: "red" }}>*</Text>
+              </Text>
               <TextInput
                 style={[
                   styles.input,
@@ -411,7 +458,7 @@ const DogInfoFormScreen = () => {
                 }}
               />
 
-              <Text>Couleur de robe du chien</Text>
+              <Text style={styles.text}>Couleur de robe du chien</Text>
               <TextInput
                 style={[
                   styles.input,
@@ -423,7 +470,7 @@ const DogInfoFormScreen = () => {
                 value={robe}
               />
 
-              <Text>Vaccinations du chien</Text>
+              <Text style={styles.text}>Vaccinations du chien</Text>
               <TextInput
                 style={[
                   styles.input,
@@ -453,17 +500,18 @@ const DogInfoFormScreen = () => {
                 />
               )}
 
-              <Text>Rappel</Text>
+              <Text style={styles.text}>Rappel</Text>
               <Picker
                 selectedValue={selectedRappel}
                 onValueChange={(itemValue) => setSelectedRappel(itemValue)}
                 style={styles.picker}
+                mode={Platform.OS === 'ios' ? 'dropdown' : 'dialog'}
               >
                 <Picker.Item label="Non" value="Non" />
                 <Picker.Item label="Oui" value="Oui" />
               </Picker>
 
-              <Text>Date de vaccination</Text>
+              <Text style={styles.text}>Date de vaccination</Text>
               <TextInput
                 style={[
                   styles.input,
@@ -479,7 +527,7 @@ const DogInfoFormScreen = () => {
                 }}
               />
 
-              <Text>Information général </Text>
+              <Text style={styles.text}>Information général </Text>
               <TextInput
                 style={[
                   styles.input,
@@ -491,7 +539,7 @@ const DogInfoFormScreen = () => {
                 value={info}
               />
 
-              <Text>Traits de personalité</Text>
+              <Text style={styles.text}>Traits de personalité</Text>
               <TextInput
                 style={[
                   styles.input,
@@ -600,8 +648,8 @@ const DogInfoFormScreen = () => {
                 </View>
               )}
             </View>
-            <TouchableOpacity onPress={() => handleSubmit()}>
-              <Text> Soumettre </Text>
+            <TouchableOpacity style={styles.submit} onPress={() => handleSubmit()}>
+              <Text style={styles.textSubmit}> Soumettre </Text>
             </TouchableOpacity>
           </SafeAreaView>
         </KeyboardAvoidingView>
@@ -627,14 +675,27 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
   },
+  text: {
+    color: '#263238',
+    fontFamily: "Lexend_400Regular",
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  
   input: {
-    height: 40,
+    height: 50,
     borderColor: "#4D4D4D",
     backgroundColor: "#4D4D4D",
     borderWidth: 1,
-    marginBottom: 15,
+    marginBottom: 20,
     paddingLeft: 10,
-    borderRadius: 5,
+    borderRadius: 20,
+    opacity: 0.4,
+    color: "black",
+    fontSize: 16,
+    width: "100%",
+    borderBottomWidth: 1,
+    fontFamily: "Lexend_400Regular",
   },
   inputFocused: {
     backgroundColor: "#F3E882",
@@ -663,9 +724,11 @@ const styles = StyleSheet.create({
   },
   picker: {
     height: 60,
-    marginBottom: 15,
+    paddingBottom: 200,
   },
   loading: {
+    fontFamily: "Lexend_400Regular",
+    fontSize: 16,
     fontSize: 14,
     color: "#999",
   },
@@ -673,10 +736,28 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: "#eee",
+    marginBottom: 20,
   },
   suggestionText: {
+    color: '#9E9E9E',
+    fontFamily: "Lexend_400Regular",
     fontSize: 16,
   },
+  submit: {
+    height: 50,
+    width: 200,
+    borderColor: "#0639DB",
+    backgroundColor: "#0639DB",
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center'
+   
+  },
+  textSubmit:{
+    color: "#F5F5F5",
+    fontSize: 16,
+    fontFamily: "Lexend_400Regular",
+  }
 });
 
 export default () => (
