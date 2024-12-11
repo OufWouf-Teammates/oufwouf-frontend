@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react"
 import {
   View,
   Text,
@@ -7,51 +7,58 @@ import {
   ActivityIndicator,
   ScrollView,
   Alert,
-} from 'react-native';
+} from "react-native"
 
 const InterestPoint = ({ route }) => {
-  const { markerData } = route.params; 
-  const [pointData, setPointData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { markerData } = route.params
+  const [pointData, setPointData] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
   useEffect(() => {
     // Fonction pour récupérer les données d'un point d'intérêt spécifique
     const fetchInterestPoint = async () => {
       try {
-
-        const url = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}lieu/${markerData.latitude},${markerData.longitude}/${markerData.name}`);
-        const response = await fetch(url);
+        const url = await fetch(
+          `${process.env.EXPO_PUBLIC_BACKEND_URL}lieu/${
+            markerData?.latitude || 1
+          },${markerData?.longitude || 1}/${markerData.name}`
+        )
+        const response = await fetch(url)
         if (!response.ok) {
-          throw new Error('Une erreur est survenue lors de la récupération des données.');
+          throw new Error(
+            "Une erreur est survenue lors de la récupération des données."
+          )
         }
-        const data = await response.json();
-        setPointData(data);
+        const data = await response.json()
+        setPointData(data)
         console.log(pointData)
       } catch (err) {
-        setError(err.message);
-        Alert.alert('Erreur', err.message);
+        setError(err.message)
+        Alert.alert("Erreur", err.message)
       } finally {
-        setIsLoading(false);
+        setIsLoading(false)
       }
-    };
+    }
 
-    fetchInterestPoint();
-  }, []);
+    fetchInterestPoint()
+  }, [])
 
   if (isLoading) {
     return (
       <View style={styles.centeredView}>
         <ActivityIndicator size="large" color="#007BFF" />
       </View>
-    );
+    )
   }
 
   if (error || !pointData) {
     return (
       <View style={styles.centeredView}>
-        <Text style={styles.errorText}>Impossible de charger les données du point d'intérêt.</Text>
+        <Text style={styles.errorText}>
+          Impossible de charger les données du point d'intérêt.
+        </Text>
       </View>
-    );
+    )
   }
 
   return (
@@ -72,52 +79,56 @@ const InterestPoint = ({ route }) => {
 
         <View style={styles.detailContainer}>
           <Text style={styles.detailLabel}>Adresse :</Text>
-          <Text style={styles.detailValue}>{pointData.address || 'Non renseignée'}</Text>
+          <Text style={styles.detailValue}>
+            {pointData.address || "Non renseignée"}
+          </Text>
         </View>
 
         <View style={styles.detailContainer}>
           <Text style={styles.detailLabel}>Horaires :</Text>
-          <Text style={styles.detailValue}>{pointData.hours || 'Non spécifiés'}</Text>
+          <Text style={styles.detailValue}>
+            {pointData.hours || "Non spécifiés"}
+          </Text>
         </View>
       </View>
     </ScrollView>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: "#F9F9F9",
   },
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   image: {
-    width: '100%',
+    width: "100%",
     height: 200,
-    resizeMode: 'cover',
+    resizeMode: "cover",
   },
   placeholderImage: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#E0E0E0',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#E0E0E0",
   },
   placeholderText: {
-    color: '#757575',
+    color: "#757575",
   },
   infoContainer: {
     padding: 16,
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 8,
   },
   description: {
     fontSize: 16,
-    color: '#555',
+    color: "#555",
     marginBottom: 16,
   },
   detailContainer: {
@@ -125,17 +136,17 @@ const styles = StyleSheet.create({
   },
   detailLabel: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   detailValue: {
     fontSize: 16,
-    color: '#333',
+    color: "#333",
   },
   errorText: {
-    color: 'red',
+    color: "red",
     fontSize: 18,
-    textAlign: 'center',
+    textAlign: "center",
   },
-});
+})
 
-export default InterestPoint;
+export default InterestPoint
