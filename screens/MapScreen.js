@@ -36,7 +36,7 @@ export default function MapScreen({ navigation }) {
   const [mapRef, setMapRef] = useState(null) // Référence pour MapView
   const [redMarker, setRedMarker] = useState(null) // État pour le marker rouge
   const [modalVisible, setModalVisible] = useState(false)
-  const [placesData, setPlacesData] = useState([])
+  const [places, setPlaces] = useState([])
   const [selectedFilter, setSelectedFilter] = useState(null);
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   useEffect(() => {
@@ -131,9 +131,10 @@ export default function MapScreen({ navigation }) {
   const handleFilterPress = (filter) => {
     if (selectedFilter === filter) {
       setSelectedFilter(null);
-      setPlacesData([])
+      setPlaces([])
     } else {
       setSelectedFilter(filter);
+
       let endpoint = "";
       if (filter === "Boutiques") endpoint = "boutiques";
       else if (filter === "Vétérinaires") endpoint = "veterinaires";
@@ -162,12 +163,17 @@ export default function MapScreen({ navigation }) {
             });
         
             // Mets à jour l'état avec les données des lieux
-            setPlacesData(res);
+            setPlaces(res);
           }
         })
         .catch((error) => console.error("Erreur lors de la requête :", error));
     }
   };
+
+  const markers = places.map((data, i) => {
+    return <Marker key={i} coordinate={{ latitude: data.latitude, longitude: data.longitude }} title={data.name} />;
+  });
+
 
   if (!location) {
     return (
@@ -263,6 +269,7 @@ export default function MapScreen({ navigation }) {
                 </View>
               </Marker>
             }
+            {markers}
           </MapView>
         </View>
         <View style={styles.container2}>
