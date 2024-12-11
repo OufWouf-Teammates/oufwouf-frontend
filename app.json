@@ -20,11 +20,6 @@
             "CFBundleURLSchemes": [
               "com.googleusercontent.apps.940302423711-jmue55vlpv1kait48ubgarif7g3e0ml9"
             ]
-          },
-          {
-            "CFBundleURLSchemes": [
-              "com.googleusercontent.apps.940302423711-jmue55vlpv1kait48ubgarif7g3e0ml9"
-            ]
           }
         ],
         "NSCameraUsageDescription": "Cette application a besoin d'accéder à votre woof caméra.",
@@ -51,13 +46,9 @@
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE",
         "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION",
-        "CAMERA",
-        "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE",
-        "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION"
-      ]
+      ],
+      "package": "com.lacapsule.oufwouf"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -74,7 +65,11 @@
       "policy": "appVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/523a502f-3e2e-4187-ade4-64537f6a76ca"
-    }
+      "url": "https://u.expo.dev/523a502f-3e2e-4187-ade4-64537f6a76ca",
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
+    },
+    "owner": "oufwouf"
   }
 }

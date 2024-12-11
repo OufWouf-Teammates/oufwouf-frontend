@@ -6,37 +6,36 @@ import {
   ImageBackground,
   Image,
   TextInput,
-} from "react-native";
+} from "react-native"
 
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react"
+import { useSelector } from "react-redux"
 
 export default function DogProfileScreen({ navigation }) {
-  const token = useSelector((state) => state.user.value?.accessToken);
-  const [dog, setDog] = useState({
-    name: "Reptincel",
-    id: "26147124561461242",
-    uri: "https://upload.wikimedia.org/wikipedia/commons/1/18/Dog_Breeds.jpg",
-    race: "Shiba",
-    sex: "male",
-    anniversaire: "30/08/2003",
-    infosGeneral: "connard, enculé, mal aimé",
-    personality: "avare, pauvre",
-    vaccins: [
-      { name: "sida", rappel: true, date: "21/11/2010" },
-      { name: "lediable", rappel: false, date: "11/87/2036" },
-    ],
-  });
+  const token = useSelector((state) => state.user.value.token)
+  const [dog, setDog] = useState({})
 
   useEffect(() => {
-    (async () => {
-      const response = await fetch(process.env.EXPO_PUBLIC_BACKEND_URL + `?token=${token}`);
+    ;(async () => {
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_BACKEND_URL}dogs`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
 
-      const data = await response.json();
+      const data = await response.json()
 
-      setDog(data);
-    })();
-  }, []);
+      setDog(data.dog[0])
+    })()
+  }, [])
+
+  useEffect(() => {
+    console.log(dog)
+  }, [dog])
+
   return (
     <ImageBackground
       source={require("../assets/BG_App.png")}
@@ -58,7 +57,7 @@ export default function DogProfileScreen({ navigation }) {
         <View style={styles.infos}>
           {/* ID */}
           <View style={styles.infoBox}>
-            <Text>ID: {dog.id} </Text>
+            <Text>ID: {dog.ID} </Text>
           </View>
           {/* Race */}
           <View style={styles.infoBox}>
@@ -72,7 +71,7 @@ export default function DogProfileScreen({ navigation }) {
             </View>
             {/* Anniversaire */}
             <View style={styles.infoDemiBox}>
-              <Text> {dog.anniversaire} </Text>
+              <Text> {dog.birthday} </Text>
             </View>
           </View>
 
@@ -99,7 +98,7 @@ export default function DogProfileScreen({ navigation }) {
 
           {/* Infos général */}
           <View style={styles.infoBox}>
-            <Text>Informations général: {dog.infosGeneral}</Text>
+            <Text>Informations général: {dog.infos}</Text>
           </View>
           {/* Personnalité */}
           <View style={styles.infoBox}>
@@ -108,7 +107,7 @@ export default function DogProfileScreen({ navigation }) {
         </View>
       </SafeAreaView>
     </ImageBackground>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -158,4 +157,4 @@ const styles = StyleSheet.create({
   vaccins: {
     gap: 15,
   },
-});
+})

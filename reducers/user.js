@@ -1,25 +1,25 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
   value: { email: null, token: null },
   isLoggedIn: false,
-};
+}
 
 export const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: {
     connectUser: (state, action) => {
-        state.value = { email: action.payload.email, token: action.payload.accessToken }; // Réinitialiser l'état
-        state.isLoggedIn = true;
+      state.value = { email: action.payload.email, token: action.payload.token } // Réinitialiser l'état
+      state.isLoggedIn = true
     },
     disconnectUser: (state) => {
-        state.value = { email: null, token: null }; // Réinitialiser l'état
-        state.isLoggedIn = false;
+      state.value = { email: null, token: null } // Réinitialiser l'état
+      state.isLoggedIn = false
     },
     reset: () => initialState, // Réinitialise l'état
   },
-});
+})
 
-export const { connectUser, disconnectUser, reset } = userSlice.actions;
-export default userSlice.reducer;
+export const { connectUser, disconnectUser, reset } = userSlice.actions
+export default userSlice.reducer

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react"
 import {
   SafeAreaView,
   StyleSheet,
@@ -34,27 +34,30 @@ const InterestPoint = ({ route }) => {
         const response = await fetch(url);
         
         if (!response.ok) {
-          throw new Error('Une erreur est survenue lors de la récupération des données.');
+          throw new Error(
+            "Une erreur est survenue lors de la récupération des données."
+          )
         }
         const data = await response.json();
         setPointData(data);
         console.log('info place:', pointData)
       } catch (err) {
-        setError(err.message);
-        Alert.alert('Erreur', err.message);
+        setError(err.message)
+        Alert.alert("Erreur", err.message)
       } finally {
-        setIsLoading(false);
+        setIsLoading(false)
       }
-    };
+    }
 
-    fetchInterestPoint();
-  }, []);
+    fetchInterestPoint()
+  }, [])
 
   if (isLoading) {
     return (
       <View style={styles.centeredView}>
         <ActivityIndicator size="large" color="#007BFF" />
       </View>
+    )
     )
   }
 
@@ -64,7 +67,11 @@ const InterestPoint = ({ route }) => {
         <Text style={styles.errorText}>
           Impossible de charger les données du point d'intérêt.
         </Text>
+        <Text style={styles.errorText}>
+          Impossible de charger les données du point d'intérêt.
+        </Text>
       </View>
+    )
     )
   }
 

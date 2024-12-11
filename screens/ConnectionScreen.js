@@ -88,8 +88,8 @@ export default function ConnectionScreen({ navigation }) {
           if (data.result) {
             dispatch(
               connectUser({
-                email: data.result.email,
-                token: data.result.token,
+                email: data.data.email,
+                token: data.data.token,
               })
             )
             navigation.navigate("Map")
@@ -136,60 +136,58 @@ export default function ConnectionScreen({ navigation }) {
       source={require("../assets/BG_App.png")}
       style={styles.container}
     >
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <SafeAreaView style={styles.innerContainer}>
-        <Image
-          style={styles.image}
-          source={require("../assets/logo_oufwouf_couleur.png")}
-        />
-        <Text style={styles.title}>Pour woufer la vie à pleins crocs !</Text>
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("Sign In", { connectToAccount, createAccount })
-          }
-          style={styles.buttonSignIn}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.textButtonSignIn}>Se connecter</Text>
-          <FontAwesome name="arrow-right" size={25} color="#F5F5F5" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("Sign Up", { connectToAccount, createAccount })
-          }
-          style={styles.buttonSignUp}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.textButtonSignUp}>S'inscrire</Text>
-          <FontAwesome name="arrow-right" size={25} color="#0639DB" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Dog Info Form")}
-          style={styles.buttonSignUp}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.textButtonSignUp}>Dog Profile</Text>
-          <FontAwesome name="arrow-right" size={25} color="#0639DB" />
-        </TouchableOpacity>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <SafeAreaView style={styles.innerContainer}>
+          <Image
+            style={styles.image}
+            source={require("../assets/logo_oufwouf_couleur.png")}
+          />
+          <Text style={styles.title}>Pour woufer la vie à pleins crocs !</Text>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("Sign In", {
+                connectToAccount,
+                createAccount,
+              })
+            }
+            style={styles.buttonSignIn}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.textButtonSignIn}>Se connecter</Text>
+            <FontAwesome name="arrow-right" size={25} color="#F5F5F5" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("Sign Up", {
+                connectToAccount,
+                createAccount,
+              })
+            }
+            style={styles.buttonSignUp}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.textButtonSignUp}>S'inscrire</Text>
+            <FontAwesome name="arrow-right" size={25} color="#0639DB" />
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Interest")}
-          style={styles.buttonSignUp}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.textButtonSignUp}>interest</Text>
-          <FontAwesome name="arrow-right" size={25} color="#0639DB" />
-        </TouchableOpacity>
-        <GoogleSignInButton
-          title="Connect with Google"
-          connectToAccount={connectToAccount}
-        />
-        <AppleSignInButton
-          title="Connect with Apple"
-          connectToAccount={connectToAccount}
-        />
-      </SafeAreaView>
-    </ScrollView>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Interest")}
+            style={styles.buttonSignUp}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.textButtonSignUp}>interest</Text>
+            <FontAwesome name="arrow-right" size={25} color="#0639DB" />
+          </TouchableOpacity>
+          <GoogleSignInButton
+            title="Connect with Google"
+            connectToAccount={connectToAccount}
+          />
+          <AppleSignInButton
+            title="Connect with Apple"
+            connectToAccount={connectToAccount}
+          />
+        </SafeAreaView>
+      </ScrollView>
     </ImageBackground>
   )
 }
