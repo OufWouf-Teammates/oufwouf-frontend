@@ -173,17 +173,27 @@ export default function MapScreen({ navigation }) {
             const res = data.data.elements.map((element) => {
               return {
                 name: element?.tags?.name || "Inconnu", // Nom par défaut si non défini
+<<<<<<< HEAD
                 latitude: element?.lat ?? 0, // Valeur par défaut pour la latitude
                 longitude: element?.lon ?? 0, // Valeur par défaut pour la longitude
               }
             })
 
+=======
+                latitude: element?.lat ?? 0,           // Valeur par défaut pour la latitude
+                longitude: element?.lon ?? 0,         // Valeur par défaut pour la longitude
+                type: endpoint,
+              };
+            });
+        
+>>>>>>> f2663f6d9e30a7d162589b3031c09d4e7fb25c34
             // Mets à jour l'état avec les données des lieux
             setPlaces(res)
           }
         })
         .catch((error) => console.error("Erreur lors de la requête :", error))
     }
+<<<<<<< HEAD
   }
   const onMarkerSelect = (markerData) => {
     navigation.navigate("Interest", { markerData })
@@ -236,6 +246,68 @@ export default function MapScreen({ navigation }) {
       </Marker>
     )
   })
+=======
+  };
+  const icons = {
+    boutiques: require('../assets/os.png'),
+    veterinaires: require('../assets/veterinaire.png')
+  }
+  const onMarkerSelect = (markerData) =>{
+    navigation.navigate("Interest", {markerData})
+  }
+  const markers = places.map((data, i) => {
+    return (
+    <Marker
+      key={i}
+      coordinate={{ latitude: data.latitude, longitude: data.longitude }}
+    >
+      <Image
+        source={icons[data.type]}
+        style={{width: 28, height: 28}}
+      />
+    <Callout
+        tooltip={false} // Désactive la bulle de tooltip par défaut
+        alphaHitTest={false} // Active ou désactive les clics sur les zones transparentes
+        onPress={()=>onMarkerSelect(data)}
+      >
+       <View 
+          style={{
+            maxWidth: '100%', 
+            minWidth: 200,
+            maxHeight: 100,
+            padding: 10, 
+            justifyContent: 'center', // Centre verticalement
+            alignItems: 'center',    // Centre horizontalement
+          }}
+        >
+          <View style={{width: '100%', justifyContent: 'center', alignItems: 'center', }}>
+            <Text 
+              style={{
+                width: '90%', 
+                textAlign: 'center',
+                fontFamily: "Lexend_400Regular",
+                fontSize: 16,
+              }}>{data.name}</Text>   
+            </View>
+          <Text 
+            style={{
+              margin: 5,
+              textAlign: 'center',
+              backgroundColor: '#0639DB',
+              paddingVertical: 5,
+              paddingHorizontal: 10,
+              borderRadius: 25,
+              color: '#F5F5F5',
+              fontFamily: "Lexend_400Regular",
+              fontSize: 16,
+            }}>Voir plus</Text>
+        </View>
+      </Callout>
+    </Marker>
+    );
+  });
+
+>>>>>>> f2663f6d9e30a7d162589b3031c09d4e7fb25c34
 
   if (!location) {
     return (
