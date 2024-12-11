@@ -30,6 +30,7 @@ import {
   useActionSheet,
 } from "@expo/react-native-action-sheet";
 import { useSelector } from "react-redux";
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const DogInfoFormScreen = () => {
   // lien des fetchs //
@@ -75,7 +76,7 @@ const DogInfoFormScreen = () => {
   // user token //
 
   // userToken = useSelector((state) => state.value.token);
-  userToken = "TfkTySvjjNbWqZGn9v9pX0OdpUuqR7tQ";
+  userToken = "HYG44QCUa6YAlUavvkHQYqBGlAVJUNfp";
   // permissions pour utiser l'appareil photo et la galerie //
 
   useEffect(() => {
@@ -137,16 +138,15 @@ const DogInfoFormScreen = () => {
     }
 
     setLoadingRace(true);
-    console.log(`${apiRace}${query}`);
 
     try {
       const response = await fetch(`${apiRace}?search=${query}`);
-      console.log(`${apiRace}?search=${query}`);
+
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
-      console.log(data);
+
       if (data && Array.isArray(data.data)) {
         setSuggestionRace(data.data);
       } else {
@@ -271,7 +271,6 @@ const DogInfoFormScreen = () => {
       formData.append(
         "data",
         JSON.stringify({
-          imageUri: imageUri,
           name: name,
           ID: dogId,
           race: race,
@@ -281,26 +280,28 @@ const DogInfoFormScreen = () => {
           personality: personnality,
         })
       );
-      if (data.imageUri) {
+      if (imageUri) {
         formData.append("photoFromFront", {
-          uri: data.imageUri,
+          uri: imageUri,
           type: "image/jpeg",
           name: "dog_image.jpg",
         });
       }
+
       console.log(formData);
-      
+
       const response = await fetch(apiNewDog, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${userToken}`,
         },
-        
+
         body: formData,
       });
       const responseData = await response.json();
+
       console.log(responseData);
-      
+
       if (responseData.result) {
         const vaccinResponse = await fetch(apiNewVaccins, {
           method: "POST",
@@ -313,7 +314,7 @@ const DogInfoFormScreen = () => {
         });
 
         const data = await vaccinResponse.json();
-
+        console.log(data);
         if (data.result) {
           console.log("YAY new vaccins");
         } else {
@@ -355,21 +356,21 @@ const DogInfoFormScreen = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <ImageBackground
-        style={styles.container}
+        style={styles.background}
         source={require("../assets/BG_App.png")}
       >
-        <KeyboardAvoidingView
-          style={styles.container}
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-        >
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+
           <SafeAreaView style={styles.innerContainer}>
             <TouchableOpacity onPress={handleChooseImage}>
-              <Image
-                style={styles.image}
-                source={imageUri && { uri: imageUri }}
-              />
+            <Image
+              style={styles.image}
+              source={imageUri ? { uri: imageUri } : require('../assets/dog_example.webp')}
+            />
+            <View style={styles.updatePhoto}>
+              <FontAwesome name="pencil" size={15} color="#0639DB" />
+            </View>
             </TouchableOpacity>
             <View style={styles.form}>
               <Text style={styles.text}>
@@ -399,6 +400,7 @@ const DogInfoFormScreen = () => {
                 onChangeText={(value) => handleInputRace(value)}
                 value={race}
                 placeholder="Rechercher..."
+                placeholderTextColor="black"
               />
               {loadingRace && <Text style={styles.loading}>Chargement...</Text>}
               {suggestionsRace.length > 0 && (
@@ -450,6 +452,7 @@ const DogInfoFormScreen = () => {
                 ]}
                 onBlur={handleBlur}
                 placeholder="Choisissez une date"
+                placeholderTextColor="black"
                 value={selectedBirthday}
                 onFocus={() => {
                   dismissKeyboard();
@@ -481,6 +484,7 @@ const DogInfoFormScreen = () => {
                 onChangeText={(value) => handleInputVaccins(value)}
                 value={vaccination}
                 placeholder="Rechercher..."
+                placeholderTextColor="black"
               />
               {loadingVaccin && (
                 <Text style={styles.loading}>Chargement...</Text>
@@ -505,7 +509,7 @@ const DogInfoFormScreen = () => {
                 selectedValue={selectedRappel}
                 onValueChange={(itemValue) => setSelectedRappel(itemValue)}
                 style={styles.picker}
-                mode={Platform.OS === 'ios' ? 'dropdown' : 'dialog'}
+                mode={Platform.OS === "ios" ? "dropdown" : "dialog"}
               >
                 <Picker.Item label="Non" value="Non" />
                 <Picker.Item label="Oui" value="Oui" />
@@ -519,6 +523,7 @@ const DogInfoFormScreen = () => {
                 ]}
                 onBlur={handleBlur}
                 placeholder="Choisissez une date"
+                placeholderTextColor="black"
                 value={selectedVaccin}
                 onFocus={() => {
                   dismissKeyboard();
@@ -560,12 +565,20 @@ const DogInfoFormScreen = () => {
                   visible={isBirthday}
                   onRequestClose={() => setIsBirthday(false)}
                 >
+                  
                   <TouchableOpacity
                     style={styles.modalContent}
                     activeOpacity={1}
                     onPress={() => setIsBirthday(false)}
                   >
+                    
                     <View style={styles.calendarContainer}>
+                    <TouchableOpacity
+                        style={styles.closeButton}
+                        onPress={() => setIsBirthday(false)}
+                      >
+                        <Text style={styles.closeButtonText}>X</Text>
+                      </TouchableOpacity>
                       <Calendar
                         onDayPress={handleBirthday}
                         markedDates={{
@@ -602,12 +615,7 @@ const DogInfoFormScreen = () => {
                         ]}
                         locale={"fr"}
                       />
-                      <TouchableOpacity
-                        style={styles.closeButton}
-                        onPress={() => setIsBirthday(false)}
-                      >
-                        <Text style={styles.closeButtonText}>Fermer</Text>
-                      </TouchableOpacity>
+
                     </View>
                   </TouchableOpacity>
                 </Modal>
@@ -617,6 +625,12 @@ const DogInfoFormScreen = () => {
 
               {isVaccin && (
                 <View style={styles.calendarContainer}>
+                  <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => setIsVaccin(false)}
+                  >
+                      <Text style={styles.closeButtonText}>X</Text>
+                  </TouchableOpacity>
                   <Calendar
                     onDayPress={handleVaccin}
                     markedDates={{
@@ -648,48 +662,50 @@ const DogInfoFormScreen = () => {
                 </View>
               )}
             </View>
-            <TouchableOpacity style={styles.submit} onPress={() => handleSubmit()}>
+            <TouchableOpacity
+              style={styles.submit}
+              onPress={() => handleSubmit()}
+            >
               <Text style={styles.textSubmit}> Soumettre </Text>
             </TouchableOpacity>
           </SafeAreaView>
-        </KeyboardAvoidingView>
-      </ImageBackground>
-    </ScrollView>
+      </ScrollView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: "center",
-    // alignItems: "center",
-    // padding: 20,
+  },
+  background: {
+    width: '100%',
+    height: '100%'
   },
   innerContainer: {
     width: "100%",
-    // justifyContent: "center",
     alignItems: "center",
   },
   form: {
-    width: "80%",
+    width: "90%",
     padding: 20,
     borderRadius: 10,
   },
   text: {
-    color: '#263238',
+    color: "#263238",
     fontFamily: "Lexend_400Regular",
     fontSize: 16,
     marginBottom: 10,
   },
-  
+
   input: {
-    height: 50,
+    height: 60,
     borderColor: "#4D4D4D",
-    backgroundColor: "#4D4D4D",
+    backgroundColor: "#BFBFBF",
     borderWidth: 1,
     marginBottom: 20,
     paddingLeft: 10,
-    borderRadius: 20,
+    borderRadius: 10,
     opacity: 0.4,
     color: "black",
     fontSize: 16,
@@ -706,8 +722,18 @@ const styles = StyleSheet.create({
     height: 100,
     marginBottom: 20,
     borderRadius: 50,
-    borderWidth: 2,
-    borderColor: "#ddd",
+
+  },
+  updatePhoto: {
+    backgroundColor: "white",
+    width: 30,
+    height: 30,
+    borderRadius: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    position: 'absolute',
+    top: 70,
+    right: 0 
   },
   calendarContainer: {
     position: "absolute",
@@ -724,6 +750,7 @@ const styles = StyleSheet.create({
   },
   picker: {
     height: 60,
+    marginTop: -60,
     paddingBottom: 200,
   },
   loading: {
@@ -739,25 +766,31 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   suggestionText: {
-    color: '#9E9E9E',
+    color: "#9E9E9E",
     fontFamily: "Lexend_400Regular",
     fontSize: 16,
+  },
+  closeButtonText: {
+  color: 'red',
+  textAlign: 'right',
+  paddingHorizontal: 25,
+  paddingVertical: 10,
+  fontSize: 22
   },
   submit: {
     height: 50,
-    width: 200,
+    width: '70%',
     borderColor: "#0639DB",
     backgroundColor: "#0639DB",
     borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center'
-   
+    justifyContent: "center",
+    alignItems: "center",
   },
-  textSubmit:{
+  textSubmit: {
     color: "#F5F5F5",
     fontSize: 16,
     fontFamily: "Lexend_400Regular",
-  }
+  },
 });
 
 export default () => (
