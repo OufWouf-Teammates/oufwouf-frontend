@@ -20,7 +20,7 @@ import {
 } from "@expo-google-fonts/lexend"
 import AppLoading from "expo-app-loading"
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context"
-import MapView, { Marker, Circle, PROVIDER_GOOGLE } from "react-native-maps"
+import MapView, { Marker, Circle, PROVIDER_GOOGLE, Callout, CalloutSubview } from "react-native-maps"
 import * as Location from "expo-location"
 
 import SearchBar from "../components/SearchBar"
@@ -121,9 +121,14 @@ export default function MapScreen({ navigation }) {
           <Text 
             style={[
               styles.buttonFilter,
-              selectedFilter === data ? 
-              {color : "#FFF"} : 
-              {color: "#0639DB"}]}>{data}</Text>
+              selectedFilter === data
+                ? { color: "#FFF" }
+                : { color: "#0639DB" },
+              {
+                fontFamily: "Lexend_400Regular",
+                fontSize: 16,
+              },
+            ]}>{data}</Text>
         </TouchableOpacity>
     )
   })
@@ -169,9 +174,50 @@ export default function MapScreen({ navigation }) {
         .catch((error) => console.error("Erreur lors de la requête :", error));
     }
   };
-
+  const onMarkerSelect = (markerData) =>{
+    navigation.navigate("Interest", {markerData})
+  }
   const markers = places.map((data, i) => {
-    return <Marker key={i} coordinate={{ latitude: data.latitude, longitude: data.longitude }} title={data.name} />;
+    return (
+    <Marker
+      key={i}
+      coordinate={{ latitude: data.latitude, longitude: data.longitude }}
+    >
+    <Callout
+        tooltip={false} // Désactive la bulle de tooltip par défaut
+        alphaHitTest={false} // Active ou désactive les clics sur les zones transparentes
+        onPress={()=>onMarkerSelect(data)}
+      >
+       <View 
+          style={{ 
+            padding: 10, 
+            justifyContent: 'center', // Centre verticalement
+            alignItems: 'center',    // Centre horizontalement
+          }}
+        >
+          <Text 
+            style={{
+              width: '100%', 
+              textAlign: 'center',
+              fontFamily: "Lexend_400Regular",
+              fontSize: 16,
+            }}>{data.name}</Text>
+          <Text 
+            style={{
+              margin: 5,
+              textAlign: 'center',
+              backgroundColor: '#0639DB',
+              paddingVertical: 5,
+              paddingHorizontal: 10,
+              borderRadius: 25,
+              color: '#F5F5F5',
+              fontFamily: "Lexend_400Regular",
+              fontSize: 16,
+            }}>Voir plus</Text>
+        </View>
+      </Callout>
+    </Marker>
+    );
   });
 
 
