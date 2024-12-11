@@ -1,5 +1,6 @@
 import { StatusBar } from "expo-status-bar"
 import {
+  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -135,6 +136,7 @@ export default function ConnectionScreen({ navigation }) {
       source={require("../assets/BG_App.png")}
       style={styles.container}
     >
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
       <SafeAreaView style={styles.innerContainer}>
         <Image
           style={styles.image}
@@ -187,15 +189,20 @@ export default function ConnectionScreen({ navigation }) {
           connectToAccount={connectToAccount}
         />
       </SafeAreaView>
+    </ScrollView>
     </ImageBackground>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: "center",
+    flexGrow: 1,
+  },
+  scrollContainer: {
+    flexGrow: 1,
     justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
   },
   innerContainer: {
     flex: 1,
