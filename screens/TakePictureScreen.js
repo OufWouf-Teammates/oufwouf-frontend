@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { CameraView, Camera, FlashMode } from "expo-camera";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 export default function TakePictureScreen({ navigation }) {
   const apiPicture = `${process.env.EXPO_PUBLIC_BACKEND_URL}personalPicture`;
-  const userToken = "6vznLSAKeYGpHSgEy74PMwrfuSNWGFpU";
+  const userToken = useSelector((state) => state.user.value.token)
 
   const [hasPermission, setHasPermission] = useState(false);
   const [flashStatus, setflashStatus] = useState("off");
@@ -33,7 +34,7 @@ export default function TakePictureScreen({ navigation }) {
         formData.append(
           "data",
           JSON.stringify({
-            description: data.description,
+            description: 'blabla',
             latitude: 3000,
             longitude: 456677,
           })
@@ -59,8 +60,8 @@ export default function TakePictureScreen({ navigation }) {
       } else {
         console.log("pas de nouvelle photo")
       }
-    } catch {
-      console.error(error.message);
+    } catch (error) {
+      console.error("Error taking picture:", error.message);
     }
   };
 

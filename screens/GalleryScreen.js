@@ -19,11 +19,12 @@ import {
 import AppLoading from "expo-app-loading";
 
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 function Gallery() {
   const apiPicture = `${process.env.EXPO_PUBLIC_BACKEND_URL}personalPicture`;
-  // const userToken = useSelector((state) => state.value.token);
-  const userToken = "6vznLSAKeYGpHSgEy74PMwrfuSNWGFpU";
+  const userToken = useSelector((state) => state.user.value.token)
 
   const [galerie, setGalerie] = useState([]);
 
