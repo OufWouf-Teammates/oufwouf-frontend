@@ -58,7 +58,6 @@ const InterestPoint = ({ route }) => {
         <ActivityIndicator size="large" color="#007BFF" />
       </View>
     )
-    )
   }
 
   if (error || !pointData) {
@@ -71,7 +70,6 @@ const InterestPoint = ({ route }) => {
           Impossible de charger les données du point d'intérêt.
         </Text>
       </View>
-    )
     )
   }
 
