@@ -30,9 +30,13 @@ import {
   useActionSheet,
 } from "@expo/react-native-action-sheet";
 import { useSelector } from "react-redux";
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 const DogInfoFormScreen = () => {
+
+  // userToken = useSelector((state) => state.value.token);
+  const userToken = "HYG44QCUa6YAlUavvkHQYqBGlAVJUNfp";
+
   // lien des fetchs //
 
   const apiRace = `${process.env.EXPO_PUBLIC_BACKEND_URL}races`;
@@ -73,10 +77,7 @@ const DogInfoFormScreen = () => {
 
   const { showActionSheetWithOptions } = useActionSheet();
 
-  // user token //
 
-  // userToken = useSelector((state) => state.value.token);
-  userToken = "HYG44QCUa6YAlUavvkHQYqBGlAVJUNfp";
   // permissions pour utiser l'appareil photo et la galerie //
 
   useEffect(() => {
@@ -356,319 +357,330 @@ const DogInfoFormScreen = () => {
   };
 
   return (
-      <ImageBackground
-        style={styles.background}
-        source={require("../assets/BG_App.png")}
-      >
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-
-          <SafeAreaView style={styles.innerContainer}>
-            <TouchableOpacity onPress={handleChooseImage}>
+    <ImageBackground
+      style={styles.background}
+      source={require("../assets/BG_App.png")}
+    >
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <SafeAreaView style={styles.innerContainer}>
+          <TouchableOpacity onPress={handleChooseImage}>
             <Image
               style={styles.image}
-              source={imageUri ? { uri: imageUri } : require('../assets/dog_example.webp')}
+              source={
+                imageUri
+                  ? { uri: imageUri }
+                  : require("../assets/dog_example.webp")
+              }
             />
             <View style={styles.updatePhoto}>
               <FontAwesome name="pencil" size={15} color="#0639DB" />
             </View>
-            </TouchableOpacity>
-            <View style={styles.form}>
-              <Text style={styles.text}>
-                Nom du chien<Text style={{ color: "red" }}>*</Text>
-              </Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  focusedField === "name" && styles.inputFocused,
-                ]}
-                onFocus={() => handleFocus("name")}
-                onBlur={handleBlur}
-                onChangeText={(value) => setName(value)}
-                value={name}
-              />
+          </TouchableOpacity>
+          <View style={styles.form}>
+            <Text style={styles.text}>
+              Nom du chien<Text style={{ color: "red" }}>*</Text>
+            </Text>
+            <TextInput
+              style={[
+                styles.input,
+                focusedField === "name" && styles.inputFocused,
+              ]}
+              onFocus={() => handleFocus("name")}
+              onBlur={handleBlur}
+              onChangeText={(value) => setName(value)}
+              value={name}
+            />
 
-              <Text style={styles.text}>
-                Race du chien<Text style={{ color: "red" }}>*</Text>
-              </Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  focusedField === "race" && styles.inputFocused,
-                ]}
-                onFocus={() => handleFocus("race")}
-                onBlur={handleBlur}
-                onChangeText={(value) => handleInputRace(value)}
-                value={race}
-                placeholder="Rechercher..."
-                placeholderTextColor="black"
-              />
-              {loadingRace && <Text style={styles.loading}>Chargement...</Text>}
-              {suggestionsRace.length > 0 && (
-                <FlatList
-                  data={suggestionsRace}
-                  keyExtractor={(item, index) => `${item._id}-${index}`}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      style={styles.suggestionItem}
-                      onPress={() => handleSuggestionRace(item.name)}
-                    >
-                      <Text style={styles.suggestionText}>{item.name}</Text>
-                    </TouchableOpacity>
-                  )}
-                />
-              )}
-              <Text style={styles.text}>
-                ID<Text style={{ color: "red" }}>*</Text>
-              </Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  focusedField === "id" && styles.inputFocused,
-                ]}
-                onFocus={() => handleFocus("id")}
-                onBlur={handleBlur}
-                onChangeText={(value) => setDogId(value)}
-                value={dogId}
-              />
-              <Text style={styles.text}>
-                Sexe du chien<Text style={{ color: "red" }}>*</Text>
-              </Text>
-              <Picker
-                selectedValue={selectedGender}
-                onValueChange={(itemValue) => setSelectedGender(itemValue)}
-                style={styles.picker}
-              >
-                <Picker.Item label="Mâle" value="mâle" />
-                <Picker.Item label="Femelle" value="femelle" />
-              </Picker>
-
-              <Text style={styles.text}>
-                Date de naissance<Text style={{ color: "red" }}>*</Text>
-              </Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  focusedField === "anniv" && styles.inputFocused,
-                ]}
-                onBlur={handleBlur}
-                placeholder="Choisissez une date"
-                placeholderTextColor="black"
-                value={selectedBirthday}
-                onFocus={() => {
-                  dismissKeyboard();
-                  setIsBirthday(true);
-                  handleFocus("anniv");
-                }}
-              />
-
-              <Text style={styles.text}>Couleur de robe du chien</Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  focusedField === "robe" && styles.inputFocused,
-                ]}
-                onFocus={() => handleFocus("robe")}
-                onBlur={handleBlur}
-                onChangeText={(value) => setRobe(value)}
-                value={robe}
-              />
-
-              <Text style={styles.text}>Vaccinations du chien</Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  focusedField === "Vaccination" && styles.inputFocused,
-                ]}
-                onFocus={() => handleFocus("Vaccination")}
-                onBlur={handleBlur}
-                onChangeText={(value) => handleInputVaccins(value)}
-                value={vaccination}
-                placeholder="Rechercher..."
-                placeholderTextColor="black"
-              />
-              {loadingVaccin && (
-                <Text style={styles.loading}>Chargement...</Text>
-              )}
-              {suggestionsVaccin.length > 0 && (
-                <FlatList
-                  data={suggestionsVaccin}
-                  keyExtractor={(item, index) => `${item._id}-${index}`}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      style={styles.suggestionItem}
-                      onPress={() => handleSuggestionVaccin(item.name)}
-                    >
-                      <Text style={styles.suggestionText}>{item.name}</Text>
-                    </TouchableOpacity>
-                  )}
-                />
-              )}
-
-              <Text style={styles.text}>Rappel</Text>
-              <Picker
-                selectedValue={selectedRappel}
-                onValueChange={(itemValue) => setSelectedRappel(itemValue)}
-                style={styles.picker}
-                mode={Platform.OS === "ios" ? "dropdown" : "dialog"}
-              >
-                <Picker.Item label="Non" value="Non" />
-                <Picker.Item label="Oui" value="Oui" />
-              </Picker>
-
-              <Text style={styles.text}>Date de vaccination</Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  focusedField === "vaccins" && styles.inputFocused,
-                ]}
-                onBlur={handleBlur}
-                placeholder="Choisissez une date"
-                placeholderTextColor="black"
-                value={selectedVaccin}
-                onFocus={() => {
-                  dismissKeyboard();
-                  setIsVaccin(true);
-                  handleFocus("vaccins");
-                }}
-              />
-
-              <Text style={styles.text}>Information général </Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  focusedField === "info" && styles.inputFocused,
-                ]}
-                onFocus={() => handleFocus("info")}
-                onBlur={handleBlur}
-                onChangeText={(value) => setInfo(value)}
-                value={info}
-              />
-
-              <Text style={styles.text}>Traits de personalité</Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  focusedField === "personnality" && styles.inputFocused,
-                ]}
-                onFocus={() => handleFocus("personnality")}
-                onBlur={handleBlur}
-                onChangeText={(value) => setPersonnality(value)}
-                value={personnality}
-              />
-
-              {/* modale calendrier anniv */}
-
-              {isBirthday && (
-                <Modal
-                  animationType="fade"
-                  transparent={true}
-                  visible={isBirthday}
-                  onRequestClose={() => setIsBirthday(false)}
-                >
-                  
+            <Text style={styles.text}>
+              Race du chien<Text style={{ color: "red" }}>*</Text>
+            </Text>
+            <TextInput
+              style={[
+                styles.input,
+                focusedField === "race" && styles.inputFocused,
+              ]}
+              onFocus={() => handleFocus("race")}
+              onBlur={handleBlur}
+              onChangeText={(value) => handleInputRace(value)}
+              value={race}
+              placeholder="Rechercher..."
+              placeholderTextColor="black"
+            />
+            {loadingRace && <Text style={styles.loading}>Chargement...</Text>}
+            {suggestionsRace.length > 0 && (
+              <FlatList
+                data={suggestionsRace}
+                keyExtractor={(item, index) => `${item._id}-${index}`}
+                renderItem={({ item }) => (
                   <TouchableOpacity
-                    style={styles.modalContent}
-                    activeOpacity={1}
-                    onPress={() => setIsBirthday(false)}
+                    style={styles.suggestionItem}
+                    onPress={() => handleSuggestionRace(item.name)}
                   >
-                    
-                    <View style={styles.calendarContainer}>
-                    <TouchableOpacity
-                        style={styles.closeButton}
-                        onPress={() => setIsBirthday(false)}
-                      >
-                        <Text style={styles.closeButtonText}>X</Text>
-                      </TouchableOpacity>
-                      <Calendar
-                        onDayPress={handleBirthday}
-                        markedDates={{
-                          [selectedBirthday]: {
-                            selected: true,
-                            selectedColor: "blue",
-                          },
-                        }}
-                        monthFormat={"yyyy MM "}
-                        hideExtraDays={true}
-                        firstDay={1}
-                        dayNames={[
-                          "Dim",
-                          "Lun",
-                          "Mar",
-                          "Mer",
-                          "Jeu",
-                          "Ven",
-                          "Sam",
-                        ]}
-                        monthNames={[
-                          "Janvier",
-                          "Février",
-                          "Mars",
-                          "Avril",
-                          "Mai",
-                          "Juin",
-                          "Juillet",
-                          "Août",
-                          "Septembre",
-                          "Octobre",
-                          "Novembre",
-                          "Décembre",
-                        ]}
-                        locale={"fr"}
-                      />
-
-                    </View>
+                    <Text style={styles.suggestionText}>{item.name}</Text>
                   </TouchableOpacity>
-                </Modal>
-              )}
-
-              {/* modale calendrier vaccins */}
-
-              {isVaccin && (
-                <View style={styles.calendarContainer}>
-                  <TouchableOpacity
-                  style={styles.closeButton}
-                  onPress={() => setIsVaccin(false)}
-                  >
-                      <Text style={styles.closeButtonText}>X</Text>
-                  </TouchableOpacity>
-                  <Calendar
-                    onDayPress={handleVaccin}
-                    markedDates={{
-                      [selectedVaccin]: {
-                        selected: true,
-                        selectedColor: "blue",
-                      },
-                    }}
-                    monthFormat={"yyyy MM"}
-                    hideExtraDays={true}
-                    firstDay={1}
-                    dayNames={["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"]}
-                    monthNames={[
-                      "Janvier",
-                      "Février",
-                      "Mars",
-                      "Avril",
-                      "Mai",
-                      "Juin",
-                      "Juillet",
-                      "Août",
-                      "Septembre",
-                      "Octobre",
-                      "Novembre",
-                      "Décembre",
-                    ]}
-                    locale={"fr"}
-                  />
-                </View>
-              )}
-            </View>
-            <TouchableOpacity
-              style={styles.submit}
-              onPress={() => handleSubmit()}
+                )}
+              />
+            )}
+            <Text style={styles.text}>
+              ID<Text style={{ color: "red" }}>*</Text>
+            </Text>
+            <TextInput
+              style={[
+                styles.input,
+                focusedField === "id" && styles.inputFocused,
+              ]}
+              onFocus={() => handleFocus("id")}
+              onBlur={handleBlur}
+              onChangeText={(value) => setDogId(value)}
+              value={dogId}
+            />
+            <Text style={styles.text}>
+              Sexe du chien<Text style={{ color: "red" }}>*</Text>
+            </Text>
+            <Picker
+              selectedValue={selectedGender}
+              onValueChange={(itemValue) => setSelectedGender(itemValue)}
+              style={styles.picker}
             >
-              <Text style={styles.textSubmit}> Soumettre </Text>
-            </TouchableOpacity>
-          </SafeAreaView>
+              <Picker.Item label="Mâle" value="mâle" />
+              <Picker.Item label="Femelle" value="femelle" />
+            </Picker>
+
+            <Text style={styles.text}>
+              Date de naissance<Text style={{ color: "red" }}>*</Text>
+            </Text>
+            <TextInput
+              style={[
+                styles.input,
+                focusedField === "anniv" && styles.inputFocused,
+              ]}
+              onBlur={handleBlur}
+              placeholder="Choisissez une date"
+              placeholderTextColor="black"
+              value={selectedBirthday}
+              onFocus={() => {
+                dismissKeyboard();
+                setIsBirthday(true);
+                handleFocus("anniv");
+              }}
+            />
+
+            <Text style={styles.text}>Couleur de robe du chien</Text>
+            <TextInput
+              style={[
+                styles.input,
+                focusedField === "robe" && styles.inputFocused,
+              ]}
+              onFocus={() => handleFocus("robe")}
+              onBlur={handleBlur}
+              onChangeText={(value) => setRobe(value)}
+              value={robe}
+            />
+
+            <Text style={styles.text}>Vaccinations du chien</Text>
+            <TextInput
+              style={[
+                styles.input,
+                focusedField === "Vaccination" && styles.inputFocused,
+              ]}
+              onFocus={() => handleFocus("Vaccination")}
+              onBlur={handleBlur}
+              onChangeText={(value) => handleInputVaccins(value)}
+              value={vaccination}
+              placeholder="Rechercher..."
+              placeholderTextColor="black"
+            />
+            {loadingVaccin && <Text style={styles.loading}>Chargement...</Text>}
+            {suggestionsVaccin.length > 0 && (
+              <FlatList
+                data={suggestionsVaccin}
+                keyExtractor={(item, index) => `${item._id}-${index}`}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={styles.suggestionItem}
+                    onPress={() => handleSuggestionVaccin(item.name)}
+                  >
+                    <Text style={styles.suggestionText}>{item.name}</Text>
+                  </TouchableOpacity>
+                )}
+              />
+            )}
+
+            <Text style={styles.text}>Rappel</Text>
+            <Picker
+              selectedValue={selectedRappel}
+              onValueChange={(itemValue) => setSelectedRappel(itemValue)}
+              style={styles.picker}
+              mode={Platform.OS === "ios" ? "dropdown" : "dialog"}
+            >
+              <Picker.Item label="Non" value={True} />
+              <Picker.Item label="Oui" value={Oui} />
+            </Picker>
+
+            <Text style={styles.text}>Date de vaccination</Text>
+            <TextInput
+              style={[
+                styles.input,
+                focusedField === "vaccins" && styles.inputFocused,
+              ]}
+              onBlur={handleBlur}
+              placeholder="Choisissez une date"
+              placeholderTextColor="black"
+              value={selectedVaccin}
+              onFocus={() => {
+                dismissKeyboard();
+                setIsVaccin(true);
+                handleFocus("vaccins");
+              }}
+            />
+
+            <Text style={styles.text}>Information général </Text>
+            <TextInput
+              style={[
+                styles.input,
+                focusedField === "info" && styles.inputFocused,
+              ]}
+              onFocus={() => handleFocus("info")}
+              onBlur={handleBlur}
+              onChangeText={(value) => setInfo(value)}
+              value={info}
+            />
+
+            <Text style={styles.text}>Traits de personalité</Text>
+            <TextInput
+              style={[
+                styles.input,
+                focusedField === "personnality" && styles.inputFocused,
+              ]}
+              onFocus={() => handleFocus("personnality")}
+              onBlur={handleBlur}
+              onChangeText={(value) => setPersonnality(value)}
+              value={personnality}
+            />
+
+            {/* modale calendrier anniv */}
+
+            {isBirthday && (
+              <Modal
+                animationType="fade"
+                transparent={true}
+                visible={isBirthday}
+                onRequestClose={() => setIsBirthday(false)}
+              >
+                <TouchableOpacity style={styles.modalContent} activeOpacity={1}>
+                  <View style={styles.calendarContainer}>
+                    <TouchableOpacity
+                      style={styles.closeButton}
+                      onPress={() => setIsBirthday(false)}
+                    >
+                      <Text style={styles.closeButtonText}>X</Text>
+                    </TouchableOpacity>
+                    <Calendar
+                      onDayPress={handleBirthday}
+                      markedDates={{
+                        [selectedBirthday]: {
+                          selected: true,
+                          selectedColor: "blue",
+                        },
+                      }}
+                      monthFormat={"yyyy MM "}
+                      hideExtraDays={true}
+                      firstDay={1}
+                      dayNames={[
+                        "Dim",
+                        "Lun",
+                        "Mar",
+                        "Mer",
+                        "Jeu",
+                        "Ven",
+                        "Sam",
+                      ]}
+                      monthNames={[
+                        "Janvier",
+                        "Février",
+                        "Mars",
+                        "Avril",
+                        "Mai",
+                        "Juin",
+                        "Juillet",
+                        "Août",
+                        "Septembre",
+                        "Octobre",
+                        "Novembre",
+                        "Décembre",
+                      ]}
+                      locale={"fr"}
+                    />
+                  </View>
+                </TouchableOpacity>
+              </Modal>
+            )}
+
+            {/* modale calendrier vaccins */}
+
+            {isVaccin && (
+              <Modal
+                animationType="fade"
+                transparent={true}
+                visible={isVaccin}
+                onRequestClose={() => setIsVaccin(false)}
+              >
+                <TouchableOpacity style={styles.modalContent} activeOpacity={1}>
+                  <View style={styles.calendarContainer}>
+                    <TouchableOpacity
+                      style={styles.closeButton}
+                      onPress={() => setIsVaccin(false)}
+                    >
+                      <Text style={styles.closeButtonText}>X</Text>
+                    </TouchableOpacity>
+                    <Calendar
+                      onDayPress={handleVaccin}
+                      markedDates={{
+                        [selectedVaccin]: {
+                          selected: true,
+                          selectedColor: "blue",
+                        },
+                      }}
+                      monthFormat={"yyyy MM"}
+                      hideExtraDays={true}
+                      firstDay={1}
+                      dayNames={[
+                        "Dim",
+                        "Lun",
+                        "Mar",
+                        "Mer",
+                        "Jeu",
+                        "Ven",
+                        "Sam",
+                      ]}
+                      monthNames={[
+                        "Janvier",
+                        "Février",
+                        "Mars",
+                        "Avril",
+                        "Mai",
+                        "Juin",
+                        "Juillet",
+                        "Août",
+                        "Septembre",
+                        "Octobre",
+                        "Novembre",
+                        "Décembre",
+                      ]}
+                      locale={"fr"}
+                    />
+                  </View>
+                </TouchableOpacity>
+              </Modal>
+            )}
+          </View>
+          <TouchableOpacity
+            style={styles.submit}
+            onPress={() => handleSubmit()}
+          >
+            <Text style={styles.textSubmit}> Soumettre </Text>
+          </TouchableOpacity>
+        </SafeAreaView>
       </ScrollView>
     </ImageBackground>
   );
@@ -679,8 +691,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   background: {
-    width: '100%',
-    height: '100%'
+    width: "100%",
+    height: "100%",
   },
   innerContainer: {
     width: "100%",
@@ -722,7 +734,6 @@ const styles = StyleSheet.create({
     height: 100,
     marginBottom: 20,
     borderRadius: 50,
-
   },
   updatePhoto: {
     backgroundColor: "white",
@@ -731,9 +742,9 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     justifyContent: "center",
     alignItems: "center",
-    position: 'absolute',
+    position: "absolute",
     top: 70,
-    right: 0 
+    right: 0,
   },
   calendarContainer: {
     position: "absolute",
@@ -771,15 +782,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   closeButtonText: {
-  color: 'red',
-  textAlign: 'right',
-  paddingHorizontal: 25,
-  paddingVertical: 10,
-  fontSize: 22
+    color: "red",
+    textAlign: "right",
+    paddingHorizontal: 25,
+    paddingVertical: 10,
+    fontSize: 22,
   },
   submit: {
     height: 50,
-    width: '70%',
+    width: "70%",
     borderColor: "#0639DB",
     backgroundColor: "#0639DB",
     borderRadius: 10,

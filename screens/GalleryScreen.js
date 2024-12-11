@@ -10,43 +10,61 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   ScrollView,
-} from "react-native"
+} from "react-native";
 
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 function Gallery() {
-  const [galerie, setGalerie] = useState([
-    {
-      description: "voila cest la description tac",
-      uri: "https://img.20mn.fr/2c2xoZqdQhu84Dmhb8ci9Sk/1444x920_le-berger-australien-est-le-chien-prefere-des-francais",
-    },
-    {
-      description: "voila cest la description tac",
-      uri: "https://img.20mn.fr/2c2xoZqdQhu84Dmhb8ci9Sk/1444x920_le-berger-australien-est-le-chien-prefere-des-francais",
-    },
-    {
-      description: "voila cest la description tac",
-      uri: "https://img.20mn.fr/2c2xoZqdQhu84Dmhb8ci9Sk/1444x920_le-berger-australien-est-le-chien-prefere-des-francais",
-    },
-    {
-      description: "voila cest la description tac",
-      uri: "https://img.20mn.fr/2c2xoZqdQhu84Dmhb8ci9Sk/1444x920_le-berger-australien-est-le-chien-prefere-des-francais",
-    },
-    {
-      description: "voila cest la description tac",
-      uri: "https://img.20mn.fr/2c2xoZqdQhu84Dmhb8ci9Sk/1444x920_le-berger-australien-est-le-chien-prefere-des-francais",
-    },
-  ])
+  
+  const apiPicture = `${process.env.EXPO_PUBLIC_BACKEND_URL}personalPicture`;
+  // const userToken = useSelector((state) => state.value.token);
+  const userToken = "HYG44QCUa6YAlUavvkHQYqBGlAVJUNfp";
+
+  const [galerie, setGalerie] = useState([]);
+
+  // const [galerie, setGalerie] = useState([
+  //   {
+  //     description: "voila cest la description tac",
+  //     uri: "https://img.20mn.fr/2c2xoZqdQhu84Dmhb8ci9Sk/1444x920_le-berger-australien-est-le-chien-prefere-des-francais",
+  //   },
+  //   {
+  //     description: "voila cest la description tac",
+  //     uri: "https://img.20mn.fr/2c2xoZqdQhu84Dmhb8ci9Sk/1444x920_le-berger-australien-est-le-chien-prefere-des-francais",
+  //   },
+  //   {
+  //     description: "voila cest la description tac",
+  //     uri: "https://img.20mn.fr/2c2xoZqdQhu84Dmhb8ci9Sk/1444x920_le-berger-australien-est-le-chien-prefere-des-francais",
+  //   },
+  //   {
+  //     description: "voila cest la description tac",
+  //     uri: "https://img.20mn.fr/2c2xoZqdQhu84Dmhb8ci9Sk/1444x920_le-berger-australien-est-le-chien-prefere-des-francais",
+  //   },
+  //   {
+  //     description: "voila cest la description tac",
+  //     uri: "https://img.20mn.fr/2c2xoZqdQhu84Dmhb8ci9Sk/1444x920_le-berger-australien-est-le-chien-prefere-des-francais",
+  //   },
+  // ])
 
   useEffect(() => {
-    ;(async () => {
-      const response = await fetch("")
-
-      const data = await response.json()
-
-      setGalerie(data.data)
-    })()
-  }, [])
+    const fetchGalerie = async () => {
+      try {
+        const response = await fetch(apiPicture, {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+        }
+        const data = await response.json();
+        setGalerie(data.personalPicture);
+      } catch (error) {
+        console.error("ERROR pour afficher les photos", error.message);
+      }
+    };
+    fetchGalerie();
+  }, []);
 
   return (
     <ImageBackground
@@ -72,7 +90,7 @@ function Gallery() {
         </ScrollView>
       </SafeAreaView>
     </ImageBackground>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -100,6 +118,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-})
+});
 
-export default Gallery
+export default Gallery;
