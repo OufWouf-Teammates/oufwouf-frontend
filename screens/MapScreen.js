@@ -120,6 +120,18 @@ export default function MapScreen({ navigation }) {
               <View style={styles.buttonIconCore} />
             </View>
           </TouchableOpacity>
+          <View style={styles.filters}>
+            <TouchableOpacity style={styles.buttonFilter}>
+              <Text>Vétérinaires</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.buttonFilter}>
+              <Text>Butiques</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.buttonFilter}>
+              <Text>Parcs</Text>
+            </TouchableOpacity>
+          </View>
+          
           <MapView
             style={styles.map}
             initialRegion={{
@@ -330,4 +342,12 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
   },
+  filters: {
+    position: "absolute",
+    marginTop: 100,
+    width: "100%",
+    zIndex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  }
 })
