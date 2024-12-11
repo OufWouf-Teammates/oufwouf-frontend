@@ -20,6 +20,22 @@ function Gallery() {
       description: "voila cest la description tac",
       uri: "https://img.20mn.fr/2c2xoZqdQhu84Dmhb8ci9Sk/1444x920_le-berger-australien-est-le-chien-prefere-des-francais",
     },
+    {
+      description: "voila cest la description tac",
+      uri: "https://img.20mn.fr/2c2xoZqdQhu84Dmhb8ci9Sk/1444x920_le-berger-australien-est-le-chien-prefere-des-francais",
+    },
+    {
+      description: "voila cest la description tac",
+      uri: "https://img.20mn.fr/2c2xoZqdQhu84Dmhb8ci9Sk/1444x920_le-berger-australien-est-le-chien-prefere-des-francais",
+    },
+    {
+      description: "voila cest la description tac",
+      uri: "https://img.20mn.fr/2c2xoZqdQhu84Dmhb8ci9Sk/1444x920_le-berger-australien-est-le-chien-prefere-des-francais",
+    },
+    {
+      description: "voila cest la description tac",
+      uri: "https://img.20mn.fr/2c2xoZqdQhu84Dmhb8ci9Sk/1444x920_le-berger-australien-est-le-chien-prefere-des-francais",
+    },
   ])
 
   useEffect(() => {
@@ -37,22 +53,24 @@ function Gallery() {
       source={require("../assets/BG_App.png")}
       style={styles.container}
     >
-      <ScrollView>
-        {galerie &&
-          galerie.map((e, i) => (
-            <View key={i}>
-              <Image
-                source={{ uri: e.uri }}
-                style={styles.image}
-                resizeMode="cover"
-              />
-              <TouchableOpacity>
-                <Text>Location</Text>
-              </TouchableOpacity>
-              <Text>{e.description}</Text>
-            </View>
-          ))}
-      </ScrollView>
+      <SafeAreaView style={styles.content}>
+        <ScrollView style={styles.scroll}>
+          {galerie &&
+            galerie.map((e, i) => (
+              <View key={i} style={styles.card}>
+                <Image
+                  source={{ uri: e.uri }}
+                  style={styles.image}
+                  resizeMode="cover"
+                />
+                <TouchableOpacity>
+                  <Text>Location</Text>
+                </TouchableOpacity>
+                <Text>{e.description}</Text>
+              </View>
+            ))}
+        </ScrollView>
+      </SafeAreaView>
     </ImageBackground>
   )
 }
@@ -60,11 +78,27 @@ function Gallery() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
   },
   image: {
+    width: 300,
+    height: 300,
+  },
+  content: {
+    justifyContent: "center",
+    width: "100%",
+    alignItems: "center",
+  },
+  scroll: {
+    width: "100%",
+    alignContent: "center",
+    gap: 10,
+  },
+  card: {
     width: "60%",
+    backgroundColor: "white",
+    padding: 50,
+    justifyContent: "center",
+    alignItems: "center",
   },
 })
 

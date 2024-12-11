@@ -70,33 +70,36 @@ export default function ConnectionScreen({ navigation }) {
   const connectToAccount = (objConn) => {
     console.log(`${process.env.EXPO_PUBLIC_BACKEND_URL}users/signin`)
 
-if(objConn.email && objConn.password) {
-  console.log(`${process.env.EXPO_PUBLIC_BACKEND_URL}users/signin`);
-    
-    fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}users/signin`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: objConn.email,
-        password: objConn.password,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data)
-        if (data.result) {
-          dispatch(
-            connectUser({ email: data.result.email, token: data.result.token })
-          )
-          navigation.navigate("Map")
-        } else {
-          alert(data.error)
-        }
-      })
-      .catch((error) => console.error(error))
+    if (objConn.email && objConn.password) {
+      console.log(`${process.env.EXPO_PUBLIC_BACKEND_URL}users/signin`)
 
-    console.log(objConn)
-  }
+      fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}users/signin`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: objConn.email,
+          password: objConn.password,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data)
+          if (data.result) {
+            dispatch(
+              connectUser({
+                email: data.result.email,
+                token: data.result.token,
+              })
+            )
+            navigation.navigate("Map")
+          } else {
+            alert(data.error)
+          }
+        })
+        .catch((error) => console.error(error))
+
+      console.log(objConn)
+    }
   }
 
   const createAccount = (objConn) => {
@@ -168,19 +171,21 @@ if(objConn.email && objConn.password) {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() => navigation.navigate("TakePicture")}
+          onPress={() => navigation.navigate("Interest")}
           style={styles.buttonSignUp}
           activeOpacity={0.8}
         >
-          <Text style={styles.textButtonSignUp}>Camera</Text>
+          <Text style={styles.textButtonSignUp}>interest</Text>
           <FontAwesome name="arrow-right" size={25} color="#0639DB" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('Interest')} style={styles.buttonSignUp} activeOpacity={0.8}>
-          <Text style={styles.textButtonSignUp}>interest</Text>
-          <FontAwesome name='arrow-right' size={25} color='#0639DB'/>
-        </TouchableOpacity>
-      <GoogleSignInButton title="Connect with Google" connectToAccount={connectToAccount}/>
-        <AppleSignInButton title="Connect with Apple" connectToAccount={connectToAccount} />
+        <GoogleSignInButton
+          title="Connect with Google"
+          connectToAccount={connectToAccount}
+        />
+        <AppleSignInButton
+          title="Connect with Apple"
+          connectToAccount={connectToAccount}
+        />
       </SafeAreaView>
     </ImageBackground>
   )
