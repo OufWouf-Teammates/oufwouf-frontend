@@ -11,7 +11,14 @@ import {
   Linking,
   Modal,
   Platform,
+  ScrollView,
 } from "react-native"
+import {
+  useFonts,
+  Lexend_400Regular,
+  Lexend_700Bold,
+} from "@expo-google-fonts/lexend"
+import AppLoading from "expo-app-loading"
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context"
 import MapView, { Marker, Circle, PROVIDER_GOOGLE } from "react-native-maps"
 import * as Location from "expo-location"
@@ -29,12 +36,12 @@ export default function MapScreen({ navigation }) {
   const [mapRef, setMapRef] = useState(null) // Référence pour MapView
   const [redMarker, setRedMarker] = useState(null) // État pour le marker rouge
   const [modalVisible, setModalVisible] = useState(false)
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn)
-
+  const [placesData, setPlacesData] = useState([])
+  const [selectedFilter, setSelectedFilter] = useState(null);
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   useEffect(() => {
     requestLocationPermission()
   }, [])
-
   const requestLocationPermission = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync()
     if (status !== "granted") {
@@ -54,6 +61,14 @@ export default function MapScreen({ navigation }) {
 
     let location = await Location.getCurrentPositionAsync({})
     setLocation(location)
+  }
+  //Nécessaire pour la configuration des fonts
+  const [fontsLoaded] = useFonts({
+    Lexend_400Regular,
+    Lexend_700Bold,
+  })
+  if (!fontsLoaded) {
+    return <AppLoading />
   }
 
   const centerOn = (objLatLng) => {
@@ -92,6 +107,68 @@ export default function MapScreen({ navigation }) {
     }
   }
 
+  const filterOptions = ["Vétérinaires", "Boutiques", "Parcs"];
+
+  const filters = filterOptions.map((data, i) => {
+    return (
+        <TouchableOpacity key={i} 
+          style={[
+            styles.buttonFilter,
+            selectedFilter === data? 
+            { backgroundColor: "#0639DB" } : 
+            { backgroundColor: "#FFF" }]}
+          onPress={() => handleFilterPress(data)}>
+          <Text 
+            style={[
+              styles.buttonFilter,
+              selectedFilter === data ? 
+              {color : "#FFF"} : 
+              {color: "#0639DB"}]}>{data}</Text>
+        </TouchableOpacity>
+    )
+  })
+
+  const handleFilterPress = (filter) => {
+    if (selectedFilter === filter) {
+      setSelectedFilter(null);
+      setPlacesData([])
+    } else {
+      setSelectedFilter(filter);
+      let endpoint = "";
+      if (filter === "Boutiques") endpoint = "boutiques";
+      else if (filter === "Vétérinaires") endpoint = "veterinaires";
+      else if (filter === "Parcs") endpoint = "parcs-chiens";
+  
+      const url = `${process.env.EXPO_PUBLIC_BACKEND_URL}map/${endpoint}/${location.coords.latitude},${location.coords.longitude}`;
+      
+      fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ filter }),
+      })
+        .then((response) => {
+          if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+          return response.json();
+        })
+        .then((data) => {
+          if (data.result) {
+            // Traite les données reçues
+            const res = data.data.elements.map((element) => {
+              return {
+                name: element?.tags?.name || "Inconnu", // Assure une valeur par défaut
+                latitude: element?.lat,
+                longitude: element?.lon,
+              };
+            });
+        
+            // Mets à jour l'état avec les données des lieux
+            setPlacesData(res);
+          }
+        })
+        .catch((error) => console.error("Erreur lors de la requête :", error));
+    }
+  };
+
   if (!location) {
     return (
       <View style={styles.container}>
@@ -120,17 +197,15 @@ export default function MapScreen({ navigation }) {
               <View style={styles.buttonIconCore} />
             </View>
           </TouchableOpacity>
-          <View style={styles.filters}>
-            <TouchableOpacity style={styles.buttonFilter}>
-              <Text>Vétérinaires</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.buttonFilter}>
-              <Text>Butiques</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.buttonFilter}>
-              <Text>Parcs</Text>
-            </TouchableOpacity>
-          </View>
+          <View style={styles.ScrollView}>
+            <ScrollView 
+              horizontal 
+              contentContainerStyle={styles.filters} 
+              showsHorizontalScrollIndicator={false}
+            >
+              {filters}
+            </ScrollView>
+            </View>
           
           <MapView
             style={styles.map}
@@ -342,12 +417,26 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
   },
-  filters: {
-    position: "absolute",
-    marginTop: 100,
+  ScrollView: {
+    zIndex: 1, 
     width: "100%",
-    zIndex: 1,
+    marginTop: 120,
+  }, 
+  filters: {
+    display: 'flex',
+    flexDirection: 'row',
     justifyContent: "center",
     alignItems: "center",
+  },
+  buttonFilter: {
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    marginHorizontal: 10,
+    borderRadius: 25,
+  },
+  textButtonFilter: {
+    color: '#0639DB',
+    fontFamily: "Lexend_400Regular",
+    fontSize: 16,
   }
 })
