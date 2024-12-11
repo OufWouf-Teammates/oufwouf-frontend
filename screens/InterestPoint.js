@@ -70,7 +70,7 @@ export default function InterestPoint({ navigation, route }) {
   if (!placeData) {
     return (
       <SafeAreaView style={styles.container}>
-        <Text>Unable to load the place data.</Text>
+        <Text>Impossible d'afficher cette recherche</Text>
       </SafeAreaView>
     );
   }
