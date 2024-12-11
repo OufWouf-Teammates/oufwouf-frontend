@@ -11,11 +11,26 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
+import {
+  useFonts,
+  Lexend_400Regular,
+  Lexend_700Bold,
+} from "@expo-google-fonts/lexend";
+import AppLoading from "expo-app-loading";
 
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 
+import { useEffect, useState } from "react"
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 function Gallery() {
+
+  // Nécessaire pour la configuration des fonts
+  const [fontsLoaded] = useFonts({
+    Lexend_400Regular,
+    Lexend_700Bold,
+  });
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  }
   
   const apiPicture = `${process.env.EXPO_PUBLIC_BACKEND_URL}personalPicture`;
   // const userToken = useSelector((state) => state.value.token);
@@ -46,6 +61,8 @@ function Gallery() {
   //   },
   // ])
 
+
+
   useEffect(() => {
     const fetchGalerie = async () => {
       try {
@@ -72,6 +89,13 @@ function Gallery() {
       style={styles.container}
     >
       <SafeAreaView style={styles.content}>
+          <FontAwesome
+          name="arrow-left"
+          size={25}
+          color="#0639DB"
+          style={styles.iconBack}
+          onPress={() => navigation.goBack()}
+        />
         <ScrollView style={styles.scroll}>
           {galerie &&
             galerie.map((e, i) => (
@@ -81,10 +105,12 @@ function Gallery() {
                   style={styles.image}
                   resizeMode="cover"
                 />
-                <TouchableOpacity>
-                  <Text>Location</Text>
-                </TouchableOpacity>
-                <Text>{e.description}</Text>
+                <View  style={styles.cardInfo}>
+                  <TouchableOpacity>
+                    <Text style={styles.textFont}>{e.city}</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.textFont}>{e.description}</Text>
+                </View>
               </View>
             ))}
         </ScrollView>
@@ -96,28 +122,31 @@ function Gallery() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },  
+  iconBack: {
+    marginBottom: 50
   },
   image: {
-    width: 300,
-    height: 300,
+    width: 350,
+    height: 350,
   },
-  content: {
-    justifyContent: "center",
-    width: "100%",
-    alignItems: "center",
-  },
-  scroll: {
-    width: "100%",
-    alignContent: "center",
-    gap: 10,
-  },
-  card: {
-    width: "60%",
+  cardInfo: {
+    width: 350,
     backgroundColor: "white",
     padding: 50,
+    marginBottom: 50,
+  },
+  card: {
     justifyContent: "center",
     alignItems: "center",
   },
-});
+  textFont: {
+    fontSize: 18,
+    fontFamily: "Lexend_400Regular",
+  }
+})
+
 
 export default Gallery;

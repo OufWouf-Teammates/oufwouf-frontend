@@ -10,13 +10,16 @@ export default function TabBar() {
       <View style={styles.tabBarBackground}>
         <View style={styles.containerInside}>
           <View style={styles.containerOneButtonLeft}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation?.navigate("Gallery")}>
               <FontAwesome name="heart-o" size={30} color="#1738D3" />
             </TouchableOpacity>
           </View>
           <View style={styles.containerOneButtonTop}>
             <View>
-              <TouchableOpacity style={styles.button}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => navigation?.navigate("TakePicture")}
+              >
                 <FontAwesome name="paw" size={30} color="#F5F5F5" />
               </TouchableOpacity>
             </View>

@@ -1,251 +1,152 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react"
 import {
-  SafeAreaView,
-  StyleSheet,
   View,
-  Image,
-  TouchableOpacity,
   Text,
-  ImageBackground,
-  ActivityIndicator
-} from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {
-  useFonts,
-  Lexend_400Regular,
-  Lexend_700Bold,
-} from "@expo-google-fonts/lexend";
-import AppLoading from "expo-app-loading";
+  StyleSheet,
+  Image,
+  ActivityIndicator,
+  ScrollView,
+  Alert,
+} from "react-native"
 
-export default function InterestPoint({ navigation, route }) {
-  const { localisation, nom } = route.params; // Assuming these are passed in route params
-  const [placeData, setPlaceData] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  // Nécessaire pour la configuration des fonts
-  const [fontsLoaded] = useFonts({
-    Lexend_400Regular,
-    Lexend_700Bold,
-  });
-
-  if (!fontsLoaded) {
-    return <AppLoading />;
-  }
-
-  // Icônes de patte
-  const paw = [];
-  for (let i = 0; i < 5; i++) {
-    paw.push(<FontAwesome key={i} name="paw" size={20} color="#0639DB" />);
-  }
-
+const InterestPoint = ({ route }) => {
+  const { markerData } = route.params
+  const [pointData, setPointData] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
   useEffect(() => {
-    const fetchPlaceData = async () => {
+    // Fonction pour récupérer les données d'un point d'intérêt spécifique
+    const fetchInterestPoint = async () => {
       try {
-        const response = await fetch(`https://your-backend-url.com/lieu/${localisation}/${nom}`);
-        const data = await response.json();
-        
-        if (data.result && data.data) {
-          setPlaceData(data.data);
-        } else {
-          console.error('No data found or invalid response');
+        const url = await fetch(
+          `${process.env.EXPO_PUBLIC_BACKEND_URL}lieu/${
+            markerData?.latitude || 1
+          },${markerData?.longitude || 1}/${markerData.name}`
+        )
+        const response = await fetch(url)
+        if (!response.ok) {
+          throw new Error(
+            "Une erreur est survenue lors de la récupération des données."
+          )
         }
-      } catch (error) {
-        console.error('Error fetching place data:', error);
+        const data = await response.json()
+        setPointData(data)
+        console.log(pointData)
+      } catch (err) {
+        setError(err.message)
+        Alert.alert("Erreur", err.message)
       } finally {
-        setLoading(false);
+        setIsLoading(false)
       }
-    };
+    }
 
-    fetchPlaceData();
-  }, [localisation, nom]);
+    fetchInterestPoint()
+  }, [])
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <SafeAreaView style={styles.container}>
-        <ActivityIndicator size="large" color="#0639DB" />
-      </SafeAreaView>
-    );
+      <View style={styles.centeredView}>
+        <ActivityIndicator size="large" color="#007BFF" />
+      </View>
+    )
   }
 
-  if (!placeData) {
+  if (error || !pointData) {
     return (
-      <SafeAreaView style={styles.container}>
-        <Text>Unable to load the place data.</Text>
-      </SafeAreaView>
-    );
+      <View style={styles.centeredView}>
+        <Text style={styles.errorText}>
+          Impossible de charger les données du point d'intérêt.
+        </Text>
+      </View>
+    )
   }
 
   return (
-    <ImageBackground
-      source={require("../assets/BG_App.png")}
-      style={styles.container}
-    >
-      <View style={styles.container}>
-        {/* Image du profil */}
-        <View>
-        <Image
-          source={{
-            uri: placeData.photos ? placeData.photos[0].photo_reference : require('../assets/dog_example.webp')
-          }}
-          style={styles.profilPic}
-        />
-          <FontAwesome
-            name="arrow-left"
-            size={25}
-            color="#0639DB"
-            style={styles.iconBack}
-            onPress={() => navigation.goBack()}
-          />
+    <ScrollView style={styles.container}>
+      {/* Image principale */}
+      {pointData.imageUrl ? (
+        <Image source={{ uri: pointData.imageUrl }} style={styles.image} />
+      ) : (
+        <View style={[styles.image, styles.placeholderImage]}>
+          <Text style={styles.placeholderText}>Image indisponible</Text>
+        </View>
+      )}
+
+      {/* Informations principales */}
+      <View style={styles.infoContainer}>
+        <Text style={styles.title}>{pointData.name}</Text>
+        <Text style={styles.description}>{pointData.description}</Text>
+
+        <View style={styles.detailContainer}>
+          <Text style={styles.detailLabel}>Adresse :</Text>
+          <Text style={styles.detailValue}>
+            {pointData.address || "Non renseignée"}
+          </Text>
         </View>
 
-        {/* Informations */}
-        <View style={styles.infoContainer}>
-          {/* Titre */}
-          <View style={styles.infoTitre}>
-            <Text style={styles.title}>{placeData.name}</Text>
-
-            {/* Ouverture */}
-            <View style={styles.openContainer}>
-              <Text style={styles.open}>{placeData.opening_hours ? 'OUVERT' : 'FERMÉ'}</Text>
-              <FontAwesome name="bookmark" size={35} color="#EAD32A" />
-            </View>
-          </View>
-
-          {/* Note */}
-          <View style={styles.noteAverage}>
-            {paw}
-            <Text style={styles.note}>{placeData.user_ratings_total} avis</Text>
-          </View>
-
-          {/* Profil infos */}
-          <View style={styles.profilInfos}>
-            <Text style={styles.adresse}>{placeData.formatted_address}</Text>
-
-            {/* Téléphone */}
-            {placeData.formatted_phone_number && (
-              <View style={styles.row}>
-                <FontAwesome name="phone" size={15} color="#EAD32A" />
-                <Text style={styles.phone}>{placeData.formatted_phone_number}</Text>
-              </View>
-            )}
-
-            {/* Horaires */}
-            {placeData.opening_hours && (
-              <View style={styles.row}>
-                <FontAwesome name="clock-o" size={15} color="#EAD32A" />
-                <Text style={styles.text}>Horaires d'ouverture</Text>
-              </View>
-            )}
-            <Text style={styles.hours}>
-              {placeData.opening_hours
-                ? `Aujourd'hui : ${placeData.opening_hours.weekday_text[0]}`
-                : 'Heures non disponibles'}
-            </Text>
-
-            {/* Bouton */}
-            <TouchableOpacity
-              style={styles.reserve}
-              onPress={() => console.log('Rendez-vous pris!')}
-            >
-              <Text style={styles.reserveText}>Prendre rendez-vous</Text>
-            </TouchableOpacity>
-          </View>
+        <View style={styles.detailContainer}>
+          <Text style={styles.detailLabel}>Horaires :</Text>
+          <Text style={styles.detailValue}>
+            {pointData.hours || "Non spécifiés"}
+          </Text>
         </View>
       </View>
-    </ImageBackground>
-  );
+    </ScrollView>
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#F9F9F9",
   },
-  profilPic: {
-    width: '100%',
-    height: 300,
-    marginBottom: 10,
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  iconBack: {
-    padding: 20,
-    position: 'absolute',
-    top: 40,
+  image: {
+    width: "100%",
+    height: 200,
+    resizeMode: "cover",
+  },
+  placeholderImage: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#E0E0E0",
+  },
+  placeholderText: {
+    color: "#757575",
   },
   infoContainer: {
-    padding: 20,
+    padding: 16,
   },
   title: {
-    fontSize: 42,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#0639DB',
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 8,
   },
-  openContainer: {
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  infoTitre: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  open: {
-    fontSize: 18,
-    color: '#0639DB',
-    fontWeight: 'bold',
-    borderRadius: 5,
-    borderColor: '#0639DB',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-  },
-  noteAverage: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  note: {
-    marginLeft: 10,
+  description: {
     fontSize: 16,
-    color: '#0639DB',
+    color: "#555",
+    marginBottom: 16,
   },
-  profilInfos: {
-    marginTop: 10,
+  detailContainer: {
+    marginBottom: 12,
   },
-  adresse: {
-    fontSize: 20,
-    marginBottom: 10,
+  detailLabel: {
+    fontSize: 16,
+    fontWeight: "600",
   },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 5,
+  detailValue: {
+    fontSize: 16,
+    color: "#333",
   },
-  phone: {
-    marginLeft: 10,
-    fontSize: 20,
-    color: '#4D4D4D',
+  errorText: {
+    color: "red",
+    fontSize: 18,
+    textAlign: "center",
   },
-  text: {
-    marginLeft: 10,
-    fontSize: 20,
-  },
-  hours: {
-    fontSize: 14,
-    color: '#4D4D4D',
-    marginBottom: 10,
-  },
-  reserve: {
-    backgroundColor: '#0639DB',
-    width: '70%',
-    borderRadius: 5,
-    padding: 10,
-    marginTop: 30,
-    alignItems: 'center',
-    alignSelf: 'center',
-  },
-  reserveText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 22,
-  },
-});
+})
+
+export default InterestPoint

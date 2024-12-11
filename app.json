@@ -24,10 +24,10 @@
         ],
         "NSCameraUsageDescription": "Cette application a besoin d'accéder à votre woof caméra.",
         "NSPhotoLibraryUsageDescription": "Cette application a besoin d'accéder à votre woof gallery.",
-      "supportsTablet": true,
-      "config": {
-        "googleMapsApiKey": "AIzaSyBSQzGQfgR1VmOHpO0CY_S1tadFwViMQc8"
-      }
+        "supportsTablet": true,
+        "config": {
+          "googleMapsApiKey": "AIzaSyBSQzGQfgR1VmOHpO0CY_S1tadFwViMQc8"
+        }
       },
       "bundleIdentifier": "com.lacapsule.oufwouf",
       "usesAppleSignIn": true
@@ -47,11 +47,29 @@
         "WRITE_EXTERNAL_STORAGE",
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION"
-      ]
+      ],
+      "package": "com.lacapsule.oufwouf"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-font"]
+    "plugins": [
+      "expo-font"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "523a502f-3e2e-4187-ade4-64537f6a76ca"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/523a502f-3e2e-4187-ade4-64537f6a76ca",
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
+    },
+    "owner": "oufwouf"
   }
 }
