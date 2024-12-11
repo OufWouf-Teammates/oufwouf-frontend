@@ -1,50 +1,77 @@
-import React, { useState, useEffect, useRef } from "react"
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native"
-import { CameraView, Camera, FlashMode } from "expo-camera"
-import FontAwesome from "react-native-vector-icons/FontAwesome"
+import React, { useState, useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { CameraView, Camera, FlashMode } from "expo-camera";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 export default function TakePictureScreen({ navigation }) {
-  const [hasPermission, setHasPermission] = useState(false)
-  const [flashStatus, setflashStatus] = useState("off")
-  const [facing, setFacing] = useState("back")
-  const cameraRef = useRef(null)
+  const apiPicture = `${process.env.EXPO_PUBLIC_BACKEND_URL}personalPicture`;
+  const userToken = useSelector((state) => state.user.value.token)
+
+  const [hasPermission, setHasPermission] = useState(false);
+  const [flashStatus, setflashStatus] = useState("off");
+  const [facing, setFacing] = useState("back");
+  const cameraRef = useRef(null);
+
   useEffect(() => {
-    ;(async () => {
-      const result = await Camera.requestCameraPermissionsAsync()
-      setHasPermission(result && result?.status === "granted")
-    })()
-  }, [])
+    (async () => {
+      const result = await Camera.requestCameraPermissionsAsync();
+      setHasPermission(result && result?.status === "granted");
+    })();
+  }, []);
 
   if (!hasPermission) {
-    return <View />
+    return <View />;
   }
 
   const TakePicture = async () => {
-    const photo = await cameraRef.current?.takePictureAsync({ quality: 0.3 })
+    try {
+      const photo = await cameraRef.current?.takePictureAsync({ quality: 0.3 });
 
-    if (photo) {
-      const formData = new FormData()
+      if (photo) {
+        const formData = new FormData();
 
-      formData.append("photoFromFront", {
-        uri: photo.uri,
-        name: "picture.jpg",
-        type: "image/jpeg",
-      })
+        formData.append(
+          "data",
+          JSON.stringify({
+            description: 'blabla',
+            latitude: 3000,
+            longitude: 456677,
+          })
+        );
 
-      await fetch("http://192.168.100.105:3000/personalPic", {
-        method: "POST",
-        body: formData,
-      })
+        formData.append("photoFromFront", {
+          uri: photo.uri,
+          name: "picture.jpg",
+          type: "image/jpeg",
+        });
+
+        const response = await fetch(apiPicture, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+
+          body: formData,
+        });
+
+        const responseData = await response.json()
+        console.log(responseData)
+      } else {
+        console.log("pas de nouvelle photo")
+      }
+    } catch (error) {
+      console.error("Error taking picture:", error.message);
     }
-  }
+  };
 
   const toggleFlash = () => {
-    setflashStatus((current) => (current === "off" ? "on" : "off"))
-  }
+    setflashStatus((current) => (current === "off" ? "on" : "off"));
+  };
 
   const toggleCameraFacing = () => {
-    setFacing((current) => (current === "back" ? "front" : "back"))
-  }
+    setFacing((current) => (current === "back" ? "front" : "back"));
+  };
 
   return (
     <CameraView
@@ -52,7 +79,7 @@ export default function TakePictureScreen({ navigation }) {
       flash={flashStatus}
       facing={facing}
       ref={(ref) => {
-        cameraRef.current = ref
+        cameraRef.current = ref;
       }}
     >
       <View style={styles.params}>
@@ -75,13 +102,13 @@ export default function TakePictureScreen({ navigation }) {
       <TouchableOpacity
         style={styles.galerie}
         onPress={() => {
-          navigation.navigate("Gallery")
+          navigation.navigate("Gallery");
         }}
       >
         <FontAwesome name="picture-o" size={70} color="white" />
       </TouchableOpacity>
     </CameraView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -105,4 +132,4 @@ const styles = StyleSheet.create({
     bottom: 50,
     left: 50,
   },
-})
+});

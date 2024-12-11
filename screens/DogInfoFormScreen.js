@@ -29,11 +29,16 @@ import * as MediaLibrary from "expo-media-library"
 import {
   ActionSheetProvider,
   useActionSheet,
-} from "@expo/react-native-action-sheet"
-import { useSelector } from "react-redux"
-import FontAwesome from "react-native-vector-icons/FontAwesome"
+} from "@expo/react-native-action-sheet";
+import { useSelector } from "react-redux";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+
 
 const DogInfoFormScreen = () => {
+
+  // userToken = useSelector((state) => state.value.token);
+  const userToken = "HYG44QCUa6YAlUavvkHQYqBGlAVJUNfp";
+
   // lien des fetchs //
 
   const apiRace = `${process.env.EXPO_PUBLIC_BACKEND_URL}races`
@@ -75,10 +80,6 @@ const DogInfoFormScreen = () => {
 
   const { showActionSheetWithOptions } = useActionSheet()
 
-  // user token //
-
-  // userToken = useSelector((state) => state.value.token);
-  userToken = "R5PnP5b8pISelu9BAsLI1Qi0RjMr_OuE"
   // permissions pour utiser l'appareil photo et la galerie //
 
   useEffect(() => {
@@ -458,10 +459,11 @@ const DogInfoFormScreen = () => {
               placeholderTextColor="black"
               value={selectedBirthday}
               onFocus={() => {
-                dismissKeyboard()
-                setIsBirthday(true)
-                handleFocus("anniv")
-              }}
+
+                dismissKeyboard();
+                setIsBirthday(true);
+                handleFocus("anniv");
+ }}
             />
 
             <Text style={styles.text}>Couleur de robe du chien</Text>
@@ -586,6 +588,7 @@ const DogInfoFormScreen = () => {
                   activeOpacity={1}
                   onPress={() => setIsBirthday(false)}
                 >
+
                   <View style={styles.calendarContainer}>
                     <TouchableOpacity
                       style={styles.closeButton}
@@ -821,4 +824,5 @@ export default () => (
   <ActionSheetProvider>
     <DogInfoFormScreen />
   </ActionSheetProvider>
-)
+);
+

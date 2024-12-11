@@ -17,7 +17,7 @@ import {
 } from "@expo-google-fonts/lexend";
 import AppLoading from "expo-app-loading";
 
-const InterestPoint = ({ route }) => {
+const InterestPoint = ({ navigation, route }) => {
   const { markerData } = route.params; 
   const [pointData, setPointData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);

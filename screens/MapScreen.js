@@ -129,11 +129,12 @@ export default function MapScreen({ navigation }) {
       >
         <Text
           style={[
-            styles.buttonFilter,
+            styles.textButtonFilter,
             selectedFilter === data ? { color: "#FFF" } : { color: "#0639DB" },
             {
               fontFamily: "Lexend_400Regular",
               fontSize: 16,
+              alignSelf: 'center',
             },
           ]}
         >
@@ -525,10 +526,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     marginRight: 10,
     borderRadius: 25,
+    alignContent: 'center',
+    justifyContent: 'center'
   },
   textButtonFilter: {
     color: "#0639DB",
     fontFamily: "Lexend_400Regular",
     fontSize: 16,
+    paddingVertical: 5,
+    paddingHorizontal: 5,
   },
 })
