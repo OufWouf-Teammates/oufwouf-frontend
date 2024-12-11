@@ -75,7 +75,7 @@ const DogInfoFormScreen = () => {
   // user token //
 
   // userToken = useSelector((state) => state.value.token);
-  userToken = "TfkTySvjjNbWqZGn9v9pX0OdpUuqR7tQ";
+  userToken = "HYG44QCUa6YAlUavvkHQYqBGlAVJUNfp";
   // permissions pour utiser l'appareil photo et la galerie //
 
   useEffect(() => {
@@ -137,16 +137,15 @@ const DogInfoFormScreen = () => {
     }
 
     setLoadingRace(true);
-    console.log(`${apiRace}${query}`);
 
     try {
       const response = await fetch(`${apiRace}?search=${query}`);
-      console.log(`${apiRace}?search=${query}`);
+
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
-      console.log(data);
+
       if (data && Array.isArray(data.data)) {
         setSuggestionRace(data.data);
       } else {
@@ -271,7 +270,6 @@ const DogInfoFormScreen = () => {
       formData.append(
         "data",
         JSON.stringify({
-          imageUri: imageUri,
           name: name,
           ID: dogId,
           race: race,
@@ -281,26 +279,28 @@ const DogInfoFormScreen = () => {
           personality: personnality,
         })
       );
-      if (data.imageUri) {
+      if (imageUri) {
         formData.append("photoFromFront", {
-          uri: data.imageUri,
+          uri: imageUri,
           type: "image/jpeg",
           name: "dog_image.jpg",
         });
       }
+
       console.log(formData);
-      
+
       const response = await fetch(apiNewDog, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${userToken}`,
         },
-        
+
         body: formData,
       });
       const responseData = await response.json();
+
       console.log(responseData);
-      
+
       if (responseData.result) {
         const vaccinResponse = await fetch(apiNewVaccins, {
           method: "POST",
@@ -313,7 +313,7 @@ const DogInfoFormScreen = () => {
         });
 
         const data = await vaccinResponse.json();
-
+        console.log(data);
         if (data.result) {
           console.log("YAY new vaccins");
         } else {
@@ -505,7 +505,7 @@ const DogInfoFormScreen = () => {
                 selectedValue={selectedRappel}
                 onValueChange={(itemValue) => setSelectedRappel(itemValue)}
                 style={styles.picker}
-                mode={Platform.OS === 'ios' ? 'dropdown' : 'dialog'}
+                mode={Platform.OS === "ios" ? "dropdown" : "dialog"}
               >
                 <Picker.Item label="Non" value="Non" />
                 <Picker.Item label="Oui" value="Oui" />
@@ -648,7 +648,10 @@ const DogInfoFormScreen = () => {
                 </View>
               )}
             </View>
-            <TouchableOpacity style={styles.submit} onPress={() => handleSubmit()}>
+            <TouchableOpacity
+              style={styles.submit}
+              onPress={() => handleSubmit()}
+            >
               <Text style={styles.textSubmit}> Soumettre </Text>
             </TouchableOpacity>
           </SafeAreaView>
@@ -676,12 +679,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   text: {
-    color: '#263238',
+    color: "#263238",
     fontFamily: "Lexend_400Regular",
     fontSize: 16,
     marginBottom: 10,
   },
-  
+
   input: {
     height: 50,
     borderColor: "#4D4D4D",
@@ -739,7 +742,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   suggestionText: {
-    color: '#9E9E9E',
+    color: "#9E9E9E",
     fontFamily: "Lexend_400Regular",
     fontSize: 16,
   },
@@ -749,15 +752,14 @@ const styles = StyleSheet.create({
     borderColor: "#0639DB",
     backgroundColor: "#0639DB",
     borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center'
-   
+    justifyContent: "center",
+    alignItems: "center",
   },
-  textSubmit:{
+  textSubmit: {
     color: "#F5F5F5",
     fontSize: 16,
     fontFamily: "Lexend_400Regular",
-  }
+  },
 });
 
 export default () => (
