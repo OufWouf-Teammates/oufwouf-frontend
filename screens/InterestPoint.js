@@ -18,7 +18,7 @@ import {
 import AppLoading from "expo-app-loading";
 
 export default function InterestPoint({ navigation, route }) {
-  const { localisation, nom } = route.params; // Assuming these are passed in route params
+  const { localisation, nom } = route.params;
   const [placeData, setPlaceData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -41,7 +41,7 @@ export default function InterestPoint({ navigation, route }) {
   useEffect(() => {
     const fetchPlaceData = async () => {
       try {
-        const response = await fetch(`https://your-backend-url.com/lieu/${localisation}/${nom}`);
+        const response = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}lieu/${localisation}/${nom}`);
         const data = await response.json();
         
         if (data.result && data.data) {
