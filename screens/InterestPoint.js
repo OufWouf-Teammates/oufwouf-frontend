@@ -8,7 +8,8 @@ import {
   Text,
   ImageBackground,
   ActivityIndicator,
-  ScrollView
+  ScrollView,
+  Linking
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {
@@ -17,13 +18,17 @@ import {
   Lexend_700Bold,
 } from "@expo-google-fonts/lexend";
 import AppLoading from "expo-app-loading";
+import { useSelector } from 'react-redux'
 
 const InterestPoint = ({ navigation, route }) => {
   const { markerData } = route.params; 
   const [pointData, setPointData] = useState([]);
+  const [isBookmarked, setIsBookmarked] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
+  const userToken = useSelector((state) => state.user.value?.token);
+  console.log(userToken)
   useEffect(() => {
     // Fonction pour récupérer les données d'un point d'intérêt spécifique
     const fetchInterestPoint = async () => {
@@ -110,6 +115,35 @@ const InterestPoint = ({ navigation, route }) => {
     );
   });
 
+const dayOfWeek = new Date().getDay(); // Récupérer le jour actuel (0-6)
+
+const openingHoursToday = pointData.data.opening_hours ? pointData.data.opening_hours.weekday_text[dayOfWeek - 1] : 'Heures non disponibles';
+
+const handleBookmarkClick = ({name, uri}) => {
+  fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}map/canBookmark`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${userToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ name, uri})
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.result) {
+        console.log('Favoris ajoutés avec succès', data.newFavorite);
+      } else {
+        console.error('Erreur lors de l\'ajout des favoris', data.error);
+      }
+    })
+    .catch(error => {
+      console.log(error.message);
+      
+      console.error('Erreur lors de la requête', error);
+    });
+};
+
+
   return (
     <ImageBackground
       source={require("../assets/BG_App.png")}
@@ -142,18 +176,19 @@ const InterestPoint = ({ navigation, route }) => {
             {/* Ouverture */}
             <View style={styles.openContainer}>
             <Text
-              style={pointData.data.current_opening_hours.open_now ? styles.open : styles.close}
+              style={pointData.data.current_opening_hours ? styles.open : styles.close}
             >
-              {pointData.data.open_now ? 'OUVERT' : 'FERMÉ'}
+              {pointData.data.current_opening_hours ? 'OUVERT' : 'FERMÉ'}
             </Text>              
-            <FontAwesome name="bookmark-o" size={35} color="#EAD32A" />
+            <FontAwesome name="bookmark-o" size={35} color="#EAD32A" onPress={() => handleBookmarkClick(pointData.data.name, pointData.data.photos[0])}/>
             </View>
           </View>
 
           {/* Note */}
           <View style={styles.noteAverage}>
             {/* {paw} */}
-            <Text style={styles.note}>{paw}({pointData.data.rating}){pointData.data.user_ratings_total} avis</Text>
+            <Text style={styles.note}>{paw}</Text>
+            <Text  style={styles.note}>({pointData.data.rating}){pointData.data.user_ratings_total} avis</Text>
           </View>
 
           {/* Profil infos */}
@@ -172,15 +207,17 @@ const InterestPoint = ({ navigation, route }) => {
                 <Text style={styles.text}>Horaires d'ouverture</Text>
               </View>
             <Text style={styles.hours}>
-              {pointData.data.opening_hours
-                ? `Aujourd'hui : ${pointData.data.opening_hours.weekday_text[0]}`
-                : 'Heures non disponibles'}
+            {openingHoursToday ? `Aujourd'hui : ${openingHoursToday}` : 'Heures non disponibles'}
             </Text>
 
             {/* Bouton */}
             <TouchableOpacity
               style={styles.reserve}
-              onPress={() => console.log('Rendez-vous pris!')}
+              onPress={() => {
+                const phoneNumber = `tel:${pointData.data.formatted_phone_number}`;  // Remplacez ce numéro par celui que vous souhaitez appeler
+                Linking.openURL(phoneNumber )
+                  .catch(err => console.error('Erreur de lien', err));
+              }}
             >
               <Text style={styles.reserveText}>Prendre rendez-vous</Text>
             </TouchableOpacity>
@@ -206,10 +243,10 @@ const styles = StyleSheet.create({
   iconBack: {
     padding: 20,
     position: 'absolute',
-    top: 40,
+    top: 30,
   },
   infoContainer: {
-    padding: 20,
+    padding: 30,
   },
   title: {
     fontSize: 42,
@@ -248,8 +285,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   noteAverage: {
-    flexDirection: 'row',
-    alignItems: 'center',
     marginBottom: 10,
   },
   note: {
