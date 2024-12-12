@@ -18,38 +18,19 @@ import {
 } from "@expo-google-fonts/lexend";
 import AppLoading from "expo-app-loading";
 
+import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 function Gallery() {
-  const apiPicture = `${process.env.EXPO_PUBLIC_BACKEND_URL}personalPicture`;
-  const userToken = useSelector((state) => state.user.value.token)
+  const apiPicture = `${process.env.EXPO_PUBLIC_BACKEND_URL}pictures`;
+  const userToken = useSelector((state) => state.user.value.token);
 
   const [galerie, setGalerie] = useState([]);
-
-  // const [galerie, setGalerie] = useState([
-  //   {
-  //     description: "voila cest la description tac",
-  //     uri: "https://img.20mn.fr/2c2xoZqdQhu84Dmhb8ci9Sk/1444x920_le-berger-australien-est-le-chien-prefere-des-francais",
-  //   },
-  //   {
-  //     description: "voila cest la description tac",
-  //     uri: "https://img.20mn.fr/2c2xoZqdQhu84Dmhb8ci9Sk/1444x920_le-berger-australien-est-le-chien-prefere-des-francais",
-  //   },
-  //   {
-  //     description: "voila cest la description tac",
-  //     uri: "https://img.20mn.fr/2c2xoZqdQhu84Dmhb8ci9Sk/1444x920_le-berger-australien-est-le-chien-prefere-des-francais",
-  //   },
-  //   {
-  //     description: "voila cest la description tac",
-  //     uri: "https://img.20mn.fr/2c2xoZqdQhu84Dmhb8ci9Sk/1444x920_le-berger-australien-est-le-chien-prefere-des-francais",
-  //   },
-  //   {
-  //     description: "voila cest la description tac",
-  //     uri: "https://img.20mn.fr/2c2xoZqdQhu84Dmhb8ci9Sk/1444x920_le-berger-australien-est-le-chien-prefere-des-francais",
-  //   },
-  // ])
+  const [editedDescription, setEditedDescription] = useState("");
+  const [selectedUri, setSelectedUri] = useState(null);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     const fetchGalerie = async () => {
@@ -69,8 +50,33 @@ function Gallery() {
       }
     };
     fetchGalerie();
-  }, []);
+  }, [isFocused]);
 
+
+  const handleDescription = async (uri) => {
+    try {
+      const response = await fetch("", {
+        method: "POST",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({
+          uri,
+          description : editedDescription,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.result) {
+        setEditedDescription('')
+        setSelectedUri(null)
+        console.log("yaay new des");
+      } else {
+        console.log("nauur no new des");
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
   // Nécessaire pour la configuration des fonts
   const [fontsLoaded] = useFonts({
     Lexend_400Regular,
@@ -94,18 +100,21 @@ function Gallery() {
         />
         <ScrollView style={styles.scroll}>
           {galerie &&
-            galerie.map((e, i) => (
-              <View key={i} style={styles.card}>
+            galerie.map((e) => (
+              <View key={e._id} style={styles.card}>
                 <Image
                   source={{ uri: e.uri }}
                   style={styles.image}
                   resizeMode="cover"
                 />
                 <View style={styles.cardInfo}>
-                  <TouchableOpacity>
+                  {/* <TouchableOpacity>
                     <Text style={styles.textFont}>{e.city}</Text>
-                  </TouchableOpacity>
+                  </TouchableOpacity > */}
                   <Text style={styles.textFont}>{e.description}</Text>
+                  <TouchableOpacity onPress={() => handleDescription(e._id)}>
+                  <FontAwesome name="pencil" size={15} color="#0639DB" />
+                  </TouchableOpacity>
                 </View>
               </View>
             ))}
@@ -129,9 +138,13 @@ const styles = StyleSheet.create({
     height: 350,
   },
   cardInfo: {
+    gap: 20,
+    flexDirection: "row",
     width: 350,
     backgroundColor: "white",
-    padding: 50,
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    padding: 30,
     marginBottom: 50,
   },
   card: {
