@@ -116,12 +116,12 @@ export default function ConnectionScreen({ navigation }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data)
+        console.log("le log des data:", data.data.token)
         if (data.result) {
           dispatch(
-            connectUser({ email: data.result.email, token: data.result.token })
+            connectUser({ email: data.data.email, token: data.data.token })
           )
-          navigation.navigate("Map")
+          navigation.navigate("Dog Info Form")
         } else {
           alert(data.error)
         }

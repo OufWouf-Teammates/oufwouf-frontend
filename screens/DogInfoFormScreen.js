@@ -29,15 +29,14 @@ import * as MediaLibrary from "expo-media-library"
 import {
   ActionSheetProvider,
   useActionSheet,
-} from "@expo/react-native-action-sheet";
-import { useSelector } from "react-redux";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
-
+} from "@expo/react-native-action-sheet"
+import { useSelector } from "react-redux"
+import FontAwesome from "react-native-vector-icons/FontAwesome"
+import { useNavigation } from "@react-navigation/native"
 
 const DogInfoFormScreen = () => {
-
-  // userToken = useSelector((state) => state.value.token);
-  const userToken = "HYG44QCUa6YAlUavvkHQYqBGlAVJUNfp";
+  const navigation = useNavigation()
+  const userToken = useSelector((state) => state.user.value.token)
 
   // lien des fetchs //
 
@@ -289,8 +288,7 @@ const DogInfoFormScreen = () => {
           name: "dog_image.jpg",
         })
       }
-
-      console.log(formData)
+      console.log(userToken)
 
       const response = await fetch(apiNewDog, {
         method: "POST",
@@ -301,8 +299,6 @@ const DogInfoFormScreen = () => {
         body: formData,
       })
       const responseData = await response.json()
-
-      console.log(responseData)
 
       if (isChecked2) {
         const vaccinResponse = await fetch(apiNewVaccins, {
@@ -316,14 +312,11 @@ const DogInfoFormScreen = () => {
         })
 
         const data = await vaccinResponse.json()
-        console.log(data)
         if (data.result) {
           console.log("YAY new vaccins")
         } else {
           console.log("nauuur no new vaccins")
         }
-      } else {
-        console.log("pas de nouveau chien")
       }
       console.log("Wooftastique!")
       setName("")
@@ -336,21 +329,7 @@ const DogInfoFormScreen = () => {
       setSelectedVaccin("")
       setDogId("")
       setImageUri(null)
-
-      console.log({
-        name,
-        race,
-        robe,
-        vaccination,
-        selectedBirthday,
-        selectedVaccin,
-        selectedGender,
-        selectedRappel,
-        info,
-        personnality,
-        imageUri,
-        dogId,
-      })
+      navigation.navigate("Map")
     } catch {
       console.error(error.message)
     }
@@ -459,11 +438,10 @@ const DogInfoFormScreen = () => {
               placeholderTextColor="black"
               value={selectedBirthday}
               onFocus={() => {
-
-                dismissKeyboard();
-                setIsBirthday(true);
-                handleFocus("anniv");
- }}
+                dismissKeyboard()
+                setIsBirthday(true)
+                handleFocus("anniv")
+              }}
             />
 
             <Text style={styles.text}>Couleur de robe du chien</Text>
@@ -588,7 +566,6 @@ const DogInfoFormScreen = () => {
                   activeOpacity={1}
                   onPress={() => setIsBirthday(false)}
                 >
-
                   <View style={styles.calendarContainer}>
                     <TouchableOpacity
                       style={styles.closeButton}
@@ -824,5 +801,4 @@ export default () => (
   <ActionSheetProvider>
     <DogInfoFormScreen />
   </ActionSheetProvider>
-);
-
+)
