@@ -12,6 +12,7 @@ export const userSlice = createSlice({
     connectUser: (state, action) => {
       state.value = { email: action.payload.email, token: action.payload.token } // Réinitialiser l'état
       state.isLoggedIn = true
+      console.log("je mets a jour le reducer")
     },
     disconnectUser: (state) => {
       state.value = { email: null, token: null } // Réinitialiser l'état
