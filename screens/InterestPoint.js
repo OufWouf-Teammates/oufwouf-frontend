@@ -45,6 +45,7 @@ const InterestPoint = ({ navigation, route }) => {
         }
         const data = await response.json();
         setPointData(data);
+        setIsBookmarked(true)
         console.log('info place:', pointData)
       } catch (err) {
         setError(err.message)

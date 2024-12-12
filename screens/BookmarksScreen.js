@@ -7,6 +7,7 @@ import {
   Text,
   Image,
 } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import { useState, useEffect } from "react";
 import { useSelector } from 'react-redux'
@@ -14,33 +15,35 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 function BookmarksScreen() {
   const navigation = useNavigation();
+  const apiPicture = `${process.env.EXPO_PUBLIC_BACKEND_URL}pictures`;
+  const userToken = useSelector((state) => state.user.value.token);
+
   const [bookmarks, setBookmarks] = useState([]);
-  const token = useSelector((state) => state.user.value?.token);
+
+  const isFocused = useIsFocused();
+
+  const fetchFavorite = async () => {
+    try {
+      const response = await fetch(apiPicture, {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+      }
+      const data = await response.json();
+      setBookmarks(data.favorites);
+    } catch (error) {
+      console.error("ERROR pour afficher les photos", error.message);
+    }
+  };
 
   useEffect(() => {
-    (async () => {
-      try {
-        const response = await fetch(
-          `${process.env.EXPO_PUBLIC_BACKEND_URL}map/canBookmark`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // Remplacez "token" par une variable définie
-            },
-          }
-        );
+    fetchGalerie();
+  }, [isFocused]);
 
-        const data = await response.json();
-
-        if (data.result && data.favorite) {
-          setBookmarks(data.favorite); // Mettre à jour avec les favoris
-        } else {
-          console.error("Aucun favori trouvé");
-        }
-      } catch (error) {
-        console.error("Erreur lors de la requête des favoris :", error);
-      }
-    })();
-  }, []);
+  console.log(bookmarks)
 
   return (
     <ImageBackground
