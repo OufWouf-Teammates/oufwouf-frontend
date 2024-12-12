@@ -52,23 +52,24 @@ function Gallery() {
     fetchGalerie();
   }, [isFocused]);
 
-
   const handleDescription = async (uri) => {
     try {
-      const response = await fetch("", {
+      const response = await fetch(`${apiPicture}/description`, {
         method: "POST",
         headers: { "Content-type": "application/json" },
         body: JSON.stringify({
           uri,
-          description : editedDescription,
+          description: editedDescription,
+          token: userToken
         }),
       });
 
       const data = await response.json();
+      console.log(data);
 
       if (data.result) {
-        setEditedDescription('')
-        setSelectedUri(null)
+        setEditedDescription("");
+        setSelectedUri(null);
         console.log("yaay new des");
       } else {
         console.log("nauur no new des");
@@ -108,12 +109,35 @@ function Gallery() {
                   resizeMode="cover"
                 />
                 <View style={styles.cardInfo}>
-                  {/* <TouchableOpacity>
-                    <Text style={styles.textFont}>{e.city}</Text>
-                  </TouchableOpacity > */}
-                  <Text style={styles.textFont}>{e.description}</Text>
-                  <TouchableOpacity onPress={() => handleDescription(e._id)}>
-                  <FontAwesome name="pencil" size={15} color="#0639DB" />
+                  {selectedUri === e.uri ? (
+                    // Si l'URI de l'image sélectionnée est égale à celle en cours, afficher le TextInput
+                    <TextInput
+                      style={styles.textInput}
+                      value={editedDescription}
+                      onChangeText={setEditedDescription}
+                      placeholder="Modifiez la description"
+                    />
+                  ) : (
+                    <Text style={styles.textFont}>{e.description}</Text>
+                  )}
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (selectedUri === e.uri) {
+                        // Si la photo est déjà sélectionnée, envoyer la mise à jour
+                        handleDescription(e.uri);
+                      } else {
+                        // Si la photo n'est pas sélectionnée, permettre l'édition de la description
+                        setSelectedUri(e.uri);
+                        setEditedDescription(e.description);
+                      }
+                    }}
+                  >
+                    {selectedUri === e.uri ? (
+                      // Si l'URI est sélectionnée, ne pas afficher l'icône crayon pendant l'édition
+                      <FontAwesome name="check" size={15} color="#0639DB" />
+                    ) : (
+                      <FontAwesome name="pencil" size={15} color="#0639DB" />
+                    )}
                   </TouchableOpacity>
                 </View>
               </View>
