@@ -237,10 +237,10 @@ const styles = StyleSheet.create({
   iconBack: {
     padding: 20,
     position: 'absolute',
-    top: 40,
+    top: 30,
   },
   infoContainer: {
-    padding: 20,
+    padding: 30,
   },
   title: {
     fontSize: 42,
