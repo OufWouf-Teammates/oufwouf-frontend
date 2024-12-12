@@ -18,6 +18,7 @@ import {
   Lexend_700Bold,
 } from "@expo-google-fonts/lexend";
 import AppLoading from "expo-app-loading";
+import { useSelector } from 'react-redux'
 
 const InterestPoint = ({ navigation, route }) => {
   const { markerData } = route.params; 
@@ -25,7 +26,9 @@ const InterestPoint = ({ navigation, route }) => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
+  const userToken = useSelector((state) => state.user.value?.token);
+  console.log(userToken)
   useEffect(() => {
     // Fonction pour récupérer les données d'un point d'intérêt spécifique
     const fetchInterestPoint = async () => {
@@ -116,23 +119,26 @@ const dayOfWeek = new Date().getDay(); // Récupérer le jour actuel (0-6)
 
 const openingHoursToday = pointData.data.opening_hours ? pointData.data.opening_hours.weekday_text[dayOfWeek - 1] : 'Heures non disponibles';
 
-const handleBookmarkClick = () => {
-  fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}map/canBookmark/${userToken}`, {
+const handleBookmarkClick = ({name, uri}) => {
+  fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}map/canBookmark`, {
     method: 'POST',
     headers: {
+      Authorization: `Bearer ${userToken}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ favorites })
+    body: JSON.stringify({ name, uri})
   })
     .then(response => response.json())
     .then(data => {
       if (data.result) {
-        console.log('Favoris ajoutés avec succès', data.favorites);
+        console.log('Favoris ajoutés avec succès', data.newFavorite);
       } else {
         console.error('Erreur lors de l\'ajout des favoris', data.error);
       }
     })
     .catch(error => {
+      console.log(error.message);
+      
       console.error('Erreur lors de la requête', error);
     });
 };
@@ -174,7 +180,7 @@ const handleBookmarkClick = () => {
             >
               {pointData.data.current_opening_hours ? 'OUVERT' : 'FERMÉ'}
             </Text>              
-            <FontAwesome name="bookmark-o" size={35} color="#EAD32A" onPress={handleBookmarkClick}/>
+            <FontAwesome name="bookmark-o" size={35} color="#EAD32A" onPress={() => handleBookmarkClick(pointData.data.name, pointData.data.photos[0])}/>
             </View>
           </View>
 
