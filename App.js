@@ -12,6 +12,7 @@ import MapScreen from "./screens/MapScreen"
 import TakePictureScreen from "./screens/TakePictureScreen"
 import GalleryScreen from "./screens/GalleryScreen"
 import InterestPoint from "./screens/InterestPoint"
+import SettingsScreen from "./screens/SettingsScreen"
 
 import { persistStore, persistReducer } from "redux-persist"
 import { PersistGate } from "redux-persist/integration/react"
@@ -78,6 +79,11 @@ export default function App() {
             <Stack.Screen
               name="Interest"
               component={InterestPoint}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Settings"
+              component={SettingsScreen}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

@@ -285,6 +285,7 @@ export default function MapScreen({ navigation }) {
             <SearchBar
               gotToLatLng={gotToLatLng}
               createRedPoint={createRedPoint}
+              navigation={navigation}
             />
           </View>
           <TouchableOpacity style={styles.button} onPress={centerOnUser}>
