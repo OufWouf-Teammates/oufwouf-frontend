@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   Text,
   ImageBackground,
-  ActivityIndicator
+  ActivityIndicator,
+  ScrollView
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {
@@ -22,17 +23,16 @@ const InterestPoint = ({ navigation, route }) => {
   const [pointData, setPointData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const name = markerData.name.toLowerCase().split(' ').join('');
   
   useEffect(() => {
     // Fonction pour récupérer les données d'un point d'intérêt spécifique
     const fetchInterestPoint = async () => {
       try {
 
-        const url = `${process.env.EXPO_PUBLIC_BACKEND_URL}map/lieu/${markerData.latitude},${markerData.longitude}/${name}`;
+        const url = `${process.env.EXPO_PUBLIC_BACKEND_URL}map/lieu/${markerData.place_id}`;
         console.log('url:', url)
         const response = await fetch(url);
-        
+        console.log(url)
         if (!response.ok) {
           throw new Error(
             "Une erreur est survenue lors de la récupération des données."
@@ -75,17 +75,52 @@ const InterestPoint = ({ navigation, route }) => {
 
   console.log(pointData.data.name)
 
+  const paw = [];
+  for (let i = 0; i < 5; i++) {
+    let color = '#ccc'; // Couleur par défaut pour les pattes vides
+    
+    if (i < Math.floor(pointData.data.rating)) {
+      // Patte pleine
+      color = '#0639DB';
+    } else if (i < pointData.data.rating) {
+      color = 'rgba(6, 57, 219, 0.5)';
+    }
+
+    paw.push(
+      <FontAwesome
+        key={i}
+        name="paw"
+        size={25}
+        color={color}
+        style={styles.paw}
+      />
+    );
+  }
+
+
+  const photos = pointData.data.photos.slice(1, 6).map((photo, index) => {
+    return (
+      <Image
+        key={index} // Ajoutez une clé unique pour chaque élément dans une liste
+        source={{
+          uri: photo, // Utilisez directement `photo` ici
+        }}
+        style={styles.infoPic}
+      />
+    );
+  });
+
   return (
     <ImageBackground
       source={require("../assets/BG_App.png")}
       style={styles.container}
     >
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         {/* Image du profil */}
         <View>
         <Image
           source={{
-            uri: pointData.photos ? pointData.photos[0].photo_reference : require('../assets/dog_example.webp')
+            uri: pointData.data.photos ? pointData.data.photos[0] : require('../assets/dog_example.webp')
           }}
           style={styles.profilPic}
         />
@@ -106,15 +141,19 @@ const InterestPoint = ({ navigation, route }) => {
 
             {/* Ouverture */}
             <View style={styles.openContainer}>
-              <Text style={styles.open}>{pointData.data.opening_hours ? 'OUVERT' : 'FERMÉ'}</Text>
-              <FontAwesome name="bookmark" size={35} color="#EAD32A" />
+            <Text
+              style={pointData.data.current_opening_hours.open_now ? styles.open : styles.close}
+            >
+              {pointData.data.open_now ? 'OUVERT' : 'FERMÉ'}
+            </Text>              
+            <FontAwesome name="bookmark-o" size={35} color="#EAD32A" />
             </View>
           </View>
 
           {/* Note */}
           <View style={styles.noteAverage}>
             {/* {paw} */}
-            <Text style={styles.note}>{pointData.data.user_ratings_total} avis</Text>
+            <Text style={styles.note}>{paw}({pointData.data.rating}){pointData.data.user_ratings_total} avis</Text>
           </View>
 
           {/* Profil infos */}
@@ -122,20 +161,16 @@ const InterestPoint = ({ navigation, route }) => {
             <Text style={styles.adresse}>{pointData.data.formatted_address}</Text>
 
             {/* Téléphone */}
-            {pointData.formatted_phone_number && (
               <View style={styles.row}>
                 <FontAwesome name="phone" size={15} color="#EAD32A" />
                 <Text style={styles.phone}>{pointData.data.formatted_phone_number}</Text>
               </View>
-            )}
 
             {/* Horaires */}
-            {pointData.opening_hours && (
               <View style={styles.row}>
                 <FontAwesome name="clock-o" size={15} color="#EAD32A" />
                 <Text style={styles.text}>Horaires d'ouverture</Text>
               </View>
-            )}
             <Text style={styles.hours}>
               {pointData.data.opening_hours
                 ? `Aujourd'hui : ${pointData.data.opening_hours.weekday_text[0]}`
@@ -151,7 +186,10 @@ const InterestPoint = ({ navigation, route }) => {
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+        <View style={styles.gallery}>
+            {photos}
+            </View>
+      </ScrollView>
     </ImageBackground>
   );
 }
@@ -193,6 +231,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     borderRadius: 5,
     borderColor: '#0639DB',
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  close: {
+    fontSize: 18,
+    color: '#FC4F52',
+    fontWeight: 'bold',
+    borderRadius: 5,
+    borderColor: '#FC4F52',
     borderWidth: 1,
     marginBottom: 10,
     paddingVertical: 10,
@@ -248,5 +297,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 22,
   },
+  gallery: {
+    width: '100%'
+  },
+  infoPic: {
+    width: '100%',
+    height: 300,
+    marginTop: 50,
+  }
 });
 export default InterestPoint
