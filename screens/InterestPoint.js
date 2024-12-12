@@ -126,7 +126,7 @@ const handleBookmarkClick = ({name, uri}) => {
       Authorization: `Bearer ${userToken}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ name, uri})
+    body: JSON.stringify({ name: pointData.data.name, uri: pointData.data.photos[0]})
   })
     .then(response => response.json())
     .then(data => {
