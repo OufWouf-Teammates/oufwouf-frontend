@@ -11,7 +11,7 @@ import AppLoading from "expo-app-loading"
 
 const GOOGLE_MAP_PLATEFORM_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAP_PLATEFORM_API_KEY;
 
-const SearchBar = ({gotToLatLng, createRedPoint}) => {
+const SearchBar = ({gotToLatLng, createRedPoint, navigation}) => {
     const [query, setQuery] = useState("");
     const [results, setResults] = useState([]);
 
@@ -50,6 +50,9 @@ const SearchBar = ({gotToLatLng, createRedPoint}) => {
     const gotToAddress = async () => {
         let theResult = await lookLatLongAddFromText(query);
         let chosenAddress = await choseAddress(theResult[0]);
+    }
+    const goToSettings = () => {
+      navigation.navigate("Settings")
     }
   
     const fetchPlaces = async (text) => {
@@ -101,6 +104,12 @@ const SearchBar = ({gotToLatLng, createRedPoint}) => {
       >
         <FontAwesome name="search" size={16} color="#0639DB" style={styles.icon} />
       </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.buttonSettings}
+        onPress={() => goToSettings()}
+      >
+        <FontAwesome name="user" size={16} color="#0639DB" style={styles.icon} />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -146,6 +155,26 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "#FFF",
+    paddingTop: 0,
+    height: 35,
+    width: '10%',
+    borderRadius: 25,
+    position: "absolute",
+    display: 'flex',
+    justifyContent: 'center',
+    alignContent: 'center',
+    right: 50,
+    elevation: 2, // Équivaut à box-shadow en React Native
+  },
+  buttonHover: {
+    transform: [{ scale: 1.1 }],
+    backgroundColor: "blue",
+  },
+  icon: {
+    alignSelf: 'center',
+  },
+  buttonSettings: {
+    backgroundColor: "#FFF",
     height: 45,
     width: '10%',
     borderRadius: 25,
@@ -156,13 +185,6 @@ const styles = StyleSheet.create({
     right: 0,
     elevation: 2, // Équivaut à box-shadow en React Native
   },
-  buttonHover: {
-    transform: [{ scale: 1.1 }],
-    backgroundColor: "blue",
-  },
-  icon: {
-    alignSelf: 'center',
-  }
 });
 
 export default SearchBar;
