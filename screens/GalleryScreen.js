@@ -156,7 +156,7 @@ function Gallery() {
                         } else {
                           // Si la photo n'est pas sélectionnée, permettre l'édition de la description
                           setSelectedUri(e.uri);
-                          setEditedDescription(e.description);
+                          setEditedDescription('');
                         }
                       }}
                     >
