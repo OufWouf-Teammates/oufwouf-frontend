@@ -10,7 +10,7 @@ export default function TabBar() {
       <View style={styles.tabBarBackground}>
         <View style={styles.containerInside}>
           <View style={styles.containerOneButtonLeft}>
-            <TouchableOpacity onPress={() => navigation?.navigate("Gallery")}>
+            <TouchableOpacity onPress={() => navigation?.navigate("Bookmarks")}>
               <FontAwesome name="heart-o" size={30} color="#1738D3" />
             </TouchableOpacity>
           </View>
