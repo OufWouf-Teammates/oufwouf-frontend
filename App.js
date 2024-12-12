@@ -13,6 +13,7 @@ import TakePictureScreen from "./screens/TakePictureScreen"
 import GalleryScreen from "./screens/GalleryScreen"
 import InterestPoint from "./screens/InterestPoint"
 import SettingsScreen from "./screens/SettingsScreen"
+import BookmarksScreen from "./screens/BookmarksScreen.js"
 
 import { persistStore, persistReducer } from "redux-persist"
 import { PersistGate } from "redux-persist/integration/react"
@@ -84,6 +85,11 @@ export default function App() {
             <Stack.Screen
               name="Settings"
               component={SettingsScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Bookmarks"
+              component={BookmarksScreen}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>
