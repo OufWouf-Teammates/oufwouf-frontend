@@ -61,21 +61,45 @@ export default function DogProfileScreen({ navigation }) {
         <View style={styles.infos}>
           {/* ID */}
           <View style={styles.infoBox}>
-            <Text>ID: {dog.ID} </Text>
+            <FontAwesome
+              name="id-badge"
+              size={25}
+              color="#0639DB"
+              style={styles.icons}
+            />
+            <Text>{dog.ID} </Text>
           </View>
           {/* Race */}
           <View style={styles.infoBox}>
-            <Text>Race: {dog.race} </Text>
+            <FontAwesome
+              name="paw"
+              size={25}
+              color="#0639DB"
+              style={styles.icons}
+            />
+            <Text>{dog.race} </Text>
           </View>
           {/* Moitié de boite */}
           <View style={styles.demiBox}>
             {/* Sex */}
             <View style={styles.infoDemiBox}>
-              <Text>Sex: {dog.sex} </Text>
+              <FontAwesome
+                name="venus-mars"
+                size={25}
+                color="#0639DB"
+                style={styles.iconsDemi}
+              />
+              <Text>{dog.sex} </Text>
             </View>
             {/* Anniversaire */}
             <View style={styles.infoDemiBox}>
-              <Text> {dog.birthday} </Text>
+              <FontAwesome
+                name="calendar"
+                size={25}
+                color="#0639DB"
+                style={styles.iconsDemi}
+              />
+              <Text>{dog.birthday} </Text>
             </View>
           </View>
 
@@ -84,17 +108,39 @@ export default function DogProfileScreen({ navigation }) {
               <View key={index} style={styles.vaccins}>
                 {/* Vaccin si besoin */}
                 <View style={styles.infoBox}>
-                  <Text>Vaccin:{e.name}</Text>
+                  <FontAwesome
+                    name="heartbeat"
+                    size={25}
+                    color="#0639DB"
+                    style={styles.icons}
+                  />
+                  <Text>{e.name}</Text>
                 </View>
 
                 <View style={styles.demiBox}>
                   {/* Rappel */}
                   <View style={styles.infoDemiBox}>
-                    <Text>Rappel: {e.rappel ? "oui" : "non"} </Text>
+                    <Text>
+                      <FontAwesome
+                        name="bell"
+                        size={25}
+                        color="#0639DB"
+                        style={styles.iconsDemi}
+                      />
+                      {e.rappel ? "oui" : "non"}{" "}
+                    </Text>
                   </View>
                   {/* Date de Rappel */}
                   <View style={styles.infoDemiBox}>
-                    <Text> {e.date} </Text>
+                    <Text>
+                      <FontAwesome
+                        name="calendar-check-o"
+                        size={25}
+                        color="#0639DB"
+                        style={styles.iconsDemi}
+                      />
+                      {e.date}{" "}
+                    </Text>
                   </View>
                 </View>
               </View>
@@ -102,11 +148,23 @@ export default function DogProfileScreen({ navigation }) {
 
           {/* Infos général */}
           <View style={styles.infoBox}>
-            <Text>Informations général: {dog.infos}</Text>
+            <FontAwesome
+              name="info-circle"
+              size={25}
+              color="#0639DB"
+              style={styles.icons}
+            />
+            <Text>{dog.infos}</Text>
           </View>
           {/* Personnalité */}
           <View style={styles.infoBox}>
-            <Text>Traits de personnalité: {dog.personality}</Text>
+            <FontAwesome
+              name="smile-o"
+              size={25}
+              color="#0639DB"
+              style={styles.icons}
+            />
+            <Text>{dog.personality}</Text>
           </View>
         </View>
       </SafeAreaView>
@@ -142,16 +200,18 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   infoBox: {
+    flexDirection: "row",
     width: "100%",
-    padding: 10,
+    padding: 15,
     backgroundColor: "white",
-    borderRadius: 50,
+    borderRadius: 15,
   },
   infoDemiBox: {
+    flexDirection: "row",
     width: "40%",
-    padding: 10,
+    padding: 15,
     backgroundColor: "white",
-    borderRadius: 50,
+    borderRadius: 15,
   },
   arrow: {
     position: "absolute",
@@ -165,5 +225,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 30,
     marginTop: -50,
+  },
+  icons: {
+    marginRight: 15,
+    marginLeft: 15,
+  },
+  iconsDemi: {
+    marginRight: 5,
+    marginLeft: 5,
   },
 })
