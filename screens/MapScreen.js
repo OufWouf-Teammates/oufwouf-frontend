@@ -173,11 +173,12 @@ export default function MapScreen({ navigation }) {
         .then((data) => {
           if (data.result) {
             // Traite les données reçues
-            const res = data.data.elements.map((element) => {
+            const res = data.data.map((element) => {
               return {
-                name: element?.tags?.name || "Inconnu", // Nom par défaut si non défini
-                latitude: element?.lat ?? 0, // Valeur par défaut pour la latitude
-                longitude: element?.lon ?? 0, // Valeur par défaut pour la longitude
+                name: element?.name || "Inconnu", // Nom par défaut si non défini
+                latitude: element?.geometry?.location?.lat ?? 0, // Latitude correcte
+                longitude: element?.geometry?.location?.lng ?? 0, // Correction de la longitude
+                place_id: element?.place_id,
                 type: endpoint,
               }
             })
@@ -192,6 +193,7 @@ export default function MapScreen({ navigation }) {
   const icons = {
     boutiques: require("../assets/os.png"),
     veterinaires: require("../assets/veterinaire.png"),
+    "parcs-chiens": require("../assets/parc.png"),
   }
   const onMarkerSelect = (markerData) => {
     navigation.navigate("Interest", { markerData })
