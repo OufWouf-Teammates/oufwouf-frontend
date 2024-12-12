@@ -194,6 +194,8 @@ export default function MapScreen({ navigation }) {
     boutiques: require("../assets/os.png"),
     veterinaires: require("../assets/veterinaire.png"),
     "parcs-chiens": require("../assets/parc.png"),
+    photos: require("../assets/photos.png"),
+    bookmarks: require("../assets/save.png"),
   }
   const onMarkerSelect = (markerData) => {
     navigation.navigate("Interest", { markerData })
