@@ -1,17 +1,22 @@
-import { Button, StyleSheet, Text, View, TextInput, TouchableOpacity, ImageBackground, SafeAreaView, Image} from 'react-native';
+import { Button, StyleSheet, Text, View, TextInput, TouchableOpacity, ImageBackground, SafeAreaView, Image, Modal, ScrollView} from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useEffect, useState } from "react"
-import { useSelector } from "react-redux"
 import {
     useFonts,
     Lexend_400Regular,
     Lexend_700Bold,
   } from "@expo-google-fonts/lexend"
-  import AppLoading from "expo-app-loading"
+import AppLoading from "expo-app-loading"
+import { useDispatch, useSelector } from "react-redux"
+import { connectUser, disconnectUser } from "../reducers/user"
 
 export default function SettingsScreen({ navigation }) {
+    const dispatch = useDispatch()
     const token = useSelector((state) => state.user.value.token)
     const [dog, setDog] = useState({})
+    const [user, setUser]= useState({})
+    const [modalSettingsVisible, setModalSettingsVisible] = useState(false);
+    const [modalInfoVisible, setModalInfoVisible] = useState(false);
     useEffect(() => {
         ;(async () => {
           const response = await fetch(
@@ -24,9 +29,8 @@ export default function SettingsScreen({ navigation }) {
           )
     
           const data = await response.json()
-    
+          setUser(data.user)
           setDog(data.dog[0])
-          console.log(data.dog[0]);
           
         })()
     }, [])
@@ -38,14 +42,18 @@ export default function SettingsScreen({ navigation }) {
     if (!fontsLoaded) {
         return <AppLoading />
     }
- return (
+    const deconnection = () => {
+        dispatch(disconnectUser())
+        setModalSettingsVisible(!modalSettingsVisible)
+        navigation.navigate("Connection")
+    }
+return (
     <ImageBackground
       source={require("../assets/BG_App.png")}
       style={styles.container}
     >
         <SafeAreaView style={styles.innerContainer}>
             <TouchableOpacity
-                style={styles.buttonSettings}
                 onPress={() => navigation.goBack()}
             >
                 <FontAwesome name="arrow-left" size={25} color="#0639DB" />
@@ -59,6 +67,7 @@ export default function SettingsScreen({ navigation }) {
                  <TouchableOpacity
                     style={styles.button}
                     activeOpacity={0.8}
+                    onPress={() => setModalInfoVisible(true)}
                 >
                     <FontAwesome name="paw" size={25} color="#0639DB" /> 
                     <Text style={styles.textButton}>Information personal</Text>
@@ -80,13 +89,62 @@ export default function SettingsScreen({ navigation }) {
                 <TouchableOpacity
                     style={styles.buttonParam}
                     activeOpacity={0.8}
+                    onPress={() => setModalSettingsVisible(true)}
                 >
                     <FontAwesome name="gear" size={25} color="#FFF" /> 
                     <Text style={styles.textButtonParam}>Paramètres</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
-        
+        {/*Modal Settings*/}
+        <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalSettingsVisible}
+            onRequestClose={() => {setModalSettingsVisible(!modalSettingsVisible)}}
+        >
+            <View style={styles.settingsModal}>
+                <View style={styles.modalViewSettings}>
+                    <TouchableOpacity
+                        onPress={() => setModalSettingsVisible(!modalSettingsVisible)}
+                    >
+                        <FontAwesome name="close" size={25} color="#0639DB" /> 
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[styles.buttonModalSettings]}
+                        onPress={() => deconnection()}
+                        >
+                        <Text style={styles.textStyleSettings}>Déconnection</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </Modal>
+        {/*Modal Information personal*/}
+        <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalInfoVisible}
+            onRequestClose={() => {setModalInfoVisible(!modalInfoVisible)}}
+        >
+            <View style={styles.infoModal}>
+                <View style={styles.modalViewInfo}>
+                    <TouchableOpacity
+                        onPress={() => setModalInfoVisible(!modalInfoVisible)}
+                    >
+                        <FontAwesome name="close" size={25} color="#0639DB" style={styles.close}/> 
+                    </TouchableOpacity>
+                    <ScrollView>
+                        <Text style={styles.textStyleInfo}>Information personal</Text>
+                        <Text style={styles.textStyleInfo}>Modifier la photo de profil</Text>
+                        <Text style={styles.textStyleInfo}>{user.email}</Text>
+                        <Text style={styles.textStyleInfo}>Ajouter un chien</Text>
+                        <Text style={styles.textStyleInfo}>{dog.vaccins > 0? dog.vaccins : "Pas de vaccins"}</Text>
+                        <Text style={styles.textStyleInfo}>{dog.personality}</Text>
+                    </ScrollView>
+                </View>
+            </View>
+        </Modal>
+
     </ImageBackground>
  );
 }
@@ -123,14 +181,14 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         padding: 15,
         borderRadius: 5,
-      },
-      textButton: {
+    },
+    textButton: {
         color: "#0639DB",
         fontSize: 16,
         width: "70%",
         fontFamily: "Lexend_400Regular",
-      },
-      buttonParam: {
+    },
+    buttonParam: {
         backgroundColor: "#0639DB",
         width: "90%",
         flexDirection: "row",
@@ -140,11 +198,83 @@ const styles = StyleSheet.create({
         padding: 15,
         borderRadius: 5,
         
-      },
-      textButtonParam: {
+    },
+    textButtonParam: {
         color: "#FFF",
         fontSize: 16,
         width: "70%",
         fontFamily: "Lexend_400Regular",
-      },
+    },
+    close: {
+        marginBottom: 10,
+    },
+    settingsModal: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    },
+    modalViewSettings: {
+        width: '90%',
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 5,
+        padding: 10,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    buttonModalSettings: {
+        backgroundColor: "#0639DB",
+        width: "90%",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignContent: "center",
+        marginVertical: 20,
+        padding: 15,
+        borderRadius: 5,
+        alignSelf: 'center',
+    },
+    textStyleSettings: {
+        color: '#FFF',
+        width: '100%',
+        textAlign: 'center',
+        fontFamily: "Lexend_400Regular",
+        fontSize: 16,
+    },
+    infoModal: {
+        flex: 1,
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    },
+    modalViewInfo: {
+        width: '90%',
+        height: '90%',
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 5,
+        padding: 10,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    }, 
+    textStyleInfo: {
+        color: '#0639DB',
+        width: '100%',
+        textAlign: 'center',
+        fontFamily: "Lexend_400Regular",
+        fontSize: 16,
+        marginVertical: 10,
+    },
   });
