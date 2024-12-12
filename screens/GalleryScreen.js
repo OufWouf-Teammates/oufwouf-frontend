@@ -91,7 +91,7 @@ function Gallery() {
       const response = await fetch(`${apiPicture}/delete/${id}`, {
         method: "DELETE",
       });
-      if (!response.result) {
+      if (response.result) {
         console.log("bouhhh tu sais pas supp");
       } else {
         fetchGalerie();
