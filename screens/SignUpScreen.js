@@ -18,7 +18,7 @@ import {
   Lexend_400Regular,
   Lexend_700Bold,
 } from "@expo-google-fonts/lexend"
-import AppLoading from "expo-app-loading"
+import * as SplashScreen from 'expo-splash-screen';
 import { useState } from "react"
 import { useDispatch } from "react-redux"
 
@@ -38,8 +38,17 @@ export default function SignUpScreen({ navigation, route }) {
     Lexend_400Regular,
     Lexend_700Bold,
   })
+  useEffect(() => {
+    async function hideSplashScreen() {
+      if (fontsLoaded) {
+        await SplashScreen.hideAsync();
+      }
+    }
+    hideSplashScreen();
+  }, [fontsLoaded]);
+
   if (!fontsLoaded) {
-    return <AppLoading />
+    return null; // Rien n'est affiché tant que les polices ne sont pas chargées
   }
   const { createAccount } = route.params
 
