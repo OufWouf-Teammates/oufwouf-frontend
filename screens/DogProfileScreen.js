@@ -16,9 +16,21 @@ import { useSelector } from "react-redux"
 export default function DogProfileScreen({ navigation }) {
   const token = useSelector((state) => state.user.value.token)
   const [dog, setDog] = useState({})
+    //Nécessaire pour la configuration des fonts
+    const [fontsLoaded] = useFonts({
+      Lexend_400Regular,
+      Lexend_700Bold,
+    })
+    useEffect(() => {
+      async function hideSplashScreen() {
+        if (fontsLoaded) {
+          await SplashScreen.hideAsync()
+        }
+      }
+      hideSplashScreen();
 
-  useEffect(() => {
-    ;(async () => {
+
+    (async () => {
       const response = await fetch(
         `${process.env.EXPO_PUBLIC_BACKEND_URL}dogs`,
         {
@@ -31,12 +43,14 @@ export default function DogProfileScreen({ navigation }) {
       const data = await response.json()
 
       setDog(data.dog[0])
-    })()
-  }, [])
+    })();
 
-  useEffect(() => {
-    console.log(dog)
-  }, [dog])
+    }, [fontsLoaded])
+  
+    if (!fontsLoaded) {
+      return null // Rien n'est affiché tant que les polices ne sont pas chargées
+    }
+
 
   return (
     <ImageBackground
@@ -227,7 +241,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 30,
     marginTop: -40,
-    fontStyle: "italic",
+    fontFamily: "Lexend_700Bold",
   },
   icons: {
     marginRight: 15,
