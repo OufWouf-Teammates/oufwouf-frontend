@@ -42,14 +42,14 @@ export default function DogProfileScreen({ navigation }) {
       source={require("../assets/BG_App.png")}
       style={styles.container}
     >
+      <FontAwesome
+        name="arrow-left"
+        size={30}
+        color="blue"
+        style={styles.arrow}
+        onPress={() => navigation.goBack()}
+      />
       <SafeAreaView style={styles.innerContainer}>
-        <FontAwesome
-          name="arrow-left"
-          size={30}
-          color="blue"
-          style={styles.arrow}
-          onPress={() => navigation.goBack()}
-        />
         <Image
           source={{
             uri: dog.uri,
@@ -204,19 +204,19 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 15,
     backgroundColor: "white",
-    borderRadius: 15,
+    borderRadius: 5,
   },
   infoDemiBox: {
     flexDirection: "row",
     width: "40%",
     padding: 15,
     backgroundColor: "white",
-    borderRadius: 15,
+    borderRadius: 5,
   },
   arrow: {
     position: "absolute",
-    top: 70,
-    left: 40,
+    top: 30,
+    left: 30,
   },
   vaccins: {
     gap: 15,
