@@ -90,7 +90,7 @@ export default function SettingsScreen({ navigation }) {
         >
         <TouchableOpacity
             onPress={() => navigation.goBack()}
-            style={styles.arrow}
+            style={styles.iconBack}
         >
             <FontAwesome name="arrow-left" size={30} color="#0639DB" />
         </TouchableOpacity>
