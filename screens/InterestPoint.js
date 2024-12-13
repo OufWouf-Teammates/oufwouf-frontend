@@ -33,9 +33,7 @@ const InterestPoint = ({ navigation, route }) => {
     const fetchInterestPoint = async () => {
       try {
         const url = `${process.env.EXPO_PUBLIC_BACKEND_URL}map/lieu/${markerData.place_id}`
-        console.log("url:", url)
         const response = await fetch(url)
-        console.log(url)
         if (!response.ok) {
           throw new Error(
             "Une erreur est survenue lors de la récupération des données."
@@ -44,7 +42,6 @@ const InterestPoint = ({ navigation, route }) => {
         const data = await response.json()
         setPointData(data)
         setIsBookmarked(true)
-        console.log("info place:", pointData)
       } catch (err) {
         setError(err.message)
         Alert.alert("Erreur", err.message)
@@ -76,8 +73,6 @@ const InterestPoint = ({ navigation, route }) => {
       </View>
     )
   }
-
-  console.log(pointData.data.name)
 
   const paw = []
   for (let i = 0; i < 5; i++) {
@@ -129,6 +124,7 @@ const InterestPoint = ({ navigation, route }) => {
       body: JSON.stringify({
         name: pointData.data.name,
         uri: pointData.data.photos[0],
+        city: pointData.data.address_components[2].long_name,
       }),
     })
       .then((response) => response.json())
@@ -145,6 +141,8 @@ const InterestPoint = ({ navigation, route }) => {
         console.error("Erreur lors de la requête", error)
       })
   }
+
+  console.log("ville:", pointData.data.address_components[2].long_name)
 
   return (
     <ImageBackground
@@ -195,7 +193,8 @@ const InterestPoint = ({ navigation, route }) => {
                 onPress={() =>
                   handleBookmarkClick(
                     pointData.data.name,
-                    pointData.data.photos[0]
+                    pointData.data.photos[0],
+                    pointData.data.address_components[2].long_name
                   )
                 }
               />

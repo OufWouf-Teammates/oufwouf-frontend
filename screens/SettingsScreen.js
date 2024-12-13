@@ -18,7 +18,7 @@ import {
   Lexend_400Regular,
   Lexend_700Bold,
 } from "@expo-google-fonts/lexend"
-import AppLoading from "expo-app-loading"
+import * as SplashScreen from 'expo-splash-screen';
 import { useDispatch, useSelector } from "react-redux"
 import { connectUser, disconnectUser } from "../reducers/user"
 
@@ -50,8 +50,17 @@ export default function SettingsScreen({ navigation }) {
     Lexend_400Regular,
     Lexend_700Bold,
   })
+  useEffect(() => {
+    async function hideSplashScreen() {
+      if (fontsLoaded) {
+        await SplashScreen.hideAsync();
+      }
+    }
+    hideSplashScreen();
+  }, [fontsLoaded]);
+
   if (!fontsLoaded) {
-    return <AppLoading />
+    return null; // Rien n'est affiché tant que les polices ne sont pas chargées
   }
   const deconnection = () => {
     dispatch(disconnectUser())

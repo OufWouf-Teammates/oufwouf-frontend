@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, FlatList } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -7,7 +7,7 @@ import {
   Lexend_400Regular,
   Lexend_700Bold,
 } from "@expo-google-fonts/lexend"
-import AppLoading from "expo-app-loading"
+import * as SplashScreen from 'expo-splash-screen';
 
 const GOOGLE_MAP_PLATEFORM_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAP_PLATEFORM_API_KEY;
 
@@ -20,9 +20,20 @@ const SearchBar = ({gotToLatLng, createRedPoint, navigation}) => {
     Lexend_400Regular,
     Lexend_700Bold,
   })
+  useEffect(() => {
+    async function hideSplashScreen() {
+      if (fontsLoaded) {
+        await SplashScreen.hideAsync();
+      }
+    }
+    hideSplashScreen();
+  }, [fontsLoaded]);
+
   if (!fontsLoaded) {
-    return <AppLoading />
+    return null; // Rien n'est affiché tant que les polices ne sont pas chargées
   }
+
+
 
     const choseAddress = async (addressDetails) => {
         const placeId = addressDetails?.place_id;
