@@ -18,7 +18,7 @@ import {
   Lexend_700Bold,
 } from "@expo-google-fonts/lexend"
 import * as SplashScreen from 'expo-splash-screen';
-import { useState } from "react"
+import { useStat, useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { connectUser } from "../reducers/user"
 
