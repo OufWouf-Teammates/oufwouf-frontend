@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, FlatList } from "react-native";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -7,7 +7,7 @@ import {
   Lexend_400Regular,
   Lexend_700Bold,
 } from "@expo-google-fonts/lexend"
-import AppLoading from "expo-app-loading"
+import * as SplashScreen from 'expo-splash-screen';
 
 const GOOGLE_MAP_PLATEFORM_API_KEY = process.env.EXPO_PUBLIC_GOOGLE_MAP_PLATEFORM_API_KEY;
 
@@ -20,9 +20,20 @@ const SearchBar = ({gotToLatLng, createRedPoint, navigation}) => {
     Lexend_400Regular,
     Lexend_700Bold,
   })
+  useEffect(() => {
+    async function hideSplashScreen() {
+      if (fontsLoaded) {
+        await SplashScreen.hideAsync();
+      }
+    }
+    hideSplashScreen();
+  }, [fontsLoaded]);
+
   if (!fontsLoaded) {
-    return <AppLoading />
+    return null; // Rien n'est affiché tant que les polices ne sont pas chargées
   }
+
+
 
     const choseAddress = async (addressDetails) => {
         const placeId = addressDetails?.place_id;
@@ -83,44 +94,54 @@ const SearchBar = ({gotToLatLng, createRedPoint, navigation}) => {
 
   return (
     <View style={styles.search}>
-       <TextInput
-      style={styles.input}
-      placeholder="Rechercher une adresse..."
-      value={query}
-      onChangeText={fetchPlaces}
-      placeholderTextColor="lightgrey" // Déplacé ici
+      <View style={styles.buttons}>
+        <TextInput
+        style={styles.input}
+        placeholder="Rechercher une adresse..."
+        value={query}
+        onChangeText={fetchPlaces}
+        placeholderTextColor="lightgrey" // Déplacé ici
+        />
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => gotToAddress()}
+        >
+          <FontAwesome name="search" size={16} color="#0639DB" style={styles.icon} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.buttonSettings}
+          onPress={() => goToSettings()}
+        >
+          <FontAwesome name="user" size={16} color="#0639DB" style={styles.icon} />
+        </TouchableOpacity>
+
+      </View>
+      <FlatList
+        data={results}
+        keyExtractor={(item) => item.place_id}
+        style={styles.listView}
+        renderItem={({ item }) => (
+          <Text style={styles.row} onPress={() => choseAddress(item)}>{item.description}</Text>
+        )}
       />
-    <FlatList
-      data={results}
-      keyExtractor={(item) => item.place_id}
-      style={styles.listView}
-      renderItem={({ item }) => (
-        <Text style={styles.row} onPress={() => choseAddress(item)}>{item.description}</Text>
-      )}
-    />
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => gotToAddress()}
-      >
-        <FontAwesome name="search" size={16} color="#0639DB" style={styles.icon} />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.buttonSettings}
-        onPress={() => goToSettings()}
-      >
-        <FontAwesome name="user" size={16} color="#0639DB" style={styles.icon} />
-      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-    search: {
-        width: "90%", // Prenez tout l'espace disponible
-        flex:1,
-        justifyContent: 'center',
-        alignContent: 'center',
-      },
+  search: {
+    width: "90%", // Prenez tout l'espace disponible
+    flex:1,
+    justifyContent: 'center',
+    alignContent: 'center',
+  },
+  buttons: {
+    width: "90%", // Prenez tout l'espace disponible
+    flex:1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignContent: 'center',
+  }, 
   input: {
     width: "87%",
     fontSize: 16,
@@ -159,11 +180,12 @@ const styles = StyleSheet.create({
     height: 35,
     width: '10%',
     borderRadius: 25,
-    position: "absolute",
+    position: "fixed",
     display: 'flex',
     justifyContent: 'center',
     alignContent: 'center',
-    right: 50,
+    right: 40,
+    marginTop: 5,
     elevation: 2, // Équivaut à box-shadow en React Native
   },
   buttonHover: {
@@ -176,9 +198,9 @@ const styles = StyleSheet.create({
   buttonSettings: {
     backgroundColor: "#FFF",
     height: 45,
-    width: '10%',
+    width: '15%',
     borderRadius: 25,
-    position: "absolute",
+    position: "fixed",
     display: 'flex',
     justifyContent: 'center',
     alignContent: 'center',

@@ -35,6 +35,7 @@
     "expo-media-library": "^17.0.3",
     "expo-notifications": "~0.29.11",
     "expo-permissions": "^14.4.0",
+    "expo-splash-screen": "^0.29.18",
     "expo-status-bar": "~2.0.0",
     "expo-updates": "~0.26.10",
     "firebase": "^11.0.2",

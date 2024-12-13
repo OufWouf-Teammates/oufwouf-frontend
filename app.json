@@ -36,10 +36,7 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff",
-        "supportsTablet": true,
-        "config": {
-          "googleMapsApiKey": "AIzaSyBSQzGQfgR1VmOHpO0CY_S1tadFwViMQc8"
-        }
+        "supportsTablet": true
       },
       "permissions": [
         "CAMERA",
