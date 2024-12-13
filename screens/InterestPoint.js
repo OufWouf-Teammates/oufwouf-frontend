@@ -187,7 +187,7 @@ const InterestPoint = ({ navigation, route }) => {
                 {pointData.data.current_opening_hours ? "OUVERT" : "FERMÉ"}
               </Text>
               <FontAwesome
-                name={isBookmarked ? "bookmark" : "bookmark-o"}
+                name={isBookmarked ? "bookmark-o" : "bookmark"}
                 size={35}
                 color="#EAD32A"
                 onPress={() =>
@@ -269,6 +269,7 @@ const styles = StyleSheet.create({
     position: "fixed",
     top: 30,
     left: 30,
+    zIndex: 50,
   },
   infoContainer: {
     padding: 30,
