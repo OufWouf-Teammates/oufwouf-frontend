@@ -406,7 +406,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     marginTop: 65,
     width: "100%",
-    zIndex: 1,
+    zIndex: 20,
     justifyContent: "center",
     alignItems: "center",
   },

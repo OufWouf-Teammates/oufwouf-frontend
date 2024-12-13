@@ -30,7 +30,7 @@ const InterestPoint = ({ navigation, route }) => {
   const userToken = useSelector((state) => state.user.value?.token);
   console.log(userToken)
   useEffect(() => {
-    // Fonction pour récupérer les données d'un point d'intérêt spécifique
+
     const fetchInterestPoint = async () => {
       try {
 
@@ -45,6 +45,7 @@ const InterestPoint = ({ navigation, route }) => {
         }
         const data = await response.json();
         setPointData(data);
+        setIsBookmarked(true)
         console.log('info place:', pointData)
       } catch (err) {
         setError(err.message)
@@ -126,7 +127,7 @@ const handleBookmarkClick = ({name, uri}) => {
       Authorization: `Bearer ${userToken}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ name, uri})
+    body: JSON.stringify({ name: pointData.data.name, uri: pointData.data.photos[0]})
   })
     .then(response => response.json())
     .then(data => {
