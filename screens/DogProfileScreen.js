@@ -215,8 +215,8 @@ const styles = StyleSheet.create({
   },
   arrow: {
     position: "absolute",
-    top: 30,
-    left: 30,
+    top: 45,
+    left: 45,
   },
   vaccins: {
     gap: 15,
