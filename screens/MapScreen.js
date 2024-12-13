@@ -134,7 +134,7 @@ export default function MapScreen({ navigation }) {
             {
               fontFamily: "Lexend_400Regular",
               fontSize: 16,
-              alignSelf: 'center',
+              alignSelf: "center",
             },
           ]}
         >
@@ -518,7 +518,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
     width: "90%",
     marginTop: 120,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   filters: {
     display: "flex",
@@ -531,8 +531,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     marginRight: 10,
     borderRadius: 25,
-    alignContent: 'center',
-    justifyContent: 'center'
+    alignContent: "center",
+    justifyContent: "center",
   },
   textButtonFilter: {
     color: "#0639DB",
