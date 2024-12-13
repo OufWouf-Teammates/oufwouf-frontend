@@ -336,32 +336,33 @@ export default function MapScreen({ navigation }) {
             onRegionChangeComplete={handleRegionChangeComplete}
             ref={(ref) => setMapRef(ref)} // Assurez-vous que setMapRef est appelé ici
           >
+            {/* Cercle indiquant la précision */}
             {
-  location?.coords && (
-    <>
-      <Circle
-        center={{
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-        }}
-        radius={location.coords.accuracy || 0} // Par défaut 0 si accuracy est indéfini
-        strokeColor="rgba(0, 122, 255, 0.5)"
-        fillColor="rgba(0, 122, 255, 0.2)"
-      />
-      <Marker
-        coordinate={{
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
-        }}
-        anchor={{ x: 0.5, y: 0.5 }}
-      >
-        <View style={styles.marker}>
-          <View style={styles.markerCore} />
-        </View>
-      </Marker>
-    </>
-  )
-}
+              <Circle
+                center={{
+                  latitude: location?.coords?.latitude || 1,
+                  longitude: location?.coords?.longitude || 1,
+                }}
+                radius={location?.coords?.accuracy} // Précision fournie par Expo Location
+                strokeColor="rgba(0, 122, 255, 0.5)" // Couleur du contour
+                fillColor="rgba(0, 122, 255, 0.2)" // Couleur de remplissage
+              />
+            }
+
+            {/* Point bleu pour indiquer la position */}
+            {
+              <Marker testID="location-marker" 
+                coordinate={{
+                  latitude: location.coords?.latitude || 1,
+                  longitude: location.coords?.longitude || 1,
+                }}
+                anchor={{ x: 0.5, y: 0.5 }} // Centre le marker
+              >
+                <View style={styles.marker}>
+                  <View style={styles.markerCore} />
+                </View>
+              </Marker>
+            }
             {
               <Marker
                 coordinate={{

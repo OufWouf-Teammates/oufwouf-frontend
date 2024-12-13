@@ -69,11 +69,12 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
-    "@testing-library/react-native": "^10.1.1",
-    "jest": "^29.2.1",
+    "@testing-library/jest-native": "^5.4.3",
+    "@testing-library/react-native": "^12.9.0",
+    "jest": "^29.7.0",
     "jest-expo": "~52.0.2",
     "node-fetch": "2",
-    "react-test-renderer": "^18"
+    "react-test-renderer": "18"
   },
   "resolutions": {
     "expo-auth-session": "^3.7.0"
