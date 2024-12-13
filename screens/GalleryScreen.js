@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: 350,
     backgroundColor: "white",
-    justifyContent: "space-between", // Sépare les icônes et la description
+    justifyContent: "space-between",
     alignItems: "center",
     padding: 30,
     marginBottom: 50,
@@ -216,8 +216,8 @@ const styles = StyleSheet.create({
     fontFamily: "Lexend_400Regular",
   },
   descriptionContainer: {
-    flex: 1, // Permet de prendre tout l'espace restant pour la description
-    marginRight: 10, // Ajoute un espace entre la description et les icônes
+    flex: 1, 
+    marginRight: 10, 
   },
   icons: {
     flexDirection: "row",
