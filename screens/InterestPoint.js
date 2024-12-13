@@ -269,6 +269,7 @@ const styles = StyleSheet.create({
     position: "fixed",
     top: 30,
     left: 30,
+    zIndex: 50,
   },
   infoContainer: {
     padding: 30,
