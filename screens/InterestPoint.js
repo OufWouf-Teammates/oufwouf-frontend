@@ -29,6 +29,7 @@ const InterestPoint = ({ navigation, route }) => {
 
   const userToken = useSelector((state) => state.user.value?.token)
   console.log(userToken)
+
   useEffect(() => {
     const fetchInterestPoint = async () => {
       try {
@@ -41,7 +42,6 @@ const InterestPoint = ({ navigation, route }) => {
         }
         const data = await response.json()
         setPointData(data)
-        setIsBookmarked(true)
       } catch (err) {
         setError(err.message)
         Alert.alert("Erreur", err.message)
@@ -51,7 +51,7 @@ const InterestPoint = ({ navigation, route }) => {
     }
 
     fetchInterestPoint()
-  }, [])
+  }, [markerData.place_id])
 
   if (isLoading) {
     return (
@@ -64,9 +64,6 @@ const InterestPoint = ({ navigation, route }) => {
   if (error || !pointData) {
     return (
       <View style={styles.centeredView}>
-        <Text style={styles.errorText}>
-          Impossible de charger les données du point d'intérêt.
-        </Text>
         <Text style={styles.errorText}>
           Impossible de charger les données du point d'intérêt.
         </Text>
@@ -99,7 +96,7 @@ const InterestPoint = ({ navigation, route }) => {
   const photos = pointData.data.photos.slice(1, 6).map((photo, index) => {
     return (
       <Image
-        key={index} // Ajoutez une clé unique pour chaque élément dans une liste
+        key={index}
         source={{
           uri: photo, // Utilisez directement `photo` ici
         }}
@@ -114,35 +111,56 @@ const InterestPoint = ({ navigation, route }) => {
     ? pointData.data.opening_hours.weekday_text[dayOfWeek - 1]
     : "Heures non disponibles"
 
-  const handleBookmarkClick = ({ name, uri }) => {
-    fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}map/canBookmark`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${userToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: pointData.data.name,
-        uri: pointData.data.photos[0],
-        city: pointData.data.address_components[2].long_name,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.result) {
-          console.log("Favoris ajoutés avec succès", data.newFavorite)
-        } else {
-          console.error("Erreur lors de l'ajout des favoris", data.error)
+    const handleBookmarkClick = async (name) => {
+      if (!isBookmarked) {
+        // Ajout au favoris
+        fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}map/canBookmark`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: pointData.data.name,
+            uri: pointData.data.photos[0],
+            city: pointData.data.address_components[2].long_name,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.result) {
+              console.log("Favoris ajoutés avec succès", data.newFavorite)
+              setIsBookmarked(true)
+            } else {
+              console.error("Erreur lors de l'ajout des favoris", data.error)
+            }
+          })
+          .catch((error) => {
+            console.error("Erreur lors de la requête", error)
+          })
+      } else {
+        // Suppression du favori
+        try {
+          const response = await fetch(
+            `${process.env.EXPO_PUBLIC_BACKEND_URL}map/deletePoint/${name}`,
+            {
+              method: "DELETE",
+            }
+          )
+          const data = await response.json()
+    
+          if (response.ok && data.result) {
+            console.log("Favori supprimé avec succès")
+            setIsBookmarked(false)
+          } else {
+            console.error("Erreur lors de la suppression du favori", data.error || data.message)
+          }
+        } catch (error) {
+          console.error("Erreur lors de la requête de suppression", error)
         }
-      })
-      .catch((error) => {
-        console.log(error.message)
-
-        console.error("Erreur lors de la requête", error)
-      })
-  }
-
-  console.log("ville:", pointData.data.address_components[2].long_name)
+      }
+    }
+    
 
   return (
     <ImageBackground
@@ -156,7 +174,7 @@ const InterestPoint = ({ navigation, route }) => {
         style={styles.iconBack}
         onPress={() => navigation.goBack()}
       />
-      <ScrollView style={styles.container}>
+      <ScrollView>
         {/* Image du profil */}
         <View>
           <Image
@@ -187,16 +205,10 @@ const InterestPoint = ({ navigation, route }) => {
                 {pointData.data.current_opening_hours ? "OUVERT" : "FERMÉ"}
               </Text>
               <FontAwesome
-                name={isBookmarked ? "bookmark-o" : "bookmark"}
+                name={isBookmarked ? "bookmark" : "bookmark-o"}
                 size={35}
                 color="#EAD32A"
-                onPress={() =>
-                  handleBookmarkClick(
-                    pointData.data.name,
-                    pointData.data.photos[0],
-                    pointData.data.address_components[2].long_name
-                  )
-                }
+                onPress={() => handleBookmarkClick(pointData.data.name)}
               />
             </View>
           </View>
@@ -258,6 +270,7 @@ const InterestPoint = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: -10,
   },
   profilPic: {
     width: "100%",
@@ -265,8 +278,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   iconBack: {
-    padding: 20,
-    position: "fixed",
+    position: "absolute",
     top: 30,
     left: 30,
     zIndex: 50,
@@ -275,6 +287,7 @@ const styles = StyleSheet.create({
     padding: 30,
   },
   title: {
+    width: '60%',
     fontSize: 42,
     fontWeight: "bold",
     marginBottom: 10,
@@ -354,17 +367,35 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   reserveText: {
-    color: "white",
+    color: "#fff",
+    fontSize: 16,
     fontWeight: "bold",
-    fontSize: 22,
   },
   gallery: {
-    width: "100%",
+    marginTop: 30,
+    marginBottom: 30,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
   },
   infoPic: {
     width: "100%",
-    height: 300,
-    marginTop: 50,
+    height: 200,
+    marginBottom: 15,
+  },
+  errorText: {
+    fontSize: 20,
+    color: "#FC4F52",
+    textAlign: "center",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  paw: {
+    marginRight: 5,
   },
 })
+
 export default InterestPoint
