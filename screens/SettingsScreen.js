@@ -255,6 +255,12 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
   },
+  arrow: {
+    position: "absolute",
+    top: 45,
+    left: 45,
+    zIndex: 2,
+  },
   innerContainer: {
     flex: 1,
     width: "90%",
