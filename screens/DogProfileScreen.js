@@ -9,11 +9,34 @@ import {
   TouchableOpacity,
 } from "react-native"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
-
+import {
+  useFonts,
+  Lexend_400Regular,
+  Lexend_700Bold,
+} from "@expo-google-fonts/lexend"
+import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 
 export default function DogProfileScreen({ navigation }) {
+    //Nécessaire pour la configuration des fonts
+    const [fontsLoaded] = useFonts({
+      Lexend_400Regular,
+      Lexend_700Bold,
+    })
+    useEffect(() => {
+      async function hideSplashScreen() {
+        if (fontsLoaded) {
+          await SplashScreen.hideAsync()
+        }
+      }
+      hideSplashScreen()
+    }, [fontsLoaded])
+  
+    if (!fontsLoaded) {
+      return null // Rien n'est affiché tant que les polices ne sont pas chargées
+    }
+    
   const token = useSelector((state) => state.user.value.token)
   const [dog, setDog] = useState({})
 
@@ -45,7 +68,7 @@ export default function DogProfileScreen({ navigation }) {
     >
       <TouchableOpacity
         onPress={() => navigation.goBack()}
-        style={styles.arrow}
+        style={styles.iconBack}
       >
         <FontAwesome name="arrow-left" size={30} color="#0639DB" />
       </TouchableOpacity>
@@ -67,7 +90,7 @@ export default function DogProfileScreen({ navigation }) {
               color="#0639DB"
               style={styles.icons}
             />
-            <Text>{dog.ID} </Text>
+            <Text style={styles.dogInfos}>{dog.ID} </Text>
           </View>
           {/* Race */}
           <View style={styles.infoBox}>
@@ -77,7 +100,7 @@ export default function DogProfileScreen({ navigation }) {
               color="#0639DB"
               style={styles.icons}
             />
-            <Text>{dog.race} </Text>
+            <Text style={styles.dogInfos}>{dog.race} </Text>
           </View>
           {/* Moitié de boite */}
           <View style={styles.demiBox}>
@@ -89,7 +112,7 @@ export default function DogProfileScreen({ navigation }) {
                 color="#0639DB"
                 style={styles.iconsDemi}
               />
-              <Text>{dog.sex} </Text>
+              <Text style={styles.dogInfos}>{dog.sex} </Text>
             </View>
             {/* Anniversaire */}
             <View style={styles.infoDemiBox}>
@@ -99,7 +122,7 @@ export default function DogProfileScreen({ navigation }) {
                 color="#0639DB"
                 style={styles.iconsDemi}
               />
-              <Text>{dog.birthday} </Text>
+              <Text style={styles.dogInfos}>{dog.birthday} </Text>
             </View>
           </View>
 
@@ -114,13 +137,13 @@ export default function DogProfileScreen({ navigation }) {
                     color="#0639DB"
                     style={styles.icons}
                   />
-                  <Text>{e.name}</Text>
+                  <Text style={styles.dogInfos}>{e.name}</Text>
                 </View>
 
                 <View style={styles.demiBox}>
                   {/* Rappel */}
                   <View style={styles.infoDemiBox}>
-                    <Text>
+                    <Text style={styles.dogInfos}>
                       <FontAwesome
                         name="bell"
                         size={25}
@@ -132,7 +155,7 @@ export default function DogProfileScreen({ navigation }) {
                   </View>
                   {/* Date de Rappel */}
                   <View style={styles.infoDemiBox}>
-                    <Text>
+                    <Text style={styles.dogInfos}>
                       <FontAwesome
                         name="calendar-check-o"
                         size={25}
@@ -154,7 +177,7 @@ export default function DogProfileScreen({ navigation }) {
               color="#0639DB"
               style={styles.icons}
             />
-            <Text>{dog.infos}</Text>
+            <Text style={styles.dogInfos}>{dog.infos}</Text>
           </View>
           {/* Personnalité */}
           <View style={styles.infoBox}>
@@ -164,7 +187,7 @@ export default function DogProfileScreen({ navigation }) {
               color="#0639DB"
               style={styles.icons}
             />
-            <Text>{dog.personality}</Text>
+            <Text style={styles.dogInfos}>{dog.personality}</Text>
           </View>
         </View>
       </SafeAreaView>
@@ -177,6 +200,12 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+  },  
+  iconBack: {
+    position: "absolute",
+    top: 60,
+    left: 30,
+    zIndex: 50,
   },
   innerContainer: {
     flex: 1,
@@ -187,9 +216,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   dogPic: {
-    width: "40%",
+    width: "50%",
     aspectRatio: 1,
     borderRadius: 500,
+    marginTop: -50
   },
   infos: {
     width: "80%",
@@ -201,6 +231,7 @@ const styles = StyleSheet.create({
   },
   infoBox: {
     flexDirection: "row",
+    alignItems: 'center',
     width: "100%",
     padding: 15,
     backgroundColor: "white",
@@ -208,7 +239,8 @@ const styles = StyleSheet.create({
   },
   infoDemiBox: {
     flexDirection: "row",
-    width: "40%",
+    alignItems: 'center',
+    width: "48%",
     padding: 15,
     backgroundColor: "white",
     borderRadius: 5,
@@ -225,7 +257,7 @@ const styles = StyleSheet.create({
   name: {
     fontWeight: "bold",
     fontSize: 30,
-    marginTop: -50,
+    marginTop: -20,
   },
   icons: {
     marginRight: 15,
@@ -234,5 +266,11 @@ const styles = StyleSheet.create({
   iconsDemi: {
     marginRight: 5,
     marginLeft: 5,
+    paddingRight: 5
   },
+  dogInfos: {
+    width: '80%',
+    fontSize: 16,
+    flexWrap: 'wrap',
+  }
 })
