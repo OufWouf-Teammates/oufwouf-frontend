@@ -72,13 +72,12 @@ export default function SettingsScreen({ navigation }) {
       source={require("../assets/BG_App.png")}
       style={styles.container}
     >
-      <FontAwesome
-        name="arrow-left"
-        size={30}
-        color="#0639DB"
+      <TouchableOpacity
         onPress={() => navigation.goBack()}
         style={styles.arrow}
-      />
+      >
+        <FontAwesome name="arrow-left" size={30} color="#0639DB" />
+      </TouchableOpacity>
       <SafeAreaView style={styles.innerContainer}>
         <View style={styles.in}>
           <Image

@@ -6,6 +6,7 @@ import {
   ImageBackground,
   Image,
   TextInput,
+  TouchableOpacity,
 } from "react-native"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 
@@ -42,13 +43,12 @@ export default function DogProfileScreen({ navigation }) {
       source={require("../assets/BG_App.png")}
       style={styles.container}
     >
-      <FontAwesome
-        name="arrow-left"
-        size={30}
-        color="blue"
-        style={styles.arrow}
+      <TouchableOpacity
         onPress={() => navigation.goBack()}
-      />
+        style={styles.arrow}
+      >
+        <FontAwesome name="arrow-left" size={30} color="#0639DB" />
+      </TouchableOpacity>
       <SafeAreaView style={styles.innerContainer}>
         <Image
           source={{
