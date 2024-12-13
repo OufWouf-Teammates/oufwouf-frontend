@@ -35,9 +35,7 @@ const InterestPoint = ({ navigation, route }) => {
       try {
 
         const url = `${process.env.EXPO_PUBLIC_BACKEND_URL}map/lieu/${markerData.place_id}`;
-        console.log('url:', url)
         const response = await fetch(url);
-        console.log(url)
         if (!response.ok) {
           throw new Error(
             "Une erreur est survenue lors de la récupération des données."
@@ -46,7 +44,6 @@ const InterestPoint = ({ navigation, route }) => {
         const data = await response.json();
         setPointData(data);
         setIsBookmarked(true)
-        console.log('info place:', pointData)
       } catch (err) {
         setError(err.message)
         Alert.alert("Erreur", err.message)
@@ -78,8 +75,6 @@ const InterestPoint = ({ navigation, route }) => {
       </View>
     )
   }
-
-  console.log(pointData.data.name)
 
   const paw = [];
   for (let i = 0; i < 5; i++) {
@@ -127,7 +122,7 @@ const handleBookmarkClick = ({name, uri}) => {
       Authorization: `Bearer ${userToken}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ name: pointData.data.name, uri: pointData.data.photos[0]})
+    body: JSON.stringify({ name: pointData.data.name, uri: pointData.data.photos[0], city: pointData.data.address_components[2].long_name})
   })
     .then(response => response.json())
     .then(data => {
@@ -144,6 +139,7 @@ const handleBookmarkClick = ({name, uri}) => {
     });
 };
 
+console.log('ville:', pointData.data.address_components[2].long_name)
 
   return (
     <ImageBackground
@@ -181,7 +177,7 @@ const handleBookmarkClick = ({name, uri}) => {
             >
               {pointData.data.current_opening_hours ? 'OUVERT' : 'FERMÉ'}
             </Text>              
-            <FontAwesome name="bookmark-o" size={35} color="#EAD32A" onPress={() => handleBookmarkClick(pointData.data.name, pointData.data.photos[0])}/>
+            <FontAwesome name="bookmark-o" size={35} color="#EAD32A" onPress={() => handleBookmarkClick(pointData.data.name, pointData.data.photos[0],pointData.data.address_components[2].long_name)}/>
             </View>
           </View>
 
