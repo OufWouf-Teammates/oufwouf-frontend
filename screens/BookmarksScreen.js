@@ -6,6 +6,7 @@ import {
   View,
   Text,
   Image,
+  TouchableOpacity
 } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
@@ -22,7 +23,6 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 function BookmarksScreen() {
   const navigation = useNavigation();
   const userToken = useSelector((state) => state.user.value.token);
-  console.log(userToken)
   const [bookmarks, setBookmarks] = useState([]);
 
   const isFocused = useIsFocused();
@@ -38,9 +38,7 @@ function BookmarksScreen() {
         throw new Error(`Erreur ${response.status}: ${response.statusText}`);
       }
       const data = await response.json();
-      console.log(data)
       setBookmarks(data.favorite);
-      console.log(bookmarks)
 
       
     } catch (error) {
@@ -48,11 +46,30 @@ function BookmarksScreen() {
     }
   };
 
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_BACKEND_URL}map/delete/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      console.log(response)
+      const data = await response.json();
+      if (data.result) {
+        fetchFavorite(); // Actualiser la liste
+      } else {
+        console.error("Impossible de supprimer le favori.");
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
   useEffect(() => {
     fetchFavorite();
   }, [isFocused]);
 
-  console.log(bookmarks)
 return (
     <ImageBackground
       source={require("../assets/BG_App.png")}
@@ -81,7 +98,13 @@ return (
                   <Text style={styles.nameInfos}>{e.name}</Text>
                   <Text style={styles.cityInfos}>{e.city}</Text>
                 </View>
-                <FontAwesome name="bookmark" size={35} color="#EAD32A"/>
+                <TouchableOpacity
+                  onPress={() => {
+                    handleDelete(e._id)
+                  }}
+                >
+                  <FontAwesome name="bookmark" size={20} color="#EAD32A" />
+                </TouchableOpacity>
               </View>
             </View>
           </View>
@@ -131,7 +154,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   nameInfos: {
-    
+    fontSize: 26,
+    color: '#0639DB',
+    fontWeight: 600
   },
   image: {
     width: "100%",
