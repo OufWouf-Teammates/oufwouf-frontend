@@ -30,7 +30,7 @@ const InterestPoint = ({ navigation, route }) => {
   const userToken = useSelector((state) => state.user.value?.token);
   console.log(userToken)
   useEffect(() => {
-    // Fonction pour récupérer les données d'un point d'intérêt spécifique
+
     const fetchInterestPoint = async () => {
       try {
 
