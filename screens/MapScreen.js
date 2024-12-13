@@ -39,6 +39,7 @@ import { useSelector } from "react-redux"
 
 export default function MapScreen({ navigation }) {
   const [location, setLocation] = useState(null)
+  const [locationMap, setLocationMap] = useState(location)
   const [mapRef, setMapRef] = useState(null) // Référence pour MapView
   const [redMarker, setRedMarker] = useState(null) // État pour le marker rouge
   const [modalVisible, setModalVisible] = useState(false)
@@ -90,6 +91,12 @@ export default function MapScreen({ navigation }) {
       )
     }
   }
+  const handleRegionChangeComplete = (region) => {
+    setLocationMap({
+      latitude: region.latitude,
+      longitude: region.longitude,
+    });
+  };
 
   const createRedPoint = (arrLatLng) => {
     setRedMarker(arrLatLng) // Affiche le marker rouge
@@ -156,9 +163,9 @@ export default function MapScreen({ navigation }) {
       else if (filter === "Vétérinaires") endpoint = "veterinaires"
       else if (filter === "Parcs") endpoint = "parcs-chiens"
 
-      const url = `${process.env.EXPO_PUBLIC_BACKEND_URL}map/${endpoint}/${
-        location.coords?.latitude || 1
-      },${location.coords?.longitude || 1}`
+      const latitude = locationMap?.latitude || location?.coords?.latitude || 1;
+      const longitude = locationMap?.longitude || location?.coords?.longitude || 1;
+      const url = `${process.env.EXPO_PUBLIC_BACKEND_URL}map/${endpoint}/${latitude},${longitude}`;
 
       fetch(url, {
         method: "POST",
@@ -317,16 +324,17 @@ export default function MapScreen({ navigation }) {
             showsTraffic={false}
             pitchEnabled={false}
             loadingEnabled={false}
+            onRegionChangeComplete={handleRegionChangeComplete}
             ref={(ref) => setMapRef(ref)} // Assurez-vous que setMapRef est appelé ici
           >
             {/* Cercle indiquant la précision */}
             {
               <Circle
                 center={{
-                  latitude: location.coords?.latitude || 1,
-                  longitude: location.coords?.longitude || 1,
+                  latitude: location?.coords?.latitude || 1,
+                  longitude: location?.coords?.longitude || 1,
                 }}
-                radius={location.coords.accuracy} // Précision fournie par Expo Location
+                radius={location?.coords?.accuracy} // Précision fournie par Expo Location
                 strokeColor="rgba(0, 122, 255, 0.5)" // Couleur du contour
                 fillColor="rgba(0, 122, 255, 0.2)" // Couleur de remplissage
               />
@@ -406,7 +414,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     marginTop: 65,
     width: "100%",
-    zIndex: 1,
+    zIndex: 20,
     justifyContent: "center",
     alignItems: "center",
   },

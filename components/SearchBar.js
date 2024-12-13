@@ -83,44 +83,54 @@ const SearchBar = ({gotToLatLng, createRedPoint, navigation}) => {
 
   return (
     <View style={styles.search}>
-       <TextInput
-      style={styles.input}
-      placeholder="Rechercher une adresse..."
-      value={query}
-      onChangeText={fetchPlaces}
-      placeholderTextColor="lightgrey" // Déplacé ici
+      <View style={styles.buttons}>
+        <TextInput
+        style={styles.input}
+        placeholder="Rechercher une adresse..."
+        value={query}
+        onChangeText={fetchPlaces}
+        placeholderTextColor="lightgrey" // Déplacé ici
+        />
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => gotToAddress()}
+        >
+          <FontAwesome name="search" size={16} color="#0639DB" style={styles.icon} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.buttonSettings}
+          onPress={() => goToSettings()}
+        >
+          <FontAwesome name="user" size={16} color="#0639DB" style={styles.icon} />
+        </TouchableOpacity>
+
+      </View>
+      <FlatList
+        data={results}
+        keyExtractor={(item) => item.place_id}
+        style={styles.listView}
+        renderItem={({ item }) => (
+          <Text style={styles.row} onPress={() => choseAddress(item)}>{item.description}</Text>
+        )}
       />
-    <FlatList
-      data={results}
-      keyExtractor={(item) => item.place_id}
-      style={styles.listView}
-      renderItem={({ item }) => (
-        <Text style={styles.row} onPress={() => choseAddress(item)}>{item.description}</Text>
-      )}
-    />
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => gotToAddress()}
-      >
-        <FontAwesome name="search" size={16} color="#0639DB" style={styles.icon} />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.buttonSettings}
-        onPress={() => goToSettings()}
-      >
-        <FontAwesome name="user" size={16} color="#0639DB" style={styles.icon} />
-      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-    search: {
-        width: "90%", // Prenez tout l'espace disponible
-        flex:1,
-        justifyContent: 'center',
-        alignContent: 'center',
-      },
+  search: {
+    width: "90%", // Prenez tout l'espace disponible
+    flex:1,
+    justifyContent: 'center',
+    alignContent: 'center',
+  },
+  buttons: {
+    width: "90%", // Prenez tout l'espace disponible
+    flex:1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignContent: 'center',
+  }, 
   input: {
     width: "87%",
     fontSize: 16,
@@ -159,11 +169,12 @@ const styles = StyleSheet.create({
     height: 35,
     width: '10%',
     borderRadius: 25,
-    position: "absolute",
+    position: "fixed",
     display: 'flex',
     justifyContent: 'center',
     alignContent: 'center',
-    right: 50,
+    right: 40,
+    marginTop: 5,
     elevation: 2, // Équivaut à box-shadow en React Native
   },
   buttonHover: {
@@ -176,9 +187,9 @@ const styles = StyleSheet.create({
   buttonSettings: {
     backgroundColor: "#FFF",
     height: 45,
-    width: '10%',
+    width: '15%',
     borderRadius: 25,
-    position: "absolute",
+    position: "fixed",
     display: 'flex',
     justifyContent: 'center',
     alignContent: 'center',
