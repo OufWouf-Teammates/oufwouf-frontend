@@ -10,6 +10,8 @@ import {
   Image,
   Modal,
   ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import { useEffect, useState } from "react"
@@ -18,15 +20,20 @@ import {
   Lexend_400Regular,
   Lexend_700Bold,
 } from "@expo-google-fonts/lexend"
-import * as SplashScreen from 'expo-splash-screen';
+import * as SplashScreen from "expo-splash-screen"
 import { useDispatch, useSelector } from "react-redux"
 import { connectUser, disconnectUser } from "../reducers/user"
 
 export default function SettingsScreen({ navigation }) {
   const dispatch = useDispatch()
   const token = useSelector((state) => state.user.value.token)
+  const [email, setEmail] = useState("")
+  const [emailCon, setEmailCon] = useState("")
   const [dog, setDog] = useState({})
+  const [info, setInfo] = useState("")
+  const [personnality, setPersonnality] = useState("")
   const [user, setUser] = useState({})
+  const [focusedField, setFocusedField] = useState(null)
   const [modalSettingsVisible, setModalSettingsVisible] = useState(false)
   const [modalInfoVisible, setModalInfoVisible] = useState(false)
   useEffect(() => {
@@ -53,41 +60,49 @@ export default function SettingsScreen({ navigation }) {
   useEffect(() => {
     async function hideSplashScreen() {
       if (fontsLoaded) {
-        await SplashScreen.hideAsync();
+        await SplashScreen.hideAsync()
       }
     }
-    hideSplashScreen();
-  }, [fontsLoaded]);
+    hideSplashScreen()
+  }, [fontsLoaded])
 
   if (!fontsLoaded) {
-    return null; // Rien n'est affiché tant que les polices ne sont pas chargées
+    return null // Rien n'est affiché tant que les polices ne sont pas chargées
   }
   const deconnection = () => {
     dispatch(disconnectUser())
     setModalSettingsVisible(!modalSettingsVisible)
     navigation.navigate("Connection")
   }
+    // Fonction pour changer la couleur de l'input quand il est focus //
+    const handleFocus = (field) => {
+        setFocusedField(field)
+      }
+    
+      // Fonction pour gérer la perte de focus //
+    
+      const handleBlur = () => {
+        setFocusedField(null)
+      }
+    
   return (
     <ImageBackground
       source={require("../assets/BG_App.png")}
       style={styles.container}
     >
-      <FontAwesome
-        name="arrow-left"
-        size={30}
-        color="#0639DB"
+      <TouchableOpacity
         onPress={() => navigation.goBack()}
         style={styles.arrow}
-      />
+      >
+        <FontAwesome name="arrow-left" size={30} color="#0639DB" />
+      </TouchableOpacity>
       <SafeAreaView style={styles.innerContainer}>
         <View style={styles.in}>
           <Image
-            source={
-              dog?.uri ? { uri: dog.uri } : require("../assets/chien.png")
-            }
+            source={{uri: dog?.uri}}
             style={[styles.dogPic, { width: 150, height: 150 }]}
           />
-          <Text style={styles.name}>{dog?.name || "Tuu"}</Text>
+          <Text style={styles.name}>{dog?.name}</Text>
           <TouchableOpacity
             style={styles.button}
             activeOpacity={0.8}
@@ -160,18 +175,76 @@ export default function SettingsScreen({ navigation }) {
                 style={styles.close}
               />
             </TouchableOpacity>
-            <ScrollView>
-              <Text style={styles.textStyleInfo}>Information personal</Text>
-              <Text style={styles.textStyleInfo}>
-                Modifier la photo de profil
-              </Text>
-              <Text style={styles.textStyleInfo}>{user?.email}</Text>
-              <Text style={styles.textStyleInfo}>Ajouter un chien</Text>
-              <Text style={styles.textStyleInfo}>
-                {dog?.vaccins > 0 ? dog.vaccins : "Pas de vaccins"}
-              </Text>
-              <Text style={styles.textStyleInfo}>{dog?.personality}</Text>
-            </ScrollView>
+            <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                style={{ flex: 1 }}
+            >
+                <ScrollView contentContainerStyle={{ flexGrow: 1 }} >
+                    <Text style={styles.textStyleInfo}>Information personal</Text>
+                    <Text style={styles.text}>Nouveau email </Text>
+                    <TextInput
+                        style={[
+                            styles.input,
+                            focusedField === "email" && styles.inputFocused,
+                        ]}
+                        onFocus={() => handleFocus("email")}
+                        onBlur={handleBlur}
+                        onChangeText={(value) => setEmail(value)}
+                        value={email}
+                        placeholder={user?.email}
+                    />
+                    <Text style={styles.text}>Confirmer le nouveau email</Text>
+                    <TextInput
+                        style={[
+                            styles.input,
+                            focusedField === "email" && styles.inputFocused,
+                        ]}
+                        onFocus={() => handleFocus("email")}
+                        onBlur={handleBlur}
+                        onChangeText={(value) => setEmail(value)}
+                        value={email}
+                        placeholder={user?.email}
+                    />
+                    <TouchableOpacity
+                        style={[styles.buttonModalSettings]}
+                        onPress={() => null}
+                    >
+                        <Text style={styles.textStyleSettings}>Modifier les informations du maitre</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.textStyleInfo}>Information du chien</Text>
+                    <Text style={styles.text}>Information général </Text>
+                    <TextInput
+                    style={[
+                        styles.input,
+                        focusedField === "info" && styles.inputFocused,
+                    ]}
+                    onFocus={() => handleFocus("info")}
+                    onBlur={handleBlur}
+                    onChangeText={(value) => setInfo(value)}
+                    value={info}
+                    placeholder={dog?.infos}
+                    />
+
+                    <Text style={styles.text}>Traits de personalité</Text>
+                    <TextInput
+                    style={[
+                        styles.input,
+                        focusedField === "personnality" && styles.inputFocused,
+                    ]}
+                    onFocus={() => handleFocus("personnality")}
+                    onBlur={handleBlur}
+                    onChangeText={(value) => setPersonnality(value)}
+                    placeholder={dog?.personality}
+                    value={personnality}
+                    />
+                    <TouchableOpacity
+                        style={[styles.buttonModalSettings]}
+                        onPress={() => null}
+                    >
+                        <Text style={styles.textStyleSettings}>Modifier les informations du chien</Text>
+                    </TouchableOpacity>
+                </ScrollView>
+            </KeyboardAvoidingView>
           </View>
         </View>
       </Modal>
@@ -191,11 +264,13 @@ const styles = StyleSheet.create({
   },
   arrow: {
     position: "absolute",
-    top: 30,
-    left: 30,
+    top: 45,
+    left: 45,
+    zIndex: 2,
   },
   in: {
     width: "100%",
+    marginTop: 30,
     alignItems: "center",
   },
   dogPic: {
@@ -307,8 +382,35 @@ const styles = StyleSheet.create({
     color: "#0639DB",
     width: "100%",
     textAlign: "center",
+    fontFamily: "Lexend_700Bold",
+    fontSize: 20,
+    marginVertical: 10,
+  },
+  text: {
+    color: "#0639DB",
+    width: "90%",
+    paddingLeft: 15,
     fontFamily: "Lexend_400Regular",
     fontSize: 16,
     marginVertical: 10,
+  },
+  input: {
+    height: 60,
+    borderColor: "#4D4D4D",
+    backgroundColor: "#BFBFBF",
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingLeft: 10,
+    borderRadius: 5,
+    color: "black",
+    fontSize: 16,
+    width: "90%",
+    borderBottomWidth: 1,
+    fontFamily: "Lexend_400Regular",
+    alignSelf: 'center',
+  },
+  inputFocused: {
+    backgroundColor: "#F3E882",
+    borderColor: "#FBBC05",
   },
 })
