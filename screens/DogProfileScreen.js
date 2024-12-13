@@ -218,6 +218,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 45,
     left: 45,
+    zIndex: 2,
   },
   vaccins: {
     gap: 15,
