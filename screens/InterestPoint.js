@@ -156,7 +156,7 @@ const InterestPoint = ({ navigation, route }) => {
         style={styles.iconBack}
         onPress={() => navigation.goBack()}
       />
-      <ScrollView style={styles.container}>
+      <ScrollView>
         {/* Image du profil */}
         <View>
           <Image
@@ -258,6 +258,7 @@ const InterestPoint = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    maringTop: -10
   },
   profilPic: {
     width: "100%",
@@ -265,7 +266,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   iconBack: {
-    padding: 20,
     position: "fixed",
     top: 30,
     left: 30,
