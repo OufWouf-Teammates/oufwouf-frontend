@@ -26,7 +26,10 @@ export default function SettingsScreen({ navigation }) {
   const dispatch = useDispatch()
   const token = useSelector((state) => state.user.value.token)
   const [dog, setDog] = useState({})
+  const [info, setInfo] = useState("")
+  const [personnality, setPersonnality] = useState("")
   const [user, setUser] = useState({})
+  const [focusedField, setFocusedField] = useState(null)
   const [modalSettingsVisible, setModalSettingsVisible] = useState(false)
   const [modalInfoVisible, setModalInfoVisible] = useState(false)
   useEffect(() => {
@@ -67,6 +70,17 @@ export default function SettingsScreen({ navigation }) {
     setModalSettingsVisible(!modalSettingsVisible)
     navigation.navigate("Connection")
   }
+    // Fonction pour changer la couleur de l'input quand il est focus //
+    const handleFocus = (field) => {
+        setFocusedField(field)
+      }
+    
+      // Fonction pour gérer la perte de focus //
+    
+      const handleBlur = () => {
+        setFocusedField(null)
+      }
+    
   return (
     <ImageBackground
       source={require("../assets/BG_App.png")}
@@ -162,6 +176,29 @@ export default function SettingsScreen({ navigation }) {
             </TouchableOpacity>
             <ScrollView>
               <Text style={styles.textStyleInfo}>Information personal</Text>
+              <Text style={styles.text}>Information général </Text>
+                <TextInput
+                style={[
+                    styles.input,
+                    focusedField === "info" && styles.inputFocused,
+                ]}
+                onFocus={() => handleFocus("info")}
+                onBlur={handleBlur}
+                onChangeText={(value) => setInfo(value)}
+                value={info}
+                />
+
+                <Text style={styles.text}>Traits de personalité</Text>
+                <TextInput
+                style={[
+                    styles.input,
+                    focusedField === "personnality" && styles.inputFocused,
+                ]}
+                onFocus={() => handleFocus("personnality")}
+                onBlur={handleBlur}
+                onChangeText={(value) => setPersonnality(value)}
+                value={personnality}
+                />
               <Text style={styles.textStyleInfo}>
                 Modifier la photo de profil
               </Text>
@@ -310,5 +347,24 @@ const styles = StyleSheet.create({
     fontFamily: "Lexend_400Regular",
     fontSize: 16,
     marginVertical: 10,
+  },
+  input: {
+    height: 60,
+    borderColor: "#4D4D4D",
+    backgroundColor: "#BFBFBF",
+    borderWidth: 1,
+    marginBottom: 20,
+    paddingLeft: 10,
+    borderRadius: 10,
+    opacity: 0.4,
+    color: "black",
+    fontSize: 16,
+    width: "100%",
+    borderBottomWidth: 1,
+    fontFamily: "Lexend_400Regular",
+  },
+  inputFocused: {
+    backgroundColor: "#F3E882",
+    borderColor: "#FBBC05",
   },
 })
