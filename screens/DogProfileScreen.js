@@ -36,7 +36,7 @@ export default function DogProfileScreen({ navigation }) {
     if (!fontsLoaded) {
       return null // Rien n'est affiché tant que les polices ne sont pas chargées
     }
-    
+
   const token = useSelector((state) => state.user.value.token)
   const [dog, setDog] = useState({})
 
@@ -211,9 +211,10 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     gap: 40,
     alignItems: "center",
+    marginTop: 100,
   },
   dogPic: {
     width: "50%",
@@ -257,7 +258,8 @@ const styles = StyleSheet.create({
   name: {
     fontWeight: "bold",
     fontSize: 30,
-    marginTop: -20,
+    marginTop: -40,
+    fontStyle: "italic",
   },
   icons: {
     marginRight: 15,

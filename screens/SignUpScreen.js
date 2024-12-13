@@ -18,8 +18,8 @@ import {
   Lexend_400Regular,
   Lexend_700Bold,
 } from "@expo-google-fonts/lexend"
-import * as SplashScreen from 'expo-splash-screen';
-import { useState } from "react"
+import * as SplashScreen from "expo-splash-screen"
+import { useState, useEffect } from "react"
 import { useDispatch } from "react-redux"
 
 import GoogleSignInButton from "../components/GoogleSignInButton"
@@ -41,14 +41,14 @@ export default function SignUpScreen({ navigation, route }) {
   useEffect(() => {
     async function hideSplashScreen() {
       if (fontsLoaded) {
-        await SplashScreen.hideAsync();
+        await SplashScreen.hideAsync()
       }
     }
-    hideSplashScreen();
-  }, [fontsLoaded]);
+    hideSplashScreen()
+  }, [fontsLoaded])
 
   if (!fontsLoaded) {
-    return null; // Rien n'est affiché tant que les polices ne sont pas chargées
+    return null // Rien n'est affiché tant que les polices ne sont pas chargées
   }
   const { createAccount } = route.params
 

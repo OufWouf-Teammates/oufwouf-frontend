@@ -117,56 +117,58 @@ const InterestPoint = ({ navigation, route }) => {
     ? pointData.data.opening_hours.weekday_text[dayOfWeek - 1]
     : "Heures non disponibles"
 
-    const handleBookmarkClick = async (name) => {
-      if (!isBookmarked) {
-        // Ajout au favoris
-        fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}map/canBookmark`, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: pointData.data.name,
-            uri: pointData.data.photos[0],
-            city: pointData.data.address_components[2].long_name,
-          }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.result) {
-              console.log("Favoris ajoutés avec succès", data.newFavorite)
-              setIsBookmarked(true)
-            } else {
-              console.error("Erreur lors de l'ajout des favoris", data.error)
-            }
-          })
-          .catch((error) => {
-            console.error("Erreur lors de la requête", error)
-          })
-      } else {
-        // Suppression du favori
-        try {
-          const response = await fetch(
-            `${process.env.EXPO_PUBLIC_BACKEND_URL}map/deletePoint/${name}`,
-            {
-              method: "DELETE",
-            }
-          )
-          const data = await response.json()
-    
-          if (response.ok && data.result) {
-            console.log("Favori supprimé avec succès")
-            setIsBookmarked(false)
+  const handleBookmarkClick = async (name) => {
+    if (!isBookmarked) {
+      // Ajout au favoris
+      fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}map/canBookmark`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: pointData.data.name,
+          uri: pointData.data.photos[0],
+          city: pointData.data.address_components[2].long_name,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.result) {
+            console.log("Favoris ajoutés avec succès", data.newFavorite)
+            setIsBookmarked(true)
           } else {
-            console.error("Erreur lors de la suppression du favori", data.error || data.message)
+            console.error("Erreur lors de l'ajout des favoris", data.error)
           }
-        } catch (error) {
-          console.error("Erreur lors de la requête de suppression", error)
+        })
+        .catch((error) => {
+          console.error("Erreur lors de la requête", error)
+        })
+    } else {
+      // Suppression du favori
+      try {
+        const response = await fetch(
+          `${process.env.EXPO_PUBLIC_BACKEND_URL}map/deletePoint/${name}`,
+          {
+            method: "DELETE",
+          }
+        )
+        const data = await response.json()
+
+        if (response.ok && data.result) {
+          console.log("Favori supprimé avec succès")
+          setIsBookmarked(false)
+        } else {
+          console.error(
+            "Erreur lors de la suppression du favori",
+            data.error || data.message
+          )
         }
+      } catch (error) {
+        console.error("Erreur lors de la requête de suppression", error)
       }
     }
-    
+  }
 
   return (
     <ImageBackground
@@ -295,7 +297,11 @@ const styles = StyleSheet.create({
     padding: 30,
   },
   title: {
+<<<<<<< HEAD
     width: '70%',
+=======
+    width: "60%",
+>>>>>>> 7d5b53daad1133aa353f93158acdcd9c542ed8b9
     fontSize: 42,
     fontWeight: "bold",
     marginBottom: 10,

@@ -16,7 +16,7 @@ import {
   Lexend_400Regular,
   Lexend_700Bold,
 } from "@expo-google-fonts/lexend"
-import * as SplashScreen from 'expo-splash-screen';
+import * as SplashScreen from "expo-splash-screen"
 
 import { useIsFocused } from "@react-navigation/native"
 import { useEffect, useState } from "react"
@@ -110,14 +110,14 @@ function Gallery() {
   useEffect(() => {
     async function hideSplashScreen() {
       if (fontsLoaded) {
-        await SplashScreen.hideAsync();
+        await SplashScreen.hideAsync()
       }
     }
-    hideSplashScreen();
-  }, [fontsLoaded]);
+    hideSplashScreen()
+  }, [fontsLoaded])
 
   if (!fontsLoaded) {
-    return null; // Rien n'est affiché tant que les polices ne sont pas chargées
+    return null // Rien n'est affiché tant que les polices ne sont pas chargées
   }
   return (
     <ImageBackground
@@ -125,8 +125,13 @@ function Gallery() {
       style={styles.container}
     >
       <TouchableOpacity
+<<<<<<< HEAD
         onPress={() => navigation.goBack()}
         style={styles.iconBack}
+=======
+        style={styles.arrow}
+        onPress={() => navigation.goBack()}
+>>>>>>> 7d5b53daad1133aa353f93158acdcd9c542ed8b9
       >
         <FontAwesome name="arrow-left" size={30} color="#0639DB" />
       </TouchableOpacity>
@@ -234,6 +239,7 @@ const styles = StyleSheet.create({
   card: {
     justifyContent: "center",
     alignItems: "center",
+    borderRadius: 5,
   },
   textFont: {
     fontSize: 18,
