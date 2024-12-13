@@ -10,29 +10,29 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   ScrollView,
-} from "react-native";
+} from "react-native"
 import {
   useFonts,
   Lexend_400Regular,
   Lexend_700Bold,
-} from "@expo-google-fonts/lexend";
-import AppLoading from "expo-app-loading";
+} from "@expo-google-fonts/lexend"
+import * as SplashScreen from 'expo-splash-screen';
 
-import { useIsFocused } from "@react-navigation/native";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native"
+import { useEffect, useState } from "react"
+import { useSelector } from "react-redux"
+import { useNavigation } from "@react-navigation/native"
 
-import FontAwesome from "react-native-vector-icons/FontAwesome";
+import FontAwesome from "react-native-vector-icons/FontAwesome"
 function Gallery() {
-  const navigation = useNavigation();
-  const apiPicture = `${process.env.EXPO_PUBLIC_BACKEND_URL}pictures`;
-  const userToken = useSelector((state) => state.user.value.token);
+  const navigation = useNavigation()
+  const apiPicture = `${process.env.EXPO_PUBLIC_BACKEND_URL}pictures`
+  const userToken = useSelector((state) => state.user.value.token)
 
-  const [galerie, setGalerie] = useState([]);
-  const [editedDescription, setEditedDescription] = useState("");
-  const [selectedUri, setSelectedUri] = useState(null);
-  const isFocused = useIsFocused();
+  const [galerie, setGalerie] = useState([])
+  const [editedDescription, setEditedDescription] = useState("")
+  const [selectedUri, setSelectedUri] = useState(null)
+  const isFocused = useIsFocused()
 
   const fetchGalerie = async () => {
     try {
@@ -40,20 +40,20 @@ function Gallery() {
         headers: {
           Authorization: `Bearer ${userToken}`,
         },
-      });
+      })
       if (!response.ok) {
-        throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+        throw new Error(`Erreur ${response.status}: ${response.statusText}`)
       }
-      const data = await response.json();
-      setGalerie(data.personalPicture);
+      const data = await response.json()
+      setGalerie(data.personalPicture)
     } catch (error) {
-      console.error("ERROR pour afficher les photos", error.message);
+      console.error("ERROR pour afficher les photos", error.message)
     }
-  };
+  }
 
   useEffect(() => {
-    fetchGalerie();
-  }, [isFocused]);
+    fetchGalerie()
+  }, [isFocused])
 
   const handleDescription = async (uri) => {
     try {
@@ -64,65 +64,77 @@ function Gallery() {
           uri,
           description: editedDescription,
         }),
-      });
+      })
 
-      const data = await response.json();
-      console.log(data);
+      const data = await response.json()
+      console.log(data)
 
       if (data.result) {
         setGalerie((prevGalerie) =>
           prevGalerie.map((e) =>
             e.uri === uri ? { ...e, description: editedDescription } : e
           )
-        );
-        setEditedDescription("");
-        setSelectedUri(null);
-        console.log("yaay new des");
+        )
+        setEditedDescription("")
+        setSelectedUri(null)
+        console.log("yaay new des")
       } else {
-        console.log("nauur no new des");
+        console.log("nauur no new des")
       }
     } catch (error) {
-      console.error(error.message);
+      console.error(error.message)
     }
-  };
+  }
 
   const handleDelete = async (id) => {
     try {
       const response = await fetch(`${apiPicture}/delete/${id}`, {
         method: "DELETE",
-      });
+      })
       if (response.result) {
-        console.log("bouhhh tu sais pas supp");
+        console.log("bouhhh tu sais pas supp")
       } else {
-        fetchGalerie();
-        console.log("ca y est cest supp");
+        fetchGalerie()
+        console.log("ca y est cest supp")
       }
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message)
     }
-  };
+  }
 
   // Nécessaire pour la configuration des fonts
   const [fontsLoaded] = useFonts({
     Lexend_400Regular,
     Lexend_700Bold,
-  });
+  })
+  useEffect(() => {
+    async function hideSplashScreen() {
+      if (fontsLoaded) {
+        await SplashScreen.hideAsync();
+      }
+    }
+    hideSplashScreen();
+  }, [fontsLoaded]);
+
   if (!fontsLoaded) {
-    return <AppLoading />;
+    return null; // Rien n'est affiché tant que les polices ne sont pas chargées
   }
   return (
     <ImageBackground
       source={require("../assets/BG_App.png")}
       style={styles.container}
     >
+      <FontAwesome
+        name="arrow-left"
+        size={30}
+        color="#0639DB"
+        style={styles.arrow}
+        onPress={() => navigation.goBack()}
+      />
       <SafeAreaView style={styles.content}>
-        <FontAwesome
-          name="arrow-left"
-          size={25}
-          color="#0639DB"
-          style={styles.iconBack}
-          onPress={() => navigation.goBack()}
-        />
+        <View style={styles.titleBox}>
+          <Text style={styles.title}>Gallerie</Text>
+        </View>
         <ScrollView style={styles.scroll}>
           {galerie &&
             galerie.map((e) => (
@@ -152,11 +164,11 @@ function Gallery() {
                       onPress={() => {
                         if (selectedUri === e.uri) {
                           // Si la photo est déjà sélectionnée, envoyer la mise à jour
-                          handleDescription(e.uri);
+                          handleDescription(e.uri)
                         } else {
                           // Si la photo n'est pas sélectionnée, permettre l'édition de la description
-                          setSelectedUri(e.uri);
-                          setEditedDescription('');
+                          setSelectedUri(e.uri)
+                          setEditedDescription("")
                         }
                       }}
                     >
@@ -170,7 +182,7 @@ function Gallery() {
                     {/* Icône de suppression */}
                     <TouchableOpacity
                       onPress={() => {
-                        handleDelete(e._id);
+                        handleDelete(e._id)
                       }}
                     >
                       <FontAwesome name="trash" size={20} color="#EAD32A" />
@@ -182,7 +194,7 @@ function Gallery() {
         </ScrollView>
       </SafeAreaView>
     </ImageBackground>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -191,12 +203,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  iconBack: {
-    marginBottom: 50,
+  arrow: {
+    position: "absolute",
+    top: 30,
+    left: 30,
   },
   image: {
     width: 350,
     height: 350,
+  },
+  titleBox: {
+    justifyContent: "center",
+    alignItems: "center",
+    height: 200,
+  },
+  title: {
+    color: "blue",
+    fontWeight: "bold",
+    fontSize: 35,
   },
   cardInfo: {
     flexDirection: "row",
@@ -231,6 +255,9 @@ const styles = StyleSheet.create({
     borderColor: "#0639DB",
     padding: 5,
   },
-});
+  scroll: {
+    marginTop: 10,
+  },
+})
 
-export default Gallery;
+export default Gallery

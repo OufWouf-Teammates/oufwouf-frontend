@@ -9,44 +9,39 @@ import {
   ImageBackground,
   ActivityIndicator,
   ScrollView,
-  Linking
-} from 'react-native';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+  Linking,
+} from "react-native"
+import FontAwesome from "react-native-vector-icons/FontAwesome"
 import {
   useFonts,
   Lexend_400Regular,
   Lexend_700Bold,
-} from "@expo-google-fonts/lexend";
-import AppLoading from "expo-app-loading";
-import { useSelector } from 'react-redux'
+} from "@expo-google-fonts/lexend"
+import AppLoading from "expo-app-loading"
+import { useSelector } from "react-redux"
 
 const InterestPoint = ({ navigation, route }) => {
-  const { markerData } = route.params; 
-  const [pointData, setPointData] = useState([]);
-  const [isBookmarked, setIsBookmarked] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { markerData } = route.params
+  const [pointData, setPointData] = useState([])
+  const [isBookmarked, setIsBookmarked] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  const userToken = useSelector((state) => state.user.value?.token);
+  const userToken = useSelector((state) => state.user.value?.token)
   console.log(userToken)
   useEffect(() => {
-    // Fonction pour récupérer les données d'un point d'intérêt spécifique
     const fetchInterestPoint = async () => {
       try {
-
-        const url = `${process.env.EXPO_PUBLIC_BACKEND_URL}map/lieu/${markerData.place_id}`;
-        console.log('url:', url)
-        const response = await fetch(url);
-        console.log(url)
+        const url = `${process.env.EXPO_PUBLIC_BACKEND_URL}map/lieu/${markerData.place_id}`
+        const response = await fetch(url)
         if (!response.ok) {
           throw new Error(
             "Une erreur est survenue lors de la récupération des données."
           )
         }
-        const data = await response.json();
-        setPointData(data);
+        const data = await response.json()
+        setPointData(data)
         setIsBookmarked(true)
-        console.log('info place:', pointData)
       } catch (err) {
         setError(err.message)
         Alert.alert("Erreur", err.message)
@@ -79,17 +74,15 @@ const InterestPoint = ({ navigation, route }) => {
     )
   }
 
-  console.log(pointData.data.name)
-
-  const paw = [];
+  const paw = []
   for (let i = 0; i < 5; i++) {
-    let color = '#ccc'; // Couleur par défaut pour les pattes vides
-    
+    let color = "#ccc" // Couleur par défaut pour les pattes vides
+
     if (i < Math.floor(pointData.data.rating)) {
       // Patte pleine
-      color = '#0639DB';
+      color = "#0639DB"
     } else if (i < pointData.data.rating) {
-      color = 'rgba(6, 57, 219, 0.5)';
+      color = "rgba(6, 57, 219, 0.5)"
     }
 
     paw.push(
@@ -100,9 +93,8 @@ const InterestPoint = ({ navigation, route }) => {
         color={color}
         style={styles.paw}
       />
-    );
+    )
   }
-
 
   const photos = pointData.data.photos.slice(1, 6).map((photo, index) => {
     return (
@@ -113,58 +105,67 @@ const InterestPoint = ({ navigation, route }) => {
         }}
         style={styles.infoPic}
       />
-    );
-  });
-
-const dayOfWeek = new Date().getDay(); // Récupérer le jour actuel (0-6)
-
-const openingHoursToday = pointData.data.opening_hours ? pointData.data.opening_hours.weekday_text[dayOfWeek - 1] : 'Heures non disponibles';
-
-const handleBookmarkClick = ({name, uri}) => {
-  fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}map/canBookmark`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${userToken}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ name: pointData.data.name, uri: pointData.data.photos[0]})
+    )
   })
-    .then(response => response.json())
-    .then(data => {
-      if (data.result) {
-        console.log('Favoris ajoutés avec succès', data.newFavorite);
-      } else {
-        console.error('Erreur lors de l\'ajout des favoris', data.error);
-      }
-    })
-    .catch(error => {
-      console.log(error.message);
-      
-      console.error('Erreur lors de la requête', error);
-    });
-};
 
+  const dayOfWeek = new Date().getDay() // Récupérer le jour actuel (0-6)
+
+  const openingHoursToday = pointData.data.opening_hours
+    ? pointData.data.opening_hours.weekday_text[dayOfWeek - 1]
+    : "Heures non disponibles"
+
+  const handleBookmarkClick = ({ name, uri }) => {
+    fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}map/canBookmark`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${userToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: pointData.data.name,
+        uri: pointData.data.photos[0],
+        city: pointData.data.address_components[2].long_name,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          console.log("Favoris ajoutés avec succès", data.newFavorite)
+        } else {
+          console.error("Erreur lors de l'ajout des favoris", data.error)
+        }
+      })
+      .catch((error) => {
+        console.log(error.message)
+
+        console.error("Erreur lors de la requête", error)
+      })
+  }
+
+  console.log("ville:", pointData.data.address_components[2].long_name)
 
   return (
     <ImageBackground
       source={require("../assets/BG_App.png")}
       style={styles.container}
     >
+      <FontAwesome
+        name="arrow-left"
+        size={30}
+        color="#0639DB"
+        style={styles.iconBack}
+        onPress={() => navigation.goBack()}
+      />
       <ScrollView style={styles.container}>
         {/* Image du profil */}
         <View>
-        <Image
-          source={{
-            uri: pointData.data.photos ? pointData.data.photos[0] : require('../assets/dog_example.webp')
-          }}
-          style={styles.profilPic}
-        />
-          <FontAwesome
-            name="arrow-left"
-            size={25}
-            color="#0639DB"
-            style={styles.iconBack}
-            onPress={() => navigation.goBack()}
+          <Image
+            source={{
+              uri: pointData.data.photos
+                ? pointData.data.photos[0]
+                : require("../assets/dog_example.webp"),
+            }}
+            style={styles.profilPic}
           />
         </View>
 
@@ -176,12 +177,27 @@ const handleBookmarkClick = ({name, uri}) => {
 
             {/* Ouverture */}
             <View style={styles.openContainer}>
-            <Text
-              style={pointData.data.current_opening_hours ? styles.open : styles.close}
-            >
-              {pointData.data.current_opening_hours ? 'OUVERT' : 'FERMÉ'}
-            </Text>              
-            <FontAwesome name="bookmark-o" size={35} color="#EAD32A" onPress={() => handleBookmarkClick(pointData.data.name, pointData.data.photos[0])}/>
+              <Text
+                style={
+                  pointData.data.current_opening_hours
+                    ? styles.open
+                    : styles.close
+                }
+              >
+                {pointData.data.current_opening_hours ? "OUVERT" : "FERMÉ"}
+              </Text>
+              <FontAwesome
+                name={isBookmarked ? "bookmark" : "bookmark-o"}
+                size={35}
+                color="#EAD32A"
+                onPress={() =>
+                  handleBookmarkClick(
+                    pointData.data.name,
+                    pointData.data.photos[0],
+                    pointData.data.address_components[2].long_name
+                  )
+                }
+              />
             </View>
           </View>
 
@@ -189,47 +205,54 @@ const handleBookmarkClick = ({name, uri}) => {
           <View style={styles.noteAverage}>
             {/* {paw} */}
             <Text style={styles.note}>{paw}</Text>
-            <Text  style={styles.note}>({pointData.data.rating}){pointData.data.user_ratings_total} avis</Text>
+            <Text style={styles.note}>
+              ({pointData.data.rating}){pointData.data.user_ratings_total} avis
+            </Text>
           </View>
 
           {/* Profil infos */}
           <View style={styles.profilInfos}>
-            <Text style={styles.adresse}>{pointData.data.formatted_address}</Text>
+            <Text style={styles.adresse}>
+              {pointData.data.formatted_address}
+            </Text>
 
             {/* Téléphone */}
-              <View style={styles.row}>
-                <FontAwesome name="phone" size={15} color="#EAD32A" />
-                <Text style={styles.phone}>{pointData.data.formatted_phone_number}</Text>
-              </View>
+            <View style={styles.row}>
+              <FontAwesome name="phone" size={15} color="#EAD32A" />
+              <Text style={styles.phone}>
+                {pointData.data.formatted_phone_number}
+              </Text>
+            </View>
 
             {/* Horaires */}
-              <View style={styles.row}>
-                <FontAwesome name="clock-o" size={15} color="#EAD32A" />
-                <Text style={styles.text}>Horaires d'ouverture</Text>
-              </View>
+            <View style={styles.row}>
+              <FontAwesome name="clock-o" size={15} color="#EAD32A" />
+              <Text style={styles.text}>Horaires d'ouverture</Text>
+            </View>
             <Text style={styles.hours}>
-            {openingHoursToday ? `Aujourd'hui : ${openingHoursToday}` : 'Heures non disponibles'}
+              {openingHoursToday
+                ? `Aujourd'hui : ${openingHoursToday}`
+                : "Heures non disponibles"}
             </Text>
 
             {/* Bouton */}
             <TouchableOpacity
               style={styles.reserve}
               onPress={() => {
-                const phoneNumber = `tel:${pointData.data.formatted_phone_number}`;  // Remplacez ce numéro par celui que vous souhaitez appeler
-                Linking.openURL(phoneNumber )
-                  .catch(err => console.error('Erreur de lien', err));
+                const phoneNumber = `tel:${pointData.data.formatted_phone_number}` // Remplacez ce numéro par celui que vous souhaitez appeler
+                Linking.openURL(phoneNumber).catch((err) =>
+                  console.error("Erreur de lien", err)
+                )
               }}
             >
               <Text style={styles.reserveText}>Prendre rendez-vous</Text>
             </TouchableOpacity>
           </View>
         </View>
-        <View style={styles.gallery}>
-            {photos}
-            </View>
+        <View style={styles.gallery}>{photos}</View>
       </ScrollView>
     </ImageBackground>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -237,38 +260,39 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   profilPic: {
-    width: '100%',
+    width: "100%",
     height: 300,
     marginBottom: 10,
   },
   iconBack: {
     padding: 20,
-    position: 'absolute',
+    position: "fixed",
     top: 30,
+    left: 30,
   },
   infoContainer: {
     padding: 30,
   },
   title: {
     fontSize: 42,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
-    color: '#0639DB',
+    color: "#0639DB",
   },
   openContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginVertical: 20,
   },
   infoTitre: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   open: {
     fontSize: 18,
-    color: '#0639DB',
-    fontWeight: 'bold',
+    color: "#0639DB",
+    fontWeight: "bold",
     borderRadius: 5,
-    borderColor: '#0639DB',
+    borderColor: "#0639DB",
     borderWidth: 1,
     marginBottom: 10,
     paddingVertical: 10,
@@ -276,10 +300,10 @@ const styles = StyleSheet.create({
   },
   close: {
     fontSize: 18,
-    color: '#FC4F52',
-    fontWeight: 'bold',
+    color: "#FC4F52",
+    fontWeight: "bold",
     borderRadius: 5,
-    borderColor: '#FC4F52',
+    borderColor: "#FC4F52",
     borderWidth: 1,
     marginBottom: 10,
     paddingVertical: 10,
@@ -291,7 +315,7 @@ const styles = StyleSheet.create({
   note: {
     marginLeft: 10,
     fontSize: 16,
-    color: '#0639DB',
+    color: "#0639DB",
   },
   profilInfos: {
     marginTop: 10,
@@ -301,14 +325,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   row: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 5,
   },
   phone: {
     marginLeft: 10,
     fontSize: 20,
-    color: '#4D4D4D',
+    color: "#4D4D4D",
   },
   text: {
     marginLeft: 10,
@@ -316,30 +340,30 @@ const styles = StyleSheet.create({
   },
   hours: {
     fontSize: 14,
-    color: '#4D4D4D',
+    color: "#4D4D4D",
     marginBottom: 10,
   },
   reserve: {
-    backgroundColor: '#0639DB',
-    width: '70%',
+    backgroundColor: "#0639DB",
+    width: "70%",
     borderRadius: 5,
     padding: 10,
     marginTop: 30,
-    alignItems: 'center',
-    alignSelf: 'center',
+    alignItems: "center",
+    alignSelf: "center",
   },
   reserveText: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: "white",
+    fontWeight: "bold",
     fontSize: 22,
   },
   gallery: {
-    width: '100%'
+    width: "100%",
   },
   infoPic: {
-    width: '100%',
+    width: "100%",
     height: 300,
     marginTop: 50,
-  }
-});
+  },
+})
 export default InterestPoint

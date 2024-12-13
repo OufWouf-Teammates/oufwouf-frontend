@@ -18,7 +18,7 @@ import {
   Lexend_400Regular,
   Lexend_700Bold,
 } from "@expo-google-fonts/lexend"
-import AppLoading from "expo-app-loading"
+import * as SplashScreen from 'expo-splash-screen';
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context"
 import MapView, {
   Marker,
@@ -39,6 +39,7 @@ import { useSelector } from "react-redux"
 
 export default function MapScreen({ navigation }) {
   const [location, setLocation] = useState(null)
+  const [locationMap, setLocationMap] = useState(location)
   const [mapRef, setMapRef] = useState(null) // Référence pour MapView
   const [redMarker, setRedMarker] = useState(null) // État pour le marker rouge
   const [modalVisible, setModalVisible] = useState(false)
@@ -73,8 +74,17 @@ export default function MapScreen({ navigation }) {
     Lexend_400Regular,
     Lexend_700Bold,
   })
+  useEffect(() => {
+    async function hideSplashScreen() {
+      if (fontsLoaded) {
+        await SplashScreen.hideAsync();
+      }
+    }
+    hideSplashScreen();
+  }, [fontsLoaded]);
+
   if (!fontsLoaded) {
-    return <AppLoading />
+    return null; // Rien n'est affiché tant que les polices ne sont pas chargées
   }
 
   const centerOn = (objLatLng) => {
@@ -90,6 +100,12 @@ export default function MapScreen({ navigation }) {
       )
     }
   }
+  const handleRegionChangeComplete = (region) => {
+    setLocationMap({
+      latitude: region.latitude,
+      longitude: region.longitude,
+    });
+  };
 
   const createRedPoint = (arrLatLng) => {
     setRedMarker(arrLatLng) // Affiche le marker rouge
@@ -134,7 +150,7 @@ export default function MapScreen({ navigation }) {
             {
               fontFamily: "Lexend_400Regular",
               fontSize: 16,
-              alignSelf: 'center',
+              alignSelf: "center",
             },
           ]}
         >
@@ -156,9 +172,9 @@ export default function MapScreen({ navigation }) {
       else if (filter === "Vétérinaires") endpoint = "veterinaires"
       else if (filter === "Parcs") endpoint = "parcs-chiens"
 
-      const url = `${process.env.EXPO_PUBLIC_BACKEND_URL}map/${endpoint}/${
-        location.coords?.latitude || 1
-      },${location.coords?.longitude || 1}`
+      const latitude = locationMap?.latitude || location?.coords?.latitude || 1;
+      const longitude = locationMap?.longitude || location?.coords?.longitude || 1;
+      const url = `${process.env.EXPO_PUBLIC_BACKEND_URL}map/${endpoint}/${latitude},${longitude}`;
 
       fetch(url, {
         method: "POST",
@@ -317,35 +333,35 @@ export default function MapScreen({ navigation }) {
             showsTraffic={false}
             pitchEnabled={false}
             loadingEnabled={false}
+            onRegionChangeComplete={handleRegionChangeComplete}
             ref={(ref) => setMapRef(ref)} // Assurez-vous que setMapRef est appelé ici
           >
-            {/* Cercle indiquant la précision */}
             {
-              <Circle
-                center={{
-                  latitude: location.coords?.latitude || 1,
-                  longitude: location.coords?.longitude || 1,
-                }}
-                radius={location.coords.accuracy} // Précision fournie par Expo Location
-                strokeColor="rgba(0, 122, 255, 0.5)" // Couleur du contour
-                fillColor="rgba(0, 122, 255, 0.2)" // Couleur de remplissage
-              />
-            }
-
-            {/* Point bleu pour indiquer la position */}
-            {
-              <Marker
-                coordinate={{
-                  latitude: location.coords?.latitude || 1,
-                  longitude: location.coords?.longitude || 1,
-                }}
-                anchor={{ x: 0.5, y: 0.5 }} // Centre le marker
-              >
-                <View style={styles.marker}>
-                  <View style={styles.markerCore} />
-                </View>
-              </Marker>
-            }
+  location?.coords && (
+    <>
+      <Circle
+        center={{
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        }}
+        radius={location.coords.accuracy || 0} // Par défaut 0 si accuracy est indéfini
+        strokeColor="rgba(0, 122, 255, 0.5)"
+        fillColor="rgba(0, 122, 255, 0.2)"
+      />
+      <Marker
+        coordinate={{
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        }}
+        anchor={{ x: 0.5, y: 0.5 }}
+      >
+        <View style={styles.marker}>
+          <View style={styles.markerCore} />
+        </View>
+      </Marker>
+    </>
+  )
+}
             {
               <Marker
                 coordinate={{
@@ -406,7 +422,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     marginTop: 65,
     width: "100%",
-    zIndex: 1,
+    zIndex: 20,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -518,7 +534,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
     width: "90%",
     marginTop: 120,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   filters: {
     display: "flex",
@@ -531,8 +547,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     marginRight: 10,
     borderRadius: 25,
-    alignContent: 'center',
-    justifyContent: 'center'
+    alignContent: "center",
+    justifyContent: "center",
   },
   textButtonFilter: {
     color: "#0639DB",

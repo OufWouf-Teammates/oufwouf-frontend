@@ -79,7 +79,7 @@ const AppleConnect = (props) => {
                     token: data.result.token,
                   })
                 )
-                navigation.navigate("Map")
+                navigation.navigate("Dog Info Form")
               } else {
                 alert(data.error)
               }
