@@ -125,13 +125,8 @@ function Gallery() {
       style={styles.container}
     >
       <TouchableOpacity
-<<<<<<< HEAD
         onPress={() => navigation.goBack()}
         style={styles.iconBack}
-=======
-        style={styles.arrow}
-        onPress={() => navigation.goBack()}
->>>>>>> 7d5b53daad1133aa353f93158acdcd9c542ed8b9
       >
         <FontAwesome name="arrow-left" size={30} color="#0639DB" />
       </TouchableOpacity>
