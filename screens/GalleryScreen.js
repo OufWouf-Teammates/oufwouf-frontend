@@ -16,7 +16,7 @@ import {
   Lexend_400Regular,
   Lexend_700Bold,
 } from "@expo-google-fonts/lexend"
-import * as SplashScreen from 'expo-splash-screen';
+import * as SplashScreen from "expo-splash-screen"
 
 import { useIsFocused } from "@react-navigation/native"
 import { useEffect, useState } from "react"
@@ -110,27 +110,26 @@ function Gallery() {
   useEffect(() => {
     async function hideSplashScreen() {
       if (fontsLoaded) {
-        await SplashScreen.hideAsync();
+        await SplashScreen.hideAsync()
       }
     }
-    hideSplashScreen();
-  }, [fontsLoaded]);
+    hideSplashScreen()
+  }, [fontsLoaded])
 
   if (!fontsLoaded) {
-    return null; // Rien n'est affiché tant que les polices ne sont pas chargées
+    return null // Rien n'est affiché tant que les polices ne sont pas chargées
   }
   return (
     <ImageBackground
       source={require("../assets/BG_App.png")}
       style={styles.container}
     >
-      <FontAwesome
-        name="arrow-left"
-        size={30}
-        color="#0639DB"
+      <TouchableOpacity
         style={styles.arrow}
         onPress={() => navigation.goBack()}
-      />
+      >
+        <FontAwesome name="arrow-left" size={30} color="#0639DB" />
+      </TouchableOpacity>
       <SafeAreaView style={styles.content}>
         <View style={styles.titleBox}>
           <Text style={styles.title}>Gallerie</Text>
@@ -234,6 +233,7 @@ const styles = StyleSheet.create({
   card: {
     justifyContent: "center",
     alignItems: "center",
+    borderRadius: 5,
   },
   textFont: {
     fontSize: 18,

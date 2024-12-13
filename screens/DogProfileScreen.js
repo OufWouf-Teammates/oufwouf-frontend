@@ -182,9 +182,10 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     gap: 40,
     alignItems: "center",
+    marginTop: 100,
   },
   dogPic: {
     width: "40%",
@@ -224,7 +225,8 @@ const styles = StyleSheet.create({
   name: {
     fontWeight: "bold",
     fontSize: 30,
-    marginTop: -50,
+    marginTop: -40,
+    fontStyle: "italic",
   },
   icons: {
     marginRight: 15,

@@ -149,14 +149,14 @@ const InterestPoint = ({ navigation, route }) => {
       source={require("../assets/BG_App.png")}
       style={styles.container}
     >
-      <FontAwesome
-        name="arrow-left"
-        size={30}
-        color="#0639DB"
-        style={styles.iconBack}
-        onPress={() => navigation.goBack()}
-      />
       <ScrollView style={styles.container}>
+        <FontAwesome
+          name="arrow-left"
+          size={30}
+          color="#0639DB"
+          style={styles.iconBack}
+          onPress={() => navigation.goBack()}
+        />
         {/* Image du profil */}
         <View>
           <Image
