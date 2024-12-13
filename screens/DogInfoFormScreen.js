@@ -58,7 +58,7 @@ const DogInfoFormScreen = () => {
   const [isVaccin, setIsVaccin] = useState(false)
   const [selectedVaccin, setSelectedVaccin] = useState("")
   const [selectedGender, setSelectedGender] = useState("mâle")
-  const [selectedRappel, setSelectedRappel] = useState("Non")
+  const [selectedRappel, setSelectedRappel] = useState(false)
   const [isChecked2, setIsChecked2] = useState(false)
 
   // gestion des fetchs pour la race et les vaccins //
@@ -83,16 +83,17 @@ const DogInfoFormScreen = () => {
 
   useEffect(() => {
     const askPermissions = async () => {
-      const cameraPermission = await ImagePicker.requestCameraPermissionsAsync()
-      const mediaPermission = await MediaLibrary.requestPermissionsAsync()
-
-      if (
-        cameraPermission.status !== "granted" ||
-        mediaPermission.status !== "granted"
-      ) {
-        alert("Permission to access camera or media library is required")
+      try {
+        const cameraPermission = await ImagePicker.requestCameraPermissionsAsync();
+        const mediaPermission = await MediaLibrary.requestPermissionsAsync();
+    
+        if (cameraPermission.status !== "granted" || mediaPermission.status !== "granted") {
+          alert("Permission to access camera or media library is required");
+        }
+      } catch (error) {
+        console.error("Permission error:", error);
       }
-    }
+    };
 
     askPermissions()
   }, [])
@@ -120,7 +121,7 @@ const DogInfoFormScreen = () => {
       setSuggestionVaccin([])
       return
     }
-
+    console.log("Fetching suggestions from URL:", `${apiRace}?search=${query}`);
     setLoadingVaccin(true)
 
     try {
@@ -146,7 +147,6 @@ const DogInfoFormScreen = () => {
       setSuggestionRace([])
       return
     }
-
     setLoadingRace(true)
 
     try {
@@ -349,6 +349,10 @@ const DogInfoFormScreen = () => {
       style={styles.background}
       source={require("../assets/BG_App.png")}
     >
+      <KeyboardAvoidingView
+                    behavior={Platform.OS === "ios" ? "padding" : "height"}
+                    style={{ flex: 1 }}
+      >
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <SafeAreaView style={styles.innerContainer}>
           <TouchableOpacity onPress={handleChooseImage}>
@@ -509,13 +513,13 @@ const DogInfoFormScreen = () => {
 
                 <Text style={styles.text}>Rappel</Text>
                 <Picker
-                  selectedValue={selectedRappel}
-                  onValueChange={(itemValue) => setSelectedRappel(itemValue)}
+                  selectedValue={selectedRappel ? 'true' : 'false'}  // Convertir en string
+                  onValueChange={(itemValue) => setSelectedRappel(itemValue === 'true')}  // Convertir en boolean
                   style={styles.picker}
-                  mode={Platform.OS === "ios" ? "dropdown" : "dialog"}
+                  mode={Platform.OS === 'ios' ? 'dropdown' : 'dialog'}
                 >
-                  <Picker.Item label="Non" value="Non" />
-                  <Picker.Item label="Oui" value="Oui" />
+                  <Picker.Item label="Non" value="false" />
+                  <Picker.Item label="Oui" value="true" />
                 </Picker>
 
                 <Text style={styles.text}>Date de vaccination</Text>
@@ -580,7 +584,7 @@ const DogInfoFormScreen = () => {
                       style={styles.closeButton}
                       onPress={() => setIsBirthday(false)}
                     >
-                      <Text style={styles.closeButtonText}>X</Text>
+                      <FontAwesome name="close" size={25} color="#0639DB" />
                     </TouchableOpacity>
                     <Calendar
                       onDayPress={handleBirthday}
@@ -626,12 +630,12 @@ const DogInfoFormScreen = () => {
             {/* modale calendrier vaccins */}
 
             {isVaccin && (
-              <View style={styles.calendarContainer}>
+              <View style={[styles.calendarContainerVaccins, {marginTop: -230}]}>
                 <TouchableOpacity
                   style={styles.closeButton}
                   onPress={() => setIsVaccin(false)}
                 >
-                  <Text style={styles.closeButtonText}>X</Text>
+                  <FontAwesome name="close" size={25} color="#0639DB" />
                 </TouchableOpacity>
                 <Calendar
                   onDayPress={handleVaccin}
@@ -672,6 +676,7 @@ const DogInfoFormScreen = () => {
           </TouchableOpacity>
         </SafeAreaView>
       </ScrollView>
+      </KeyboardAvoidingView>
     </ImageBackground>
   )
 }
@@ -702,13 +707,12 @@ const styles = StyleSheet.create({
 
   input: {
     height: 60,
-    borderColor: "#4D4D4D",
-    backgroundColor: "#BFBFBF",
+    borderColor: "#BFBFBF",
+    backgroundColor: "rgb(227, 227, 227);",
     borderWidth: 1,
     marginBottom: 20,
     paddingLeft: 10,
     borderRadius: 10,
-    opacity: 0.4,
     color: "black",
     fontSize: 16,
     width: "100%",
@@ -738,9 +742,19 @@ const styles = StyleSheet.create({
     right: 0,
   },
   calendarContainer: {
-    position: "absolute",
-    top: 150,
-    zIndex: 1000,
+    alignSelf: 'center',
+    width: "90%",
+    backgroundColor: "white",
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4,
+    padding: 20, // Ajout d'un padding si nécessaire
+    marginTop: 20,  // Espacement dynamique
+  },
+  calendarContainerVaccins: {
     width: "100%",
     backgroundColor: "white",
     borderRadius: 10,
@@ -749,6 +763,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 4,
+    padding: 20, // Ajout d'un padding si nécessaire
+    marginTop: 20,  // Espacement dynamique
   },
   picker: {
     height: 60,
@@ -759,16 +775,19 @@ const styles = StyleSheet.create({
     fontFamily: "Lexend_400Regular",
     fontSize: 16,
     fontSize: 14,
-    color: "#999",
+    color: "black",
   },
   suggestionItem: {
     padding: 10,
+    color: 'black',
+    backgroundColor: '#FFF',
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-    marginBottom: 20,
+    borderBottomColor: "rgb(227, 227, 227);",
+    marginBottom: 5,
+    borderRadius: 5,
   },
   suggestionText: {
-    color: "#9E9E9E",
+    color: 'black',
     fontFamily: "Lexend_400Regular",
     fontSize: 16,
   },

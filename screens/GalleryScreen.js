@@ -125,8 +125,8 @@ function Gallery() {
       style={styles.container}
     >
       <TouchableOpacity
-        style={styles.arrow}
         onPress={() => navigation.goBack()}
+        style={styles.iconBack}
       >
         <FontAwesome name="arrow-left" size={30} color="#0639DB" />
       </TouchableOpacity>
@@ -202,11 +202,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  arrow: {
+  iconBack: {
     position: "absolute",
-    top: 30,
+    top: 60,
     left: 30,
-    zIndex: 2,
+    zIndex: 50,
   },
   image: {
     width: 350,

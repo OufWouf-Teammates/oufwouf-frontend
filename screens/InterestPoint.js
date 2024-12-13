@@ -17,10 +17,16 @@ import {
   Lexend_400Regular,
   Lexend_700Bold,
 } from "@expo-google-fonts/lexend"
-import AppLoading from "expo-app-loading"
+import * as SplashScreen from 'expo-splash-screen';
 import { useSelector } from "react-redux"
 
 const InterestPoint = ({ navigation, route }) => {
+    //Nécessaire pour la configuration des fonts
+    const [fontsLoaded] = useFonts({
+      Lexend_400Regular,
+      Lexend_700Bold,
+    })
+
   const { markerData } = route.params
   const [pointData, setPointData] = useState([])
   const [isBookmarked, setIsBookmarked] = useState(false)
@@ -111,71 +117,68 @@ const InterestPoint = ({ navigation, route }) => {
     ? pointData.data.opening_hours.weekday_text[dayOfWeek - 1]
     : "Heures non disponibles"
 
-  const handleBookmarkClick = async (name) => {
-    if (!isBookmarked) {
-      // Ajout au favoris
-      fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}map/canBookmark`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: pointData.data.name,
-          uri: pointData.data.photos[0],
-          city: pointData.data.address_components[2].long_name,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.result) {
-            console.log("Favoris ajoutés avec succès", data.newFavorite)
-            setIsBookmarked(true)
-          } else {
-            console.error("Erreur lors de l'ajout des favoris", data.error)
-          }
+    const handleBookmarkClick = async (name) => {
+      if (!isBookmarked) {
+        // Ajout au favoris
+        fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}map/canBookmark`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: pointData.data.name,
+            uri: pointData.data.photos[0],
+            city: pointData.data.address_components[2].long_name,
+          }),
         })
-        .catch((error) => {
-          console.error("Erreur lors de la requête", error)
-        })
-    } else {
-      // Suppression du favori
-      try {
-        const response = await fetch(
-          `${process.env.EXPO_PUBLIC_BACKEND_URL}map/deletePoint/${name}`,
-          {
-            method: "DELETE",
-          }
-        )
-        const data = await response.json()
-
-        if (response.ok && data.result) {
-          console.log("Favori supprimé avec succès")
-          setIsBookmarked(false)
-        } else {
-          console.error(
-            "Erreur lors de la suppression du favori",
-            data.error || data.message
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.result) {
+              console.log("Favoris ajoutés avec succès", data.newFavorite)
+              setIsBookmarked(true)
+            } else {
+              console.error("Erreur lors de l'ajout des favoris", data.error)
+            }
+          })
+          .catch((error) => {
+            console.error("Erreur lors de la requête", error)
+          })
+      } else {
+        // Suppression du favori
+        try {
+          const response = await fetch(
+            `${process.env.EXPO_PUBLIC_BACKEND_URL}map/deletePoint/${name}`,
+            {
+              method: "DELETE",
+            }
           )
+          const data = await response.json()
+    
+          if (response.ok && data.result) {
+            console.log("Favori supprimé avec succès")
+            setIsBookmarked(false)
+          } else {
+            console.error("Erreur lors de la suppression du favori", data.error || data.message)
+          }
+        } catch (error) {
+          console.error("Erreur lors de la requête de suppression", error)
         }
-      } catch (error) {
-        console.error("Erreur lors de la requête de suppression", error)
       }
     }
-  }
+    
 
   return (
     <ImageBackground
       source={require("../assets/BG_App.png")}
       style={styles.container}
     >
-      <FontAwesome
-        name="arrow-left"
-        size={30}
-        color="#0639DB"
-        style={styles.iconBack}
+      <TouchableOpacity
         onPress={() => navigation.goBack()}
-      />
+        style={styles.iconBack}
+      >
+        <FontAwesome name="arrow-left" size={30} color="#0639DB" />
+      </TouchableOpacity>
       <ScrollView>
         {/* Image du profil */}
         <View>
@@ -231,17 +234,18 @@ const InterestPoint = ({ navigation, route }) => {
             </Text>
 
             {/* Téléphone */}
-            <View style={styles.row}>
-              <FontAwesome name="phone" size={15} color="#EAD32A" />
-              <Text style={styles.phone}>
-                {pointData.data.formatted_phone_number}
-              </Text>
-            </View>
-
+            {pointData.data.formatted_phone_number && (
+              <View style={styles.row}>
+                <FontAwesome name="phone" size={15} color="#EAD32A" />
+                <Text style={styles.phone}>
+                  {pointData.data.formatted_phone_number}
+                </Text>
+              </View>
+            )}
             {/* Horaires */}
             <View style={styles.row}>
               <FontAwesome name="clock-o" size={15} color="#EAD32A" />
-              <Text style={styles.text}>Horaires d'ouverture</Text>
+              <Text style={styles.phone}>Horaires d'ouverture</Text>
             </View>
             <Text style={styles.hours}>
               {openingHoursToday
@@ -250,6 +254,7 @@ const InterestPoint = ({ navigation, route }) => {
             </Text>
 
             {/* Bouton */}
+            {pointData.data.formatted_phone_number && (
             <TouchableOpacity
               style={styles.reserve}
               onPress={() => {
@@ -261,6 +266,7 @@ const InterestPoint = ({ navigation, route }) => {
             >
               <Text style={styles.reserveText}>Prendre rendez-vous</Text>
             </TouchableOpacity>
+            )}
           </View>
         </View>
         <View style={styles.gallery}>{photos}</View>
@@ -281,7 +287,7 @@ const styles = StyleSheet.create({
   },
   iconBack: {
     position: "absolute",
-    top: 30,
+    top: 60,
     left: 30,
     zIndex: 50,
   },
@@ -289,11 +295,12 @@ const styles = StyleSheet.create({
     padding: 30,
   },
   title: {
-    width: "60%",
+    width: '70%',
     fontSize: 42,
     fontWeight: "bold",
     marginBottom: 10,
     color: "#0639DB",
+    fontFamily: "Lexend_700Bold",
   },
   openContainer: {
     alignItems: "center",
@@ -305,6 +312,7 @@ const styles = StyleSheet.create({
   },
   open: {
     fontSize: 18,
+    fontFamily: 'Lexend_400Regular',
     color: "#0639DB",
     fontWeight: "bold",
     borderRadius: 5,
@@ -316,6 +324,7 @@ const styles = StyleSheet.create({
   },
   close: {
     fontSize: 18,
+    fontFamily: 'Lexend_400Regular',
     color: "#FC4F52",
     fontWeight: "bold",
     borderRadius: 5,
@@ -332,6 +341,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 16,
     color: "#0639DB",
+    fontFamily: 'Lexend_400Regular',
   },
   profilInfos: {
     marginTop: 10,
@@ -349,13 +359,22 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 20,
     color: "#4D4D4D",
+    fontFamily: 'Lexend_400Regular',
+  },  
+  hours: {
+    marginLeft: 10,
+    fontSize: 16,
+    color: "#4D4D4D",
+    fontFamily: 'Lexend_400Regular',
   },
   text: {
     marginLeft: 10,
     fontSize: 20,
+    fontFamily: 'Lexend_400Regular',
   },
   hours: {
     fontSize: 14,
+    fontFamily: 'Lexend_400Regular',
     color: "#4D4D4D",
     marginBottom: 10,
   },
@@ -371,7 +390,7 @@ const styles = StyleSheet.create({
   reserveText: {
     color: "#fff",
     fontSize: 16,
-    fontWeight: "bold",
+    fontFamily: 'Lexend_700Bold',
   },
   gallery: {
     marginTop: 30,
@@ -382,11 +401,12 @@ const styles = StyleSheet.create({
   },
   infoPic: {
     width: "100%",
-    height: 200,
+    height: 300,
     marginBottom: 15,
   },
   errorText: {
     fontSize: 20,
+    fontFamily: 'Lexend_400Regular',
     color: "#FC4F52",
     textAlign: "center",
   },

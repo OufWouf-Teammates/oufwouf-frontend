@@ -260,11 +260,11 @@ const styles = StyleSheet.create({
     width: "90%",
     height: "100%",
   },
-  arrow: {
+  iconBack: {
     position: "absolute",
-    top: 45,
-    left: 45,
-    zIndex: 2,
+    top: 60,
+    left: 30,
+    zIndex: 50,
   },
   in: {
     width: "100%",

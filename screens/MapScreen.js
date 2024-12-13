@@ -397,6 +397,13 @@ const styles = StyleSheet.create({
   container2: {
     flex: 0.13,
   },
+  
+  iconBack: {
+    position: "absolute",
+    top: 60,
+    left: 30,
+    zIndex: 50,
+  },
   map: {
     flex: 1,
     position: "absolute",
