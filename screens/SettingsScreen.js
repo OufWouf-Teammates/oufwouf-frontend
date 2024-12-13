@@ -175,8 +175,15 @@ export default function SettingsScreen({ navigation }) {
               />
             </TouchableOpacity>
             <ScrollView>
-              <Text style={styles.textStyleInfo}>Information personal</Text>
-              <Text style={styles.text}>Information général </Text>
+                <Text style={styles.textStyleInfo}>Information personal</Text>
+                <Text style={styles.textStyleInfo}>{user?.email}</Text>
+                <Text style={styles.textStyleInfo}>Ajouter un chien</Text>
+                <Text style={styles.textStyleInfo}>
+                    {dog?.vaccins > 0 ? dog.vaccins : "Pas de vaccins"}
+                </Text>
+                <Text style={styles.textStyleInfo}>{dog?.personality}</Text>
+                <Text style={styles.textStyleInfo}>Information du chien</Text>
+                <Text style={styles.text}>Information général </Text>
                 <TextInput
                 style={[
                     styles.input,
@@ -202,12 +209,6 @@ export default function SettingsScreen({ navigation }) {
               <Text style={styles.textStyleInfo}>
                 Modifier la photo de profil
               </Text>
-              <Text style={styles.textStyleInfo}>{user?.email}</Text>
-              <Text style={styles.textStyleInfo}>Ajouter un chien</Text>
-              <Text style={styles.textStyleInfo}>
-                {dog?.vaccins > 0 ? dog.vaccins : "Pas de vaccins"}
-              </Text>
-              <Text style={styles.textStyleInfo}>{dog?.personality}</Text>
             </ScrollView>
           </View>
         </View>
