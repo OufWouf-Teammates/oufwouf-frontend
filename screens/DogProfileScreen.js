@@ -57,6 +57,7 @@ export default function DogProfileScreen({ navigation }) {
       return null // Rien n'est affiché tant que les polices ne sont pas chargées
     }
 
+    console.log(dog)
 
   return (
     <ImageBackground
