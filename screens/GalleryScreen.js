@@ -128,7 +128,7 @@ function Gallery() {
         name="arrow-left"
         size={30}
         color="#0639DB"
-        style={styles.arrow}
+        style={styles.iconBack}
         onPress={() => navigation.goBack()}
       />
       <SafeAreaView style={styles.content}>
@@ -202,11 +202,12 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-  },
-  arrow: {
+  },  
+  iconBack: {
     position: "absolute",
-    top: 30,
+    top: 60,
     left: 30,
+    zIndex: 50,
   },
   image: {
     width: 350,

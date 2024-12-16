@@ -19,7 +19,7 @@ import {
   Lexend_700Bold,
 } from "@expo-google-fonts/lexend"
 import * as SplashScreen from 'expo-splash-screen';
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useDispatch } from "react-redux"
 
 import GoogleSignInButton from "../components/GoogleSignInButton"
@@ -41,31 +41,46 @@ export default function SignUpScreen({ navigation, route }) {
   useEffect(() => {
     async function hideSplashScreen() {
       if (fontsLoaded) {
-        await SplashScreen.hideAsync();
+        await SplashScreen.hideAsync()
       }
     }
-    hideSplashScreen();
-  }, [fontsLoaded]);
+    hideSplashScreen()
+  }, [fontsLoaded])
 
   if (!fontsLoaded) {
-    return null; // Rien n'est affiché tant que les polices ne sont pas chargées
+    return null // Rien n'est affiché tant que les polices ne sont pas chargées
   }
   const { createAccount } = route.params
-
+  
   const handleInscription = () => {
-    if (isChecked) {
-      if (password === confirmPassword) {
-        createAccount({ email, password })
-        navigation.navigate("Dog Info Form")
-      } else {
-        setPassword("")
-        setConfirmPassworrd("")
-        alert("Les mots de passe ne correspondent pas")
-      }
-    } else {
-      alert("Vous devez accepter les CGU")
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    if (!emailRegex.test(email)) {
+      alert("Veuillez entrer une adresse e-mail valide.");
+      return;
     }
-  }
+    
+    if (password.length < 8) {
+      alert("Le mot de passe doit contenir au moins 8 caractères.");
+      return;
+    }
+  
+    if (!isChecked) {
+      alert("Vous devez accepter les CGU.");
+      return;
+    }
+  
+    if (password !== confirmPassword) {
+      setPassword("");
+      setConfirmPassworrd("");
+      alert("Les mots de passe ne correspondent pas.");
+      return;
+    }
+  
+    // Envoyez les données au backend
+    createAccount({ email, password });
+    navigation.navigate("Dog Info Form");
+  };
 
   const signUpToAccount = (objInsc) => {
     createAccount(objInsc)
@@ -77,7 +92,7 @@ export default function SignUpScreen({ navigation, route }) {
       style={styles.container}
     >
       <KeyboardAvoidingView
-        style={styles.innerContainer}
+        style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -173,14 +188,10 @@ export default function SignUpScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
-  },
-  innerContainer: {
-    flexGrow: 1,
+    flex: 1,
   },
   scrollContainer: {
     flexGrow: 1,
-    justifyContent: "center",
     alignItems: "center",
     padding: 20,
   },

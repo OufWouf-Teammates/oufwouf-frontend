@@ -6,18 +6,36 @@ import {
   ImageBackground,
   Image,
   TextInput,
+  TouchableOpacity,
 } from "react-native"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
-
+import {
+  useFonts,
+  Lexend_400Regular,
+  Lexend_700Bold,
+} from "@expo-google-fonts/lexend"
+import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 
 export default function DogProfileScreen({ navigation }) {
   const token = useSelector((state) => state.user.value.token)
   const [dog, setDog] = useState({})
+    //Nécessaire pour la configuration des fonts
+    const [fontsLoaded] = useFonts({
+      Lexend_400Regular,
+      Lexend_700Bold,
+    })
+    useEffect(() => {
+      async function hideSplashScreen() {
+        if (fontsLoaded) {
+          await SplashScreen.hideAsync()
+        }
+      }
+      hideSplashScreen();
 
-  useEffect(() => {
-    ;(async () => {
+
+    (async () => {
       const response = await fetch(
         `${process.env.EXPO_PUBLIC_BACKEND_URL}dogs`,
         {
@@ -30,25 +48,26 @@ export default function DogProfileScreen({ navigation }) {
       const data = await response.json()
 
       setDog(data.dog[0])
-    })()
-  }, [])
+    })();
 
-  useEffect(() => {
-    console.log(dog)
-  }, [dog])
+    }, [fontsLoaded])
+  
+    if (!fontsLoaded) {
+      return null // Rien n'est affiché tant que les polices ne sont pas chargées
+    }
+
 
   return (
     <ImageBackground
       source={require("../assets/BG_App.png")}
       style={styles.container}
     >
-      <FontAwesome
-        name="arrow-left"
-        size={30}
-        color="blue"
-        style={styles.arrow}
+      <TouchableOpacity
         onPress={() => navigation.goBack()}
-      />
+        style={styles.arrow}
+      >
+        <FontAwesome name="arrow-left" size={30} color="#0639DB" />
+      </TouchableOpacity>
       <SafeAreaView style={styles.innerContainer}>
         <Image
           source={{
@@ -182,9 +201,10 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     gap: 40,
     alignItems: "center",
+    marginTop: 100,
   },
   dogPic: {
     width: "40%",
@@ -215,8 +235,9 @@ const styles = StyleSheet.create({
   },
   arrow: {
     position: "absolute",
-    top: 30,
-    left: 30,
+    top: 45,
+    left: 45,
+    zIndex: 2,
   },
   vaccins: {
     gap: 15,
@@ -224,7 +245,8 @@ const styles = StyleSheet.create({
   name: {
     fontWeight: "bold",
     fontSize: 30,
-    marginTop: -50,
+    marginTop: -40,
+    fontFamily: "Lexend_700Bold",
   },
   icons: {
     marginRight: 15,
