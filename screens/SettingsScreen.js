@@ -49,7 +49,7 @@ export default function SettingsScreen({ navigation }) {
             )
             const data = await response.json()
             setUser(data.user)
-            setDog(data.dog[0])
+            setDog(data.dog)
         })()
     }, [])
     //Nécessaire pour la configuration des fonts
