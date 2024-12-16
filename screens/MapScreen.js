@@ -18,7 +18,7 @@ import {
   Lexend_400Regular,
   Lexend_700Bold,
 } from "@expo-google-fonts/lexend"
-import * as SplashScreen from 'expo-splash-screen';
+import * as SplashScreen from "expo-splash-screen"
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context"
 import MapView, {
   Marker,
@@ -46,6 +46,8 @@ export default function MapScreen({ navigation }) {
   const [places, setPlaces] = useState([])
   const [selectedFilter, setSelectedFilter] = useState(null)
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn)
+  const userToken = useSelector((state) => state.user.value?.token)
+
   useEffect(() => {
     requestLocationPermission()
   }, [])
@@ -77,14 +79,14 @@ export default function MapScreen({ navigation }) {
   useEffect(() => {
     async function hideSplashScreen() {
       if (fontsLoaded) {
-        await SplashScreen.hideAsync();
+        await SplashScreen.hideAsync()
       }
     }
-    hideSplashScreen();
-  }, [fontsLoaded]);
+    hideSplashScreen()
+  }, [fontsLoaded])
 
   if (!fontsLoaded) {
-    return null; // Rien n'est affiché tant que les polices ne sont pas chargées
+    return null // Rien n'est affiché tant que les polices ne sont pas chargées
   }
 
   const centerOn = (objLatLng) => {
@@ -104,8 +106,8 @@ export default function MapScreen({ navigation }) {
     setLocationMap({
       latitude: region.latitude,
       longitude: region.longitude,
-    });
-  };
+    })
+  }
 
   const createRedPoint = (arrLatLng) => {
     setRedMarker(arrLatLng) // Affiche le marker rouge
@@ -129,7 +131,7 @@ export default function MapScreen({ navigation }) {
     }
   }
 
-  const filterOptions = ["Vétérinaires", "Boutiques", "Parcs"]
+  const filterOptions = ["Vétérinaires", "Boutiques", "Parcs", "Bookmarks"]
 
   const filters = filterOptions.map((data, i) => {
     return (
@@ -171,14 +173,19 @@ export default function MapScreen({ navigation }) {
       if (filter === "Boutiques") endpoint = "boutiques"
       else if (filter === "Vétérinaires") endpoint = "veterinaires"
       else if (filter === "Parcs") endpoint = "parcs-chiens"
+      else if (filter === "Bookmarks") endpoint = "bookmarks"
 
-      const latitude = locationMap?.latitude || location?.coords?.latitude || 1;
-      const longitude = locationMap?.longitude || location?.coords?.longitude || 1;
-      const url = `${process.env.EXPO_PUBLIC_BACKEND_URL}map/${endpoint}/${latitude},${longitude}`;
+      const latitude = locationMap?.latitude || location?.coords?.latitude || 1
+      const longitude =
+        locationMap?.longitude || location?.coords?.longitude || 1
+      const url = `${process.env.EXPO_PUBLIC_BACKEND_URL}map/${endpoint}/${latitude},${longitude}`
 
       fetch(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ filter }),
       })
         .then((response) => {
@@ -351,7 +358,8 @@ export default function MapScreen({ navigation }) {
 
             {/* Point bleu pour indiquer la position */}
             {
-              <Marker testID="location-marker" 
+              <Marker
+                testID="location-marker"
                 coordinate={{
                   latitude: location.coords?.latitude || 1,
                   longitude: location.coords?.longitude || 1,
@@ -397,7 +405,7 @@ const styles = StyleSheet.create({
   container2: {
     flex: 0.13,
   },
-  
+
   iconBack: {
     position: "absolute",
     top: 60,
