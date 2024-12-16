@@ -9,7 +9,12 @@ import {
   TouchableOpacity,
 } from "react-native"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
-
+import {
+  useFonts,
+  Lexend_400Regular,
+  Lexend_700Bold,
+} from "@expo-google-fonts/lexend"
+import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 
