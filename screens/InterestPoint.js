@@ -189,13 +189,12 @@ const InterestPoint = ({ navigation, route }) => {
       source={require("../assets/BG_App.png")}
       style={styles.container}
     >
-      <FontAwesome
-        name="arrow-left"
-        size={30}
-        color="#0639DB"
-        style={styles.iconBack}
+      <TouchableOpacity
         onPress={() => navigation.goBack()}
-      />
+        style={styles.iconBack}
+      >
+        <FontAwesome name="arrow-left" size={30} color="#0639DB" />
+      </TouchableOpacity>
       <ScrollView>
         {/* Image du profil */}
         <View>
@@ -251,17 +250,18 @@ const InterestPoint = ({ navigation, route }) => {
             </Text>
 
             {/* Téléphone */}
-            <View style={styles.row}>
-              <FontAwesome name="phone" size={15} color="#EAD32A" />
-              <Text style={styles.phone}>
-                {pointData.data.formatted_phone_number}
-              </Text>
-            </View>
-
+            {pointData.data.formatted_phone_number && (
+              <View style={styles.row}>
+                <FontAwesome name="phone" size={15} color="#EAD32A" />
+                <Text style={styles.phone}>
+                  {pointData.data.formatted_phone_number}
+                </Text>
+              </View>
+            )}
             {/* Horaires */}
             <View style={styles.row}>
               <FontAwesome name="clock-o" size={15} color="#EAD32A" />
-              <Text style={styles.text}>Horaires d'ouverture</Text>
+              <Text style={styles.phone}>Horaires d'ouverture</Text>
             </View>
             <Text style={styles.hours}>
               {openingHoursToday
@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
   },
   iconBack: {
     position: "absolute",
-    top: 30,
+    top: 60,
     left: 30,
     zIndex: 50,
   },
@@ -314,6 +314,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
     color: "#0639DB",
+    fontFamily: "Lexend_700Bold",
   },
   openContainer: {
     alignItems: "center",
@@ -402,7 +403,7 @@ const styles = StyleSheet.create({
   },
   infoPic: {
     width: "100%",
-    height: 200,
+    height: 300,
     marginBottom: 15,
   },
   errorText: {

@@ -12,6 +12,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import { useEffect, useState } from "react"
@@ -31,7 +32,7 @@ export default function SettingsScreen({ navigation }) {
     const [emailCon, setEmailCon] = useState("")
     const [dog, setDog] = useState({})
     const [info, setInfo] = useState("")
-    const [personnality, setPersonnality] = useState("")
+    const [personality, setPersonality] = useState("")
     const [user, setUser] = useState({})
     const [focusedField, setFocusedField] = useState(null)
     const [modalSettingsVisible, setModalSettingsVisible] = useState(false)
@@ -82,6 +83,71 @@ export default function SettingsScreen({ navigation }) {
     const handleBlur = () => {
         setFocusedField(null)
     }
+
+    const updateEmail = () => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+      if (!emailRegex.test(email)) {
+        Alert.alert("Veuillez entrer une adresse e-mail valide.");
+        return;
+      }
+      if (email !== emailCon) {
+          Alert.alert("Les deux e-mails ne sont pas identiques")
+          return 
+      }
+        fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}users`, {
+          method: "PUT",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({email: email}),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.result) {
+              Alert.alert(`E-mail mise à jour: ${data.email}`)
+            }else{
+              Alert.alert(data.error)
+            }
+          })
+          .catch((error) => {
+            Alert.alert("Erreur de réseau ou serveur indisponible.");
+            console.error(error); // Logge l'erreur pour débogage
+          });
+    }
+
+    const updateDog = () => {
+
+    // Vérification si au moins l'un des champs est rempli
+    if (!personality && !info) {
+      Alert.alert("Veuillez remplir au moins un champ (personnalité ou informations).");
+      return;
+    }
+    fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}dogs`, {
+          method: "PUT",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            personality: personality || undefined, 
+            infos: info || undefined 
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.result) {
+              Alert.alert(`Inforations mis à jour`)
+            }else{
+              Alert.alert(data.error)
+            }
+          })
+          .catch((error) => {
+            Alert.alert("Erreur de réseau ou serveur indisponible.");
+            console.error(error); // Logge l'erreur pour débogage
+          });
+    }
     
     return (
         <ImageBackground
@@ -90,7 +156,7 @@ export default function SettingsScreen({ navigation }) {
         >
         <TouchableOpacity
             onPress={() => navigation.goBack()}
-            style={styles.arrow}
+            style={styles.iconBack}
         >
             <FontAwesome name="arrow-left" size={30} color="#0639DB" />
         </TouchableOpacity>
@@ -147,7 +213,7 @@ export default function SettingsScreen({ navigation }) {
                 style={[styles.buttonModalSettings]}
                 onPress={() => deconnection()}
                 >
-                <Text style={styles.textStyleSettings}>Déconnection</Text>
+                <Text style={styles.textStyleSettings}>Déconnexion</Text>
                 </TouchableOpacity>
             </View>
             </View>
@@ -195,9 +261,9 @@ export default function SettingsScreen({ navigation }) {
                         <TextInput
                             style={[
                                 styles.input,
-                                focusedField === "email" && styles.inputFocused,
+                                focusedField === "emailCon" && styles.inputFocused,
                             ]}
-                            onFocus={() => handleFocus("email")}
+                            onFocus={() => handleFocus("emailCon")}
                             onBlur={handleBlur}
                             onChangeText={(value) => setEmailCon(value)}
                             value={emailCon}
@@ -205,7 +271,10 @@ export default function SettingsScreen({ navigation }) {
                         />
                         <TouchableOpacity
                             style={[styles.buttonModalSettings]}
-                            onPress={() => null}
+                            onPress={() => {
+                              updateEmail()
+                              setModalInfoVisible(!modalInfoVisible)
+                            }}
                         >
                             <Text style={styles.textStyleSettings}>Modifier les informations du maitre</Text>
                         </TouchableOpacity>
@@ -227,17 +296,20 @@ export default function SettingsScreen({ navigation }) {
                         <TextInput
                         style={[
                             styles.input,
-                            focusedField === "personnality" && styles.inputFocused,
+                            focusedField === "personality" && styles.inputFocused,
                         ]}
-                        onFocus={() => handleFocus("personnality")}
+                        onFocus={() => handleFocus("personality")}
                         onBlur={handleBlur}
-                        onChangeText={(value) => setPersonnality(value)}
+                        onChangeText={(value) => setPersonality(value)}
                         placeholder={dog?.personality}
-                        value={personnality}
+                        value={personality}
                         />
                         <TouchableOpacity
                             style={[styles.buttonModalSettings]}
-                            onPress={() => null}
+                            onPress={() => {
+                              updateDog()
+                              setModalInfoVisible(!modalInfoVisible)
+                            }}
                         >
                             <Text style={styles.textStyleSettings}>Modifier les informations du chien</Text>
                         </TouchableOpacity>
@@ -255,16 +327,22 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
   },
-  innerContainer: {
-    flex: 1,
-    width: "90%",
-    height: "100%",
-  },
   arrow: {
     position: "absolute",
     top: 45,
     left: 45,
     zIndex: 2,
+  },
+  innerContainer: {
+    flex: 1,
+    width: "90%",
+    height: "100%",
+  },
+  iconBack: {
+    position: "absolute",
+    top: 60,
+    left: 30,
+    zIndex: 50,
   },
   in: {
     width: "100%",
