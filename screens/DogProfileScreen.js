@@ -47,7 +47,7 @@ export default function DogProfileScreen({ navigation }) {
 
       const data = await response.json()
 
-      setDog(data.dog[0])
+      setDog(data.dog)
     })();
 
     }, [fontsLoaded])
@@ -148,7 +148,7 @@ export default function DogProfileScreen({ navigation }) {
                         style={styles.iconsDemi}
                       />
                       <View style={styles.dogInfo}>
-                      {e.rappel ? "oui" : "non"}{" "}
+                      <Text>{e.rappel ? "oui" : "non"}</Text>
                       </View>
                     </Text>
                   </View>
@@ -162,7 +162,7 @@ export default function DogProfileScreen({ navigation }) {
                         style={styles.iconsDemi}
                       />
                       <View style={styles.dogInfo}>
-                      {e.date}{" "}
+                      <Text>{e.date}</Text>
                       </View>
                     </Text>
                   </View>
