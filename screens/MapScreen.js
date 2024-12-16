@@ -343,28 +343,27 @@ export default function MapScreen({ navigation }) {
             onRegionChangeComplete={handleRegionChangeComplete}
             ref={(ref) => setMapRef(ref)} // Assurez-vous que setMapRef est appelé ici
           >
-            {/* Cercle indiquant la précision */}
             {
               <Circle
-                center={{
-                  latitude: location?.coords?.latitude || 1,
-                  longitude: location?.coords?.longitude || 1,
-                }}
-                radius={location?.coords?.accuracy} // Précision fournie par Expo Location
-                strokeColor="rgba(0, 122, 255, 0.5)" // Couleur du contour
-                fillColor="rgba(0, 122, 255, 0.2)" // Couleur de remplissage
+              center={{
+                latitude: location?.coords?.latitude || 1,
+                longitude: location?.coords?.longitude || 1,
+              }}
+              radius={location?.coords?.accuracy} // Précision fournie par Expo Location
+              strokeColor="rgba(0, 122, 255, 0.5)" // Couleur du contour
+              fillColor="rgba(0, 122, 255, 0.2)" // Couleur de remplissage
               />
             }
 
             {/* Point bleu pour indiquer la position */}
             {
               <Marker
-                testID="location-marker"
-                coordinate={{
-                  latitude: location.coords?.latitude || 1,
-                  longitude: location.coords?.longitude || 1,
-                }}
-                anchor={{ x: 0.5, y: 0.5 }} // Centre le marker
+              testID="location-marker"
+              coordinate={{
+                latitude: location.coords?.latitude || 1,
+                longitude: location.coords?.longitude || 1,
+              }}
+              anchor={{ x: 0.5, y: 0.5 }} // Centre le marker
               >
                 <View style={styles.marker}>
                   <View style={styles.markerCore} />
@@ -373,11 +372,11 @@ export default function MapScreen({ navigation }) {
             }
             {
               <Marker
-                coordinate={{
-                  latitude: redMarker?.lat || 1,
-                  longitude: redMarker?.lng || 1,
-                }}
-                anchor={{ x: 0.5, y: 0.5 }}
+              coordinate={{
+                latitude: redMarker?.lat || 1,
+                longitude: redMarker?.lng || 1,
+              }}
+              anchor={{ x: 0.5, y: 0.5 }}
               >
                 <View style={styles.redMarker}>
                   <View style={styles.redMarkerCore} />
@@ -405,7 +404,7 @@ const styles = StyleSheet.create({
   container2: {
     flex: 0.13,
   },
-
+  
   iconBack: {
     position: "absolute",
     top: 60,
@@ -574,3 +573,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
 })
+
+{/* Cercle indiquant la précision */}
+
+
