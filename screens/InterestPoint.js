@@ -140,6 +140,9 @@ const InterestPoint = ({ navigation, route }) => {
           name: pointData.data.name,
           uri: pointData.data.photos[0],
           city: pointData.data.address_components[2].long_name,
+          latitude: markerData?.latitude,
+          longitude: markerData?.longitude,
+          id: markerData?.place_id,
         }),
       })
         .then((response) => response.json())

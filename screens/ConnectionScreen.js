@@ -15,7 +15,7 @@ import {
   Lexend_400Regular,
   Lexend_700Bold,
 } from "@expo-google-fonts/lexend"
-import * as SplashScreen from 'expo-splash-screen';
+import * as SplashScreen from "expo-splash-screen"
 
 import { connectUser, disconnectUser } from "../reducers/user"
 
@@ -67,14 +67,14 @@ export default function ConnectionScreen({ navigation }) {
   useEffect(() => {
     async function hideSplashScreen() {
       if (fontsLoaded) {
-        await SplashScreen.hideAsync();
+        await SplashScreen.hideAsync()
       }
     }
-    hideSplashScreen();
-  }, [fontsLoaded]);
+    hideSplashScreen()
+  }, [fontsLoaded])
 
   if (!fontsLoaded) {
-    return null; // Rien n'est affiché tant que les polices ne sont pas chargées
+    return null // Rien n'est affiché tant que les polices ne sont pas chargées
   }
 
   const connectToAccount = (objConn) => {
@@ -179,14 +179,6 @@ export default function ConnectionScreen({ navigation }) {
             <FontAwesome name="arrow-right" size={25} color="#0639DB" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Interest")}
-            style={styles.buttonSignUp}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.textButtonSignUp}>interest</Text>
-            <FontAwesome name="arrow-right" size={25} color="#0639DB" />
-          </TouchableOpacity>
           <GoogleSignInButton
             title="Connect with Google"
             connectToAccount={connectToAccount}

@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     alignItems: "left",
     marginHorizontal: 20,
-    flexWrap: 'wrap'
+    flexWrap: "wrap",
   },
   nameInfos: {
     fontSize: 26,
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Lexend_700Bold',
     fontWeight: 600
   },
-  
+
   cityInfos: {
     fontSize: 16,
     color: '4D4D4D',
