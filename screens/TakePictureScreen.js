@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   },
   params: {
     flexDirection: "row",
-    gap: 370,
+    gap: 250,
     top: 100,
   },
   galerie: {
