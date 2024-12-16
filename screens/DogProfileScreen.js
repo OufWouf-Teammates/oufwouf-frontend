@@ -7,6 +7,7 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
+  ScrollView,
 } from "react-native"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import {
@@ -68,6 +69,7 @@ export default function DogProfileScreen({ navigation }) {
       >
         <FontAwesome name="arrow-left" size={30} color="#0639DB" />
       </TouchableOpacity>
+      <ScrollView contentContainerStyle={{ flexGrow: 1, width: "100%", paddingBottom: 20 }}>
       <SafeAreaView style={styles.innerContainer}>
         <Image
           source={{
@@ -191,6 +193,7 @@ export default function DogProfileScreen({ navigation }) {
           </View>
         </View>
       </SafeAreaView>
+      </ScrollView>
     </ImageBackground>
   )
 }
@@ -207,7 +210,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     gap: 40,
-    alignItems: "center",
     marginTop: 100,
   },
   dogPic: {
@@ -233,6 +235,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   dogInfo: {
+    width: "90%",
     fontFamily: "Lexend_400Regular",
   },
   infoDemiBox: {
