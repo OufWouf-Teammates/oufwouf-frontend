@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -12,47 +12,49 @@ import {
   Modal,
   Platform,
   ScrollView,
-} from "react-native"
+} from "react-native";
 import {
   useFonts,
   Lexend_400Regular,
   Lexend_700Bold,
-} from "@expo-google-fonts/lexend"
-import * as SplashScreen from "expo-splash-screen"
-import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context"
+} from "@expo-google-fonts/lexend";
+import * as SplashScreen from "expo-splash-screen";
+import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import MapView, {
   Marker,
   Circle,
   PROVIDER_GOOGLE,
   Callout,
   CalloutSubview,
-} from "react-native-maps"
-import * as Location from "expo-location"
+} from "react-native-maps";
+import * as Location from "expo-location";
 
-import SearchBar from "../components/SearchBar"
-import TabBar from "../components/TabBar"
+import SearchBar from "../components/SearchBar";
+import TabBar from "../components/TabBar";
 
-import { Dimensions } from "react-native"
-const { width, height } = Dimensions.get("window") // Obtenir les dimensions de l'écran
+import { Dimensions } from "react-native";
+const { width, height } = Dimensions.get("window"); // Obtenir les dimensions de l'écran
 
-import { useSelector } from "react-redux"
+import { useSelector } from "react-redux";
 
 export default function MapScreen({ navigation }) {
-  const [location, setLocation] = useState(null)
-  const [locationMap, setLocationMap] = useState(location)
-  const [mapRef, setMapRef] = useState(null) // Référence pour MapView
-  const [redMarker, setRedMarker] = useState(null) // État pour le marker rouge
-  const [modalVisible, setModalVisible] = useState(false)
-  const [places, setPlaces] = useState([])
-  const [selectedFilter, setSelectedFilter] = useState(null)
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn)
-  const userToken = useSelector((state) => state.user.value?.token)
+  const [location, setLocation] = useState(null);
+  const [locationMap, setLocationMap] = useState(location);
+  const [mapRef, setMapRef] = useState(null); // Référence pour MapView
+  const [redMarker, setRedMarker] = useState(null); // État pour le marker rouge
+  const [modalVisible, setModalVisible] = useState(false);
+  const [places, setPlaces] = useState([]);
+  const [selectedFilter, setSelectedFilter] = useState(null);
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const userToken = useSelector((state) => state.user.value?.token);
+
+  const apiPicture = `${process.env.EXPO_PUBLIC_BACKEND_URL}pictures`;
 
   useEffect(() => {
-    requestLocationPermission()
-  }, [])
+    requestLocationPermission();
+  }, []);
   const requestLocationPermission = async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync()
+    let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== "granted") {
       Alert.alert(
         "Permission refusée",
@@ -64,29 +66,29 @@ export default function MapScreen({ navigation }) {
             onPress: () => Linking.openSettings(), // Ouvre les paramètres avec Linking
           },
         ]
-      )
-      return false
+      );
+      return false;
     }
 
-    let location = await Location.getCurrentPositionAsync({})
-    setLocation(location)
-  }
+    let location = await Location.getCurrentPositionAsync({});
+    setLocation(location);
+  };
   //Nécessaire pour la configuration des fonts
   const [fontsLoaded] = useFonts({
     Lexend_400Regular,
     Lexend_700Bold,
-  })
+  });
   useEffect(() => {
     async function hideSplashScreen() {
       if (fontsLoaded) {
-        await SplashScreen.hideAsync()
+        await SplashScreen.hideAsync();
       }
     }
-    hideSplashScreen()
-  }, [fontsLoaded])
+    hideSplashScreen();
+  }, [fontsLoaded]);
 
   if (!fontsLoaded) {
-    return null // Rien n'est affiché tant que les polices ne sont pas chargées
+    return null; // Rien n'est affiché tant que les polices ne sont pas chargées
   }
 
   const centerOn = (objLatLng) => {
@@ -99,39 +101,45 @@ export default function MapScreen({ navigation }) {
           longitudeDelta: 0.005,
         },
         1000 // Durée de l'animation en millisecondes
-      )
+      );
     }
-  }
+  };
   const handleRegionChangeComplete = (region) => {
     setLocationMap({
       latitude: region.latitude,
       longitude: region.longitude,
-    })
-  }
+    });
+  };
 
   const createRedPoint = (arrLatLng) => {
-    setRedMarker(arrLatLng) // Affiche le marker rouge
+    setRedMarker(arrLatLng); // Affiche le marker rouge
 
     // Masque le marker après 5 secondes
     setTimeout(() => {
-      setRedMarker(null) // Supprime le marker rouge
-    }, 5000)
-  }
+      setRedMarker(null); // Supprime le marker rouge
+    }, 5000);
+  };
 
   const gotToLatLng = (arrLatLng) => {
-    centerOn(arrLatLng)
-  }
+    centerOn(arrLatLng);
+  };
 
   const centerOnUser = () => {
     if (location && mapRef) {
       centerOn({
         lat: location.coords?.latitude || 1,
         lng: location.coords?.longitude || 1,
-      })
+      });
     }
-  }
+  };
 
-  const filterOptions = ["Vétérinaires", "Boutiques", "Parcs", "Bookmarks"]
+  const filterOptions = [
+    "Vétérinaires",
+    "Boutiques",
+    "Parcs",
+    "Bookmarks",
+    "WoofPic",
+  ];
 
   const filters = filterOptions.map((data, i) => {
     return (
@@ -159,70 +167,103 @@ export default function MapScreen({ navigation }) {
           {data}
         </Text>
       </TouchableOpacity>
-    )
-  })
+    );
+  });
 
-  const handleFilterPress = (filter) => {
+  const handleFilterPress = async (filter) => {
     if (selectedFilter === filter) {
-      setSelectedFilter(null)
-      setPlaces([])
+      setSelectedFilter(null);
+      setPlaces([]);
+      return;
     } else {
-      setSelectedFilter(filter)
+      setSelectedFilter(filter);
 
-      let endpoint = ""
-      if (filter === "Boutiques") endpoint = "boutiques"
-      else if (filter === "Vétérinaires") endpoint = "veterinaires"
-      else if (filter === "Parcs") endpoint = "parcs-chiens"
-      else if (filter === "Bookmarks") endpoint = "bookmarks"
+      if (filter !== "WoofPic") {
+        let endpoint = "";
+        if (filter === "Boutiques") endpoint = "boutiques";
+        else if (filter === "Vétérinaires") endpoint = "veterinaires";
+        else if (filter === "Parcs") endpoint = "parcs-chiens";
+        else if (filter === "Bookmarks") endpoint = "bookmarks";
 
-      const latitude = locationMap?.latitude || location?.coords?.latitude || 1
-      const longitude =
-        locationMap?.longitude || location?.coords?.longitude || 1
-      const url = `${process.env.EXPO_PUBLIC_BACKEND_URL}map/${endpoint}/${latitude},${longitude}`
+        const latitude =
+          locationMap?.latitude || location?.coords?.latitude || 1;
+        const longitude =
+          locationMap?.longitude || location?.coords?.longitude || 1;
+        const url = `${process.env.EXPO_PUBLIC_BACKEND_URL}map/${endpoint}/${latitude},${longitude}`;
 
-      fetch(url, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${userToken}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ filter }),
-      })
-        .then((response) => {
-          if (!response.ok)
-            throw new Error(`HTTP error! status: ${response.status}`)
-          return response.json()
+        fetch(url, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ filter }),
         })
-        .then((data) => {
-          if (data.result) {
-            // Traite les données reçues
-            const res = data.data.map((element) => {
-              return {
-                name: element?.name || "Inconnu", // Nom par défaut si non défini
-                latitude: element?.geometry?.location?.lat ?? 0, // Latitude correcte
-                longitude: element?.geometry?.location?.lng ?? 0, // Correction de la longitude
-                place_id: element?.place_id,
-                type: endpoint,
-              }
-            })
+          .then((response) => {
+            if (!response.ok)
+              throw new Error(`HTTP error! status: ${response.status}`);
+            return response.json();
+          })
+          .then((data) => {
+            if (data.result) {
+              // Traite les données reçues
+              const res = data.data.map((element) => {
+                return {
+                  name: element?.name || "Inconnu", // Nom par défaut si non défini
+                  latitude: element?.geometry?.location?.lat ?? 0, // Latitude correcte
+                  longitude: element?.geometry?.location?.lng ?? 0, // Correction de la longitude
+                  place_id: element?.place_id,
+                  type: endpoint,
+                };
+              });
 
-            // Mets à jour l'état avec les données des lieux
-            setPlaces(res)
-          }
-        })
-        .catch((error) => console.error("Erreur lors de la requête :", error))
+              // Mets à jour l'état avec les données des lieux
+              setPlaces(res);
+            }
+          })
+          .catch((error) =>
+            console.error("Erreur lors de la requête :", error)
+          );
+      } else {
+        // Gestion du cas "WoofPic"
+        let endpoint = "";
+        endpoint = "woofpic";
+        const response = await fetch(apiPicture, {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        // Formater les photos personnelles
+        const formattedPictures = data.personalPicture.map((element) => ({
+          uri: element?.uri,
+          latitude: element?.latitude ?? 0,
+          longitude: element?.longitude ?? 0,
+          type: endpoint,
+        }));
+
+        setPlaces(formattedPictures);
+        console.log("Places mises à jour :", formattedPictures);
+      }
     }
-  }
+  };
+
   const icons = {
     boutiques: require("../assets/os.png"),
     veterinaires: require("../assets/veterinaire.png"),
     "parcs-chiens": require("../assets/parc.png"),
-    photos: require("../assets/photos.png"),
+    woofpic: require("../assets/photos.png"),
     bookmarks: require("../assets/save.png"),
-  }
+  };
   const onMarkerSelect = (markerData) => {
-    navigation.navigate("Interest", { markerData })
-  }
+    navigation.navigate("Interest", { markerData });
+  };
   const markers = places.map((data, i) => {
     return (
       <Marker
@@ -232,67 +273,87 @@ export default function MapScreen({ navigation }) {
           longitude: data?.longitude || 1,
         }}
       >
+        {/* modal avec l'icon */}
         <Image source={icons[data.type]} style={{ width: 28, height: 28 }} />
+
         <Callout
           tooltip={false} // Désactive la bulle de tooltip par défaut
           alphaHitTest={false} // Active ou désactive les clics sur les zones transparentes
-          onPress={() => onMarkerSelect(data)}
+          onPress={() => {
+            if (selectedFilter !== "WoofPic") {
+              onMarkerSelect(data);
+            }
+          }}
         >
-          <View
-            style={{
-              maxWidth: "100%",
-              minWidth: 200,
-              maxHeight: 100,
-              padding: 10,
-              justifyContent: "center", // Centre verticalement
-              alignItems: "center", // Centre horizontalement
-            }}
-          >
+          {selectedFilter === "WoofPic" && data.uri ? (
+            <View style={{ alignItems: "center" }}>
+              {data.uri ? (
+                <Image
+                  source={{ uri: data.uri }}
+                  style={{ width: 100, height: 100 }}
+                />
+              ) : (
+                <Text>Aucune image disponible</Text>
+              )}
+            </View>
+          ) : (
             <View
               style={{
-                width: "100%",
-                justifyContent: "center",
-                alignItems: "center",
+                maxWidth: "100%",
+                minWidth: 200,
+                maxHeight: 100,
+                padding: 10,
+                justifyContent: "center", // Centre verticalement
+                alignItems: "center", // Centre horizontalement
               }}
             >
+              <View
+                style={{
+                  width: "100%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    width: "90%",
+                    textAlign: "center",
+                    fontFamily: "Lexend_400Regular",
+                    fontSize: 16,
+                  }}
+                >
+                  {data?.name}
+                </Text>
+              </View>
               <Text
                 style={{
-                  width: "90%",
+                  margin: 5,
                   textAlign: "center",
+                  backgroundColor: "#0639DB",
+                  paddingVertical: 5,
+                  paddingHorizontal: 10,
+                  borderRadius: 25,
+                  color: "#F5F5F5",
                   fontFamily: "Lexend_400Regular",
                   fontSize: 16,
                 }}
               >
-                {data.name}
+                Voir plus
               </Text>
             </View>
-            <Text
-              style={{
-                margin: 5,
-                textAlign: "center",
-                backgroundColor: "#0639DB",
-                paddingVertical: 5,
-                paddingHorizontal: 10,
-                borderRadius: 25,
-                color: "#F5F5F5",
-                fontFamily: "Lexend_400Regular",
-                fontSize: 16,
-              }}
-            >
-              Voir plus
-            </Text>
-          </View>
+          )}
         </Callout>
+        {/* modal avec l'icon */}
       </Marker>
-    )
-  })
+    );
+  });
 
   if (!location) {
     return (
       <View style={styles.container}>
         <Text>Chargement...</Text>
       </View>
-    )
+    );
   }
 
   return (
@@ -343,27 +404,27 @@ export default function MapScreen({ navigation }) {
             onRegionChangeComplete={handleRegionChangeComplete}
             ref={(ref) => setMapRef(ref)} // Assurez-vous que setMapRef est appelé ici
           >
+            {/* Cercle indiquant la précision */}
             {
               <Circle
-              center={{
-                latitude: location?.coords?.latitude || 1,
-                longitude: location?.coords?.longitude || 1,
-              }}
-              radius={location?.coords?.accuracy} // Précision fournie par Expo Location
-              strokeColor="rgba(0, 122, 255, 0.5)" // Couleur du contour
-              fillColor="rgba(0, 122, 255, 0.2)" // Couleur de remplissage
+                center={{
+                  latitude: location?.coords?.latitude || 1,
+                  longitude: location?.coords?.longitude || 1,
+                }}
+                radius={location?.coords?.accuracy} // Précision fournie par Expo Location
+                strokeColor="rgba(0, 122, 255, 0.5)" // Couleur du contour
+                fillColor="rgba(0, 122, 255, 0.2)" // Couleur de remplissage
               />
             }
 
             {/* Point bleu pour indiquer la position */}
             {
               <Marker
-              testID="location-marker"
-              coordinate={{
-                latitude: location.coords?.latitude || 1,
-                longitude: location.coords?.longitude || 1,
-              }}
-              anchor={{ x: 0.5, y: 0.5 }} // Centre le marker
+                coordinate={{
+                  latitude: location.coords?.latitude || 1,
+                  longitude: location.coords?.longitude || 1,
+                }}
+                anchor={{ x: 0.5, y: 0.5 }} // Centre le marker
               >
                 <View style={styles.marker}>
                   <View style={styles.markerCore} />
@@ -372,11 +433,11 @@ export default function MapScreen({ navigation }) {
             }
             {
               <Marker
-              coordinate={{
-                latitude: redMarker?.lat || 1,
-                longitude: redMarker?.lng || 1,
-              }}
-              anchor={{ x: 0.5, y: 0.5 }}
+                coordinate={{
+                  latitude: redMarker?.lat || 1,
+                  longitude: redMarker?.lng || 1,
+                }}
+                anchor={{ x: 0.5, y: 0.5 }}
               >
                 <View style={styles.redMarker}>
                   <View style={styles.redMarkerCore} />
@@ -391,7 +452,7 @@ export default function MapScreen({ navigation }) {
         </View>
       </SafeAreaProvider>
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -404,7 +465,7 @@ const styles = StyleSheet.create({
   container2: {
     flex: 0.13,
   },
-  
+
   iconBack: {
     position: "absolute",
     top: 60,
@@ -572,8 +633,4 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 5,
   },
-})
-
-{/* Cercle indiquant la précision */}
-
-
+});
