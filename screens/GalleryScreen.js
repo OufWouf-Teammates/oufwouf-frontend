@@ -16,7 +16,7 @@ import {
   Lexend_400Regular,
   Lexend_700Bold,
 } from "@expo-google-fonts/lexend"
-import * as SplashScreen from 'expo-splash-screen';
+import * as SplashScreen from "expo-splash-screen"
 
 import { useIsFocused } from "@react-navigation/native"
 import { useEffect, useState } from "react"
@@ -110,14 +110,14 @@ function Gallery() {
   useEffect(() => {
     async function hideSplashScreen() {
       if (fontsLoaded) {
-        await SplashScreen.hideAsync();
+        await SplashScreen.hideAsync()
       }
     }
-    hideSplashScreen();
-  }, [fontsLoaded]);
+    hideSplashScreen()
+  }, [fontsLoaded])
 
   if (!fontsLoaded) {
-    return null; // Rien n'est affiché tant que les polices ne sont pas chargées
+    return null // Rien n'est affiché tant que les polices ne sont pas chargées
   }
   return (
     <ImageBackground
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-  },  
+  },
   iconBack: {
     position: "absolute",
     top: 60,

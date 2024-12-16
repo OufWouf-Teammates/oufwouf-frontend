@@ -117,12 +117,14 @@ const DogInfoFormScreen = () => {
   // fonction pour fetch les suggestions de vaccin et race //
 
   const fetchSuggestionsVaccins = async (query) => {
+    console.log(1);
     if (!query) {
       setSuggestionVaccin([])
       return
     }
     console.log("Fetching suggestions from URL:", `${apiRace}?search=${query}`);
     setLoadingVaccin(true)
+    console.log(2);
 
     try {
       const response = await fetch(`${apiVaccins}?search=${query}`)
@@ -136,6 +138,7 @@ const DogInfoFormScreen = () => {
         setSuggestionVaccin([])
       }
     } catch (error) {
+      console.log(3);
       console.error("ERROR pour afficher les suggestions", error.message)
     } finally {
       setLoadingVaccin(false)
@@ -143,13 +146,15 @@ const DogInfoFormScreen = () => {
   }
 
   const fetchSuggestionsRace = async (query) => {
+    console.log(query);
     if (!query) {
       setSuggestionRace([])
-      return
+      return;
     }
     setLoadingRace(true)
 
     try {
+      console.log(`${apiRace}?search=${query}`);
       const response = await fetch(`${apiRace}?search=${query}`)
 
       if (!response.ok) {
@@ -163,7 +168,7 @@ const DogInfoFormScreen = () => {
         setSuggestionRace([])
       }
     } catch (error) {
-      console.error("ERROR pour afficher les suggestions", error.message)
+      console.error("ERROR pour afficher 1 les suggestions", error.message)
     } finally {
       setLoadingRace(false)
     }
@@ -312,7 +317,10 @@ const DogInfoFormScreen = () => {
       if (isChecked2) {
         const vaccinResponse = await fetch(apiNewVaccins, {
           method: "POST",
-          headers: { "Content-type": "application/json" },
+          headers: {
+            "Authorization": `Bearer ${userToken}`,
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({
             name: vaccination,
             rappel: selectedRappel,
