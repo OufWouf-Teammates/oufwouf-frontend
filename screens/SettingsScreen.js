@@ -90,7 +90,7 @@ export default function SettingsScreen({ navigation }) {
         >
         <TouchableOpacity
             onPress={() => navigation.goBack()}
-            style={styles.arrow}
+            style={styles.iconBack}
         >
             <FontAwesome name="arrow-left" size={30} color="#0639DB" />
         </TouchableOpacity>
@@ -254,6 +254,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
+  },
+  arrow: {
+    position: "absolute",
+    top: 45,
+    left: 45,
+    zIndex: 2,
   },
   innerContainer: {
     flex: 1,
