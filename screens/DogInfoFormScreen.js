@@ -317,7 +317,10 @@ const DogInfoFormScreen = () => {
       if (isChecked2) {
         const vaccinResponse = await fetch(apiNewVaccins, {
           method: "POST",
-          headers: { "Content-type": "application/json" },
+          headers: {
+            "Authorization": `Bearer ${userToken}`,
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({
             name: vaccination,
             rappel: selectedRappel,
