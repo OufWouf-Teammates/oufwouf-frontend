@@ -17,29 +17,6 @@ import {
   Lexend_400Regular,
   Lexend_700Bold,
 } from "@expo-google-fonts/lexend"
-<<<<<<< HEAD
-import * as SplashScreen from "expo-splash-screen"
-import FontAwesome from "react-native-vector-icons/FontAwesome"
-
-function BookmarksScreen() {
-  //Nécessaire pour la configuration des fonts
-  const [fontsLoaded] = useFonts({
-    Lexend_400Regular,
-    Lexend_700Bold,
-  })
-  useEffect(() => {
-    async function hideSplashScreen() {
-      if (fontsLoaded) {
-        await SplashScreen.hideAsync()
-      }
-    }
-    hideSplashScreen()
-  }, [fontsLoaded])
-
-  const navigation = useNavigation()
-  const userToken = useSelector((state) => state.user.value.token)
-  const [bookmarks, setBookmarks] = useState([])
-=======
 import * as SplashScreen from 'expo-splash-screen';
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
@@ -62,7 +39,6 @@ function BookmarksScreen() {
   const navigation = useNavigation();
   const userToken = useSelector((state) => state.user.value.token);
   const [bookmarks, setBookmarks] = useState([]);
->>>>>>> e665425e34a7e258a52fc2a80627e9284b6019bb
 
   const isFocused = useIsFocused()
 
@@ -197,28 +173,16 @@ const styles = StyleSheet.create({
   },
   nameInfos: {
     fontSize: 26,
-<<<<<<< HEAD
-    color: "#0639DB",
-    fontFamily: "Lexend_700Bold",
-    fontWeight: 600,
-=======
     color: '#0639DB',
     fontFamily: 'Lexend_700Bold',
     fontWeight: 600
->>>>>>> e665425e34a7e258a52fc2a80627e9284b6019bb
   },
 
   cityInfos: {
     fontSize: 16,
-<<<<<<< HEAD
-    color: "4D4D4D",
-    fontFamily: "Lexend_400Regular",
-    fontWeight: 600,
-=======
     color: '4D4D4D',
     fontFamily: 'Lexend_400Regular',
     fontWeight: 600
->>>>>>> e665425e34a7e258a52fc2a80627e9284b6019bb
   },
   image: {
     width: "100%",
