@@ -47,7 +47,7 @@ export default function DogProfileScreen({ navigation }) {
 
       const data = await response.json()
 
-      setDog(data.dog[0])
+      setDog(data.dog)
     })();
 
     }, [fontsLoaded])
@@ -64,7 +64,7 @@ export default function DogProfileScreen({ navigation }) {
     >
       <TouchableOpacity
         onPress={() => navigation.goBack()}
-        style={styles.arrow}
+        style={styles.iconBack}
       >
         <FontAwesome name="arrow-left" size={30} color="#0639DB" />
       </TouchableOpacity>
@@ -86,7 +86,7 @@ export default function DogProfileScreen({ navigation }) {
               color="#0639DB"
               style={styles.icons}
             />
-            <Text>{dog.ID} </Text>
+            <Text style={styles.dogInfo}>{dog.ID} </Text>
           </View>
           {/* Race */}
           <View style={styles.infoBox}>
@@ -96,7 +96,7 @@ export default function DogProfileScreen({ navigation }) {
               color="#0639DB"
               style={styles.icons}
             />
-            <Text>{dog.race} </Text>
+            <Text style={styles.dogInfo}>{dog.race} </Text>
           </View>
           {/* Moitié de boite */}
           <View style={styles.demiBox}>
@@ -108,7 +108,7 @@ export default function DogProfileScreen({ navigation }) {
                 color="#0639DB"
                 style={styles.iconsDemi}
               />
-              <Text>{dog.sex} </Text>
+              <Text style={styles.dogInfo}>{dog.sex} </Text>
             </View>
             {/* Anniversaire */}
             <View style={styles.infoDemiBox}>
@@ -118,7 +118,7 @@ export default function DogProfileScreen({ navigation }) {
                 color="#0639DB"
                 style={styles.iconsDemi}
               />
-              <Text>{dog.birthday} </Text>
+              <Text style={styles.dogInfo}>{dog.birthday} </Text>
             </View>
           </View>
 
@@ -133,20 +133,22 @@ export default function DogProfileScreen({ navigation }) {
                     color="#0639DB"
                     style={styles.icons}
                   />
-                  <Text>{e.name}</Text>
+                  <Text style={styles.dogInfo}>{e.name}</Text>
                 </View>
 
                 <View style={styles.demiBox}>
                   {/* Rappel */}
                   <View style={styles.infoDemiBox}>
-                    <Text>
+                    <Text style={styles.dogInfo}>
                       <FontAwesome
                         name="bell"
                         size={25}
                         color="#0639DB"
                         style={styles.iconsDemi}
                       />
-                      {e.rappel ? "oui" : "non"}{" "}
+                      <View style={styles.dogInfo}>
+                      <Text>{e.rappel ? "oui" : "non"}</Text>
+                      </View>
                     </Text>
                   </View>
                   {/* Date de Rappel */}
@@ -158,7 +160,9 @@ export default function DogProfileScreen({ navigation }) {
                         color="#0639DB"
                         style={styles.iconsDemi}
                       />
-                      {e.date}{" "}
+                      <View style={styles.dogInfo}>
+                      <Text>{e.date}</Text>
+                      </View>
                     </Text>
                   </View>
                 </View>
@@ -173,7 +177,7 @@ export default function DogProfileScreen({ navigation }) {
               color="#0639DB"
               style={styles.icons}
             />
-            <Text>{dog.infos}</Text>
+            <Text style={styles.dogInfo}>{dog.infos}</Text>
           </View>
           {/* Personnalité */}
           <View style={styles.infoBox}>
@@ -183,7 +187,7 @@ export default function DogProfileScreen({ navigation }) {
               color="#0639DB"
               style={styles.icons}
             />
-            <Text>{dog.personality}</Text>
+            <Text style={styles.dogInfo}>{dog.personality}</Text>
           </View>
         </View>
       </SafeAreaView>
@@ -207,7 +211,8 @@ const styles = StyleSheet.create({
     marginTop: 100,
   },
   dogPic: {
-    width: "40%",
+    width: "50%",
+    marginBottom: 35,
     aspectRatio: 1,
     borderRadius: 500,
   },
@@ -221,23 +226,29 @@ const styles = StyleSheet.create({
   },
   infoBox: {
     flexDirection: "row",
+    alignItems: 'center',
     width: "100%",
     padding: 15,
     backgroundColor: "white",
     borderRadius: 5,
   },
+  dogInfo: {
+    fontFamily: "Lexend_400Regular",
+  },
   infoDemiBox: {
     flexDirection: "row",
-    width: "40%",
-    padding: 15,
+    alignItems: 'center',
+    width: "48%",
+    paddingVertical: 15,
+    paddingHorizontal: 25,
     backgroundColor: "white",
     borderRadius: 5,
   },
-  arrow: {
+  iconBack: {
     position: "absolute",
-    top: 45,
-    left: 45,
-    zIndex: 2,
+    top: 60,
+    left: 30,
+    zIndex: 50,
   },
   vaccins: {
     gap: 15,

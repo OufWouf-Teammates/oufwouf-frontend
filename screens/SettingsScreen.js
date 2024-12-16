@@ -256,6 +256,10 @@ export default function SettingsScreen({ navigation }) {
                             onChangeText={(value) => setEmail(value)}
                             value={email}
                             placeholder={user?.email}
+                            autoCapitalize="none" // Évite la capitalisation automatique
+                            keyboardType="email-address"
+                            autoComplete="email"
+                            textContentType="emailAddress"
                         />
                         <Text style={styles.text}>Confirmer le nouveau email</Text>
                         <TextInput
@@ -268,6 +272,10 @@ export default function SettingsScreen({ navigation }) {
                             onChangeText={(value) => setEmailCon(value)}
                             value={emailCon}
                             placeholder={user?.email}
+                            autoCapitalize="none" // Évite la capitalisation automatique
+                            keyboardType="email-address"
+                            autoComplete="email"
+                            textContentType="emailAddress"
                         />
                         <TouchableOpacity
                             style={[styles.buttonModalSettings]}
