@@ -211,7 +211,8 @@ const styles = StyleSheet.create({
     marginTop: 100,
   },
   dogPic: {
-    width: "40%",
+    width: "50%",
+    marginBottom: 35,
     aspectRatio: 1,
     borderRadius: 500,
   },
