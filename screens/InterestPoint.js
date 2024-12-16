@@ -27,6 +27,8 @@ const InterestPoint = ({ navigation, route }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
 
+  console.log(markerData)
+
   const userToken = useSelector((state) => state.user.value?.token)
   console.log(userToken)
 
@@ -52,6 +54,20 @@ const InterestPoint = ({ navigation, route }) => {
 
     fetchInterestPoint()
   }, [markerData.place_id])
+
+  useEffect(() => {
+    ;(async () => {
+      const url = `${process.env.EXPO_PUBLIC_BACKEND_URL}map/isBookmarked?name=${markerData?.name}`
+      const response = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          "Content-Type": "application/json",
+        },
+      })
+      const data = await response.json()
+      setIsBookmarked(data.isBookmarked)
+    })()
+  }, [])
 
   if (isLoading) {
     return (
@@ -114,7 +130,7 @@ const InterestPoint = ({ navigation, route }) => {
   const handleBookmarkClick = async (name) => {
     if (!isBookmarked) {
       // Ajout au favoris
-      fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}map/canBookmark`, {
+      fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}map/addBookmark`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${userToken}`,
@@ -145,6 +161,10 @@ const InterestPoint = ({ navigation, route }) => {
           `${process.env.EXPO_PUBLIC_BACKEND_URL}map/deletePoint/${name}`,
           {
             method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${userToken}`,
+              "Content-Type": "application/json",
+            },
           }
         )
         const data = await response.json()
