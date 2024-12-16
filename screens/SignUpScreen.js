@@ -98,7 +98,7 @@ export default function SignUpScreen({ navigation, route }) {
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
-            style={styles.back}
+            style={styles.iconBack}
             activeOpacity={0.8}
           >
             <FontAwesome name="arrow-left" size={25} color="#0639DB" />
@@ -269,7 +269,10 @@ const styles = StyleSheet.create({
     width: "70%",
     fontFamily: "Lexend_400Regular",
   },
-  back: {
-    width: "90%",
+  iconBack: {
+    position: "absolute",
+    top: 60,
+    left: 30,
+    zIndex: 50,
   },
 })
