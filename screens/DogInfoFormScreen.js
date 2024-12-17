@@ -33,6 +33,7 @@ import {
 import { useSelector } from "react-redux"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import { useNavigation } from "@react-navigation/native"
+import pako from 'pako';
 
 const DogInfoFormScreen = () => {
   const navigation = useNavigation()
@@ -296,24 +297,36 @@ const DogInfoFormScreen = () => {
         })
       )
       if (imageUri) {
+        console.log("Append");
+        
         formData.append("photoFromFront", {
           uri: imageUri,
           type: "image/jpeg",
           name: "dog_image.jpg",
         })
       }
-      console.log(userToken)
+      console.log('hola', apiNewDog)
 
       const response = await fetch(apiNewDog, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${userToken}`,
         },
-
         body: formData,
       })
+      console.log(response);
+      
       const responseData = await response.json()
 
+      console.log("ResponseData", responseData);
+      
+      if (responseData.result) {
+        console.log('seData')
+      }else{
+        console.log('response')
+      }
+
+      console.log('tac')
       if (isChecked2) {
         const vaccinResponse = await fetch(apiNewVaccins, {
           method: "POST",

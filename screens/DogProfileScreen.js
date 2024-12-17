@@ -29,7 +29,7 @@ import * as ImagePicker from "expo-image-picker"
 import * as MediaLibrary from "expo-media-library"
 import { useNavigation } from '@react-navigation/native';
 
-const DogProfileScreen = () => {
+export default function DogProfileScreen () {
   const navigation = useNavigation();
   const token = useSelector((state) => state.user.value.token)
   const [dogsData, setDogsData] = useState([])

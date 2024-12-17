@@ -40,7 +40,9 @@
     "expo-status-bar": "~2.0.0",
     "expo-updates": "~0.26.10",
     "firebase": "^11.0.2",
+    "metro": "^0.81.0",
     "metro-react-native-babel-preset": "^0.77.0",
+    "pako": "^2.1.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-native": "0.76.2",
@@ -53,6 +55,7 @@
     "react-native-get-random-values": "^1.11.0",
     "react-native-google-places-autocomplete": "^2.5.7",
     "react-native-image-picker": "^7.2.3",
+    "react-native-image-resizer": "^1.4.5",
     "react-native-maps": "1.18.0",
     "react-native-maps-directions": "^1.9.0",
     "react-native-modal-datetime-picker": "^18.0.0",
@@ -66,6 +69,7 @@
     "react-native-web": "~0.19.10",
     "react-redux": "^8.0.2",
     "redux-persist": "^6.0.0",
+    "strip-ansi": "^7.1.0",
     "supercluster": "^8.0.1"
   },
   "devDependencies": {
