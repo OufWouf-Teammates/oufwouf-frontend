@@ -133,6 +133,26 @@ export default function MapScreen({ navigation }) {
     }
   };
 
+  // const ImageCarousel = ({ photos }) => {
+  //   return (
+  //     <Carousel
+  //       data={photos}
+  //       renderItem={({ item }) => (
+  //         <View style={styles.carouselItem}>
+  //           <Image
+  //             source={{ uri: item }}
+  //             style={{ width: "100%", height: "100%", resizeMode: "cover" }}
+  //           />
+  //         </View>
+  //       )}
+  //       sliderWidth={width}
+  //       itemWidth={width}
+  //       autoplay
+  //       loop
+  //     />
+  //   );
+  // };
+
   const filterOptions = [
     "Vétérinaires",
     "Boutiques",
@@ -209,6 +229,7 @@ export default function MapScreen({ navigation }) {
               // Traite les données reçues
               const res = data.data.map((element) => {
                 return {
+                  uri: element?.photos?.[0],
                   name: element?.name || "Inconnu", // Nom par défaut si non défini
                   latitude: element?.geometry?.location?.lat ?? 0, // Latitude correcte
                   longitude: element?.geometry?.location?.lng ?? 0, // Correction de la longitude
@@ -301,7 +322,8 @@ export default function MapScreen({ navigation }) {
               style={{
                 maxWidth: "100%",
                 minWidth: 200,
-                maxHeight: 100,
+                maxHeight: "auto",
+                gap: 10,
                 padding: 10,
                 justifyContent: "center", // Centre verticalement
                 alignItems: "center", // Centre horizontalement
@@ -312,8 +334,15 @@ export default function MapScreen({ navigation }) {
                   width: "100%",
                   justifyContent: "center",
                   alignItems: "center",
+                  gap: 12,
                 }}
               >
+               {data.uri && (
+                <Image
+                  source={{ uri: data.uri }}
+                  style={{ width: 100, height: 100, borderRadius: 5 }}
+                />
+              )}
                 <Text
                   style={{
                     width: "90%",
@@ -632,5 +661,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingVertical: 5,
     paddingHorizontal: 5,
+  },
+  carouselItem: {
+    width: width - 40, // Ajustez la largeur du carousel
+    height: 150, // Taille des images du carousel
+    borderRadius: 10,
+    overflow: "hidden",
   },
 });
