@@ -21,8 +21,16 @@ import {
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
+import {
+  ActionSheetProvider,
+  useActionSheet,
+} from "@expo/react-native-action-sheet"
+import * as ImagePicker from "expo-image-picker"
+import * as MediaLibrary from "expo-media-library"
+import { useNavigation } from '@react-navigation/native';
 
-export default function DogProfileScreen({ navigation }) {
+const DogProfileScreen = () => {
+  const navigation = useNavigation();
   const token = useSelector((state) => state.user.value.token)
   const [dogsData, setDogsData] = useState([])
   const [info, setInfo] = useState("")
@@ -34,6 +42,7 @@ export default function DogProfileScreen({ navigation }) {
       Lexend_400Regular,
       Lexend_700Bold,
     })
+
     useEffect(() => {
       async function hideSplashScreen() {
         if (fontsLoaded) {
@@ -377,6 +386,17 @@ const styles = StyleSheet.create({
   demiBox: {
     flexDirection: "row",
     justifyContent: "space-between",
+  }, 
+  updatePhoto: {
+    backgroundColor: "white",
+    width: 30,
+    height: 30,
+    borderRadius: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    top: 170,
+    right: 0,
   },
   infoBox: {
     flexDirection: "row",
