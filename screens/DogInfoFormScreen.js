@@ -33,6 +33,7 @@ import {
 import { useSelector } from "react-redux"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import { useNavigation } from "@react-navigation/native"
+import pako from 'pako';
 
 const DogInfoFormScreen = () => {
   const navigation = useNavigation()
@@ -240,12 +241,13 @@ const DogInfoFormScreen = () => {
         if (buttonIndex === 0) {
           ImagePicker.launchCameraAsync({
             mediaType: "photo",
+            quality: 0.3,
             saveToPhotos: true,
           }).then(handleImageSelection)
         } else if (buttonIndex === 1) {
           ImagePicker.launchImageLibraryAsync({
             mediaType: "photo",
-            quality: 1,
+            quality: 0.3,
             selectionLimit: 1,
           }).then(handleImageSelection)
         }
@@ -296,24 +298,36 @@ const DogInfoFormScreen = () => {
         })
       )
       if (imageUri) {
+        console.log("Append");
+        
         formData.append("photoFromFront", {
           uri: imageUri,
           type: "image/jpeg",
           name: "dog_image.jpg",
         })
       }
-      console.log(userToken)
+      console.log('hola', apiNewDog)
 
       const response = await fetch(apiNewDog, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${userToken}`,
         },
-
         body: formData,
       })
+      console.log(response);
+      
       const responseData = await response.json()
 
+      console.log("ResponseData", responseData);
+      
+      if (responseData.result) {
+        console.log('seData')
+      }else{
+        console.log('response')
+      }
+
+      console.log('tac')
       if (isChecked2) {
         const vaccinResponse = await fetch(apiNewVaccins, {
           method: "POST",
@@ -322,12 +336,12 @@ const DogInfoFormScreen = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
+            dogId: dogId,
             name: vaccination,
             rappel: selectedRappel,
             date: selectedVaccin,
           }),
         })
-
         const data = await vaccinResponse.json()
         if (data.result) {
           console.log("YAY new vaccins")
@@ -335,7 +349,7 @@ const DogInfoFormScreen = () => {
           console.log("nauuur no new vaccins")
         }
       }
-      console.log("Wooftastique!")
+      console.log(formData)
       setName("")
       setRace("")
       setRobe("")
@@ -357,6 +371,12 @@ const DogInfoFormScreen = () => {
       style={styles.background}
       source={require("../assets/BG_App.png")}
     >
+    <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.iconBack}
+        >
+            <FontAwesome name="arrow-left" size={30} color="#0639DB" />
+      </TouchableOpacity>
       <KeyboardAvoidingView
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                     style={{ flex: 1 }}
@@ -830,6 +850,12 @@ const styles = StyleSheet.create({
   },
   checkbox: {
     marginRight: 5,
+  },
+  iconBack: {
+    position: "absolute",
+    top: 60,
+    left: 30,
+    zIndex: 50,
   },
 })
 
