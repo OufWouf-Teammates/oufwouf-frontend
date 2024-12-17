@@ -168,13 +168,14 @@ const { showActionSheetWithOptions } = useActionSheet()
                 if (buttonIndex === 0) {
                   result = await ImagePicker.launchCameraAsync({
                     mediaType: "photo",
+                    quality: 0.3,
                     saveToPhotos: true,
                   });
                   handleImageSelection(result, dogId);
                 } else if (buttonIndex === 1) {
                   result = await ImagePicker.launchImageLibraryAsync({
                     mediaType: "photo",
-                    quality: 1,
+                    quality: 0.3,
                     selectionLimit: 1,
                   });
                   handleImageSelection(result, dogId);
@@ -206,7 +207,7 @@ const { showActionSheetWithOptions } = useActionSheet()
               });
         
               // Effectuer l'appel réseau pour mettre à jour l'image
-              const response = await fetch(`${apiNewDog}/modifier/${dogId}`, {
+              const response = await fetch(`${apiNewDog}modifier/${dogId}`, {
                 method: "PUT",
                 headers: {
                   Authorization: `Bearer ${token}`, // Assurez-vous que `token` est bien défini
@@ -221,7 +222,7 @@ const { showActionSheetWithOptions } = useActionSheet()
                 // Mettre à jour l'état local de l'image si nécessaire
                 setDogsData((prevDogs) =>
                   prevDogs.map((dog) =>
-                    dog._id === dogId ? { ...dog, uri: selectedImageUri } : dog
+                    dog._id === dogId ? { ...dog, uri: imageUri } : dog
                   )
                 );
                 
@@ -377,6 +378,7 @@ const { showActionSheetWithOptions } = useActionSheet()
                 <FontAwesome name="paw" size={25} color="#0639DB" />
                 <Text style={styles.textStyleSettings}>Modifier les  informations de {data?.name}</Text>
             </TouchableOpacity>
+            
         </View>
         {/*Modal modification du chien*/}
         {visibleModalDog === data?.ID && ( // Afficher le modal uniquement si l'ID correspond
@@ -437,12 +439,6 @@ const { showActionSheetWithOptions } = useActionSheet()
                             }}
                         >
                             <Text style={styles.textStyleSettings}>Modifier les informations du chien</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={[styles.buttonModalSettings]}
-                            onPress={() => null}
-                        >
-                            <Text style={styles.textStyleSettings}>Ajouter une vaccin</Text>
                         </TouchableOpacity>
                     </ScrollView>
                 </KeyboardAvoidingView>
