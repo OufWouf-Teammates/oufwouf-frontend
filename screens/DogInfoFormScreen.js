@@ -322,12 +322,12 @@ const DogInfoFormScreen = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
+            dogId: dogId,
             name: vaccination,
             rappel: selectedRappel,
             date: selectedVaccin,
           }),
         })
-
         const data = await vaccinResponse.json()
         if (data.result) {
           console.log("YAY new vaccins")
@@ -335,7 +335,7 @@ const DogInfoFormScreen = () => {
           console.log("nauuur no new vaccins")
         }
       }
-      console.log("Wooftastique!")
+      console.log(formData)
       setName("")
       setRace("")
       setRobe("")
@@ -357,6 +357,12 @@ const DogInfoFormScreen = () => {
       style={styles.background}
       source={require("../assets/BG_App.png")}
     >
+    <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.iconBack}
+        >
+            <FontAwesome name="arrow-left" size={30} color="#0639DB" />
+      </TouchableOpacity>
       <KeyboardAvoidingView
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                     style={{ flex: 1 }}
@@ -830,6 +836,12 @@ const styles = StyleSheet.create({
   },
   checkbox: {
     marginRight: 5,
+  },
+  iconBack: {
+    position: "absolute",
+    top: 60,
+    left: 30,
+    zIndex: 50,
   },
 })
 

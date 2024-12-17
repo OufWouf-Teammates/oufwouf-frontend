@@ -49,7 +49,7 @@ export default function SettingsScreen({ navigation }) {
             )
             const data = await response.json()
             setUser(data.user)
-            setDog(data.dog)
+            setDog(data.dog[0])
         })()
     }, [])
     //Nécessaire pour la configuration des fonts
@@ -286,40 +286,14 @@ export default function SettingsScreen({ navigation }) {
                         >
                             <Text style={styles.textStyleSettings}>Modifier les informations du maitre</Text>
                         </TouchableOpacity>
-                        <Text style={styles.textStyleInfo}>Information du chien</Text>
-                        <Text style={styles.text}>Information général </Text>
-                        <TextInput
-                        style={[
-                            styles.input,
-                            focusedField === "info" && styles.inputFocused,
-                        ]}
-                        onFocus={() => handleFocus("info")}
-                        onBlur={handleBlur}
-                        onChangeText={(value) => setInfo(value)}
-                        value={info}
-                        placeholder={dog?.infos}
-                        />
-
-                        <Text style={styles.text}>Traits de personalité</Text>
-                        <TextInput
-                        style={[
-                            styles.input,
-                            focusedField === "personality" && styles.inputFocused,
-                        ]}
-                        onFocus={() => handleFocus("personality")}
-                        onBlur={handleBlur}
-                        onChangeText={(value) => setPersonality(value)}
-                        placeholder={dog?.personality}
-                        value={personality}
-                        />
                         <TouchableOpacity
                             style={[styles.buttonModalSettings]}
                             onPress={() => {
-                              updateDog()
+                              navigation.navigate("Dog Info Form")
                               setModalInfoVisible(!modalInfoVisible)
                             }}
                         >
-                            <Text style={styles.textStyleSettings}>Modifier les informations du chien</Text>
+                            <Text style={styles.textStyleSettings}>Ajouter un chien</Text>
                         </TouchableOpacity>
                     </ScrollView>
                 </KeyboardAvoidingView>
