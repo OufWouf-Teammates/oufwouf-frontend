@@ -241,12 +241,13 @@ const DogInfoFormScreen = () => {
         if (buttonIndex === 0) {
           ImagePicker.launchCameraAsync({
             mediaType: "photo",
+            quality: 0.3,
             saveToPhotos: true,
           }).then(handleImageSelection)
         } else if (buttonIndex === 1) {
           ImagePicker.launchImageLibraryAsync({
             mediaType: "photo",
-            quality: 1,
+            quality: 0.3,
             selectionLimit: 1,
           }).then(handleImageSelection)
         }
