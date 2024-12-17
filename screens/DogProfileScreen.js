@@ -18,15 +18,47 @@ import {
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
+import {
+  ActionSheetProvider,
+  useActionSheet,
+} from "@expo/react-native-action-sheet"
+import * as ImagePicker from "expo-image-picker"
+import * as MediaLibrary from "expo-media-library"
+import { useNavigation } from '@react-navigation/native';
 
-export default function DogProfileScreen({ navigation }) {
+const DogProfileScreen = () => {
+  const navigation = useNavigation();
   const token = useSelector((state) => state.user.value.token)
   const [dog, setDog] = useState({})
+  const [imageUri, setImageUri] = useState(null)
+    const apiNewDog = `${process.env.EXPO_PUBLIC_BACKEND_URL}dogs`
+  // gestion des options pour la phtoto de profil //
+
+  const { showActionSheetWithOptions } = useActionSheet()
+
+  useEffect(() => {
+    const askPermissions = async () => {
+      try {
+        const cameraPermission = await ImagePicker.requestCameraPermissionsAsync();
+        const mediaPermission = await MediaLibrary.requestPermissionsAsync();
+    
+        if (cameraPermission.status !== "granted" || mediaPermission.status !== "granted") {
+
+        }
+      } catch (error) {
+        console.error("Permission error:", error);
+      }
+    };
+
+    askPermissions()
+  }, [])
+
     //Nécessaire pour la configuration des fonts
     const [fontsLoaded] = useFonts({
       Lexend_400Regular,
       Lexend_700Bold,
     })
+
     useEffect(() => {
       async function hideSplashScreen() {
         if (fontsLoaded) {
@@ -57,7 +89,89 @@ export default function DogProfileScreen({ navigation }) {
       return null // Rien n'est affiché tant que les polices ne sont pas chargées
     }
 
-    console.log(dog)
+    
+    const handleChooseImage = async () => {
+      const options = ["Prenez une photo", "Sélectionnez une photo", "Annuler"];
+      const cancelButtonIndex = options.length - 1;
+    
+      showActionSheetWithOptions(
+        { options, cancelButtonIndex },
+        async (buttonIndex) => {
+          let result = null;
+    
+          try {
+            if (buttonIndex === 0) {
+              result = await ImagePicker.launchCameraAsync({
+                mediaType: "photo",
+                saveToPhotos: true,
+              });
+              handleImageSelection(result);
+            } else if (buttonIndex === 1) {
+              result = await ImagePicker.launchImageLibraryAsync({
+                mediaType: "photo",
+                quality: 1,
+                selectionLimit: 1,
+              });
+              handleImageSelection(result);
+            }
+          } catch (error) {
+            console.error("Erreur lors de la sélection d'image :", error.message);
+          }
+        }
+      );
+    };
+    
+    
+    const handleImageSelection = async (response) => {
+      if (response.assets && response.assets.length > 0) {
+        const selectedImageUri = response.assets[0].uri;
+        console.log("Image sélectionnée :", selectedImageUri);
+    
+        setImageUri(selectedImageUri); // Mettre à jour l'URI de l'image dans l'état local
+    
+        try {
+          // Créer un formulaire avec uniquement l'image sélectionnée
+          const formData = new FormData();
+    
+          formData.append("photoFromFront", {
+            uri: selectedImageUri,  // Utiliser l'URI de l'image sélectionnée
+            type: "image/jpeg",      // Assurez-vous du type correct selon l'image
+            name: "dog_image.jpg",   // Le nom du fichier
+          });
+    
+          // Effectuer l'appel réseau pour mettre à jour l'image
+          const response = await fetch(`${apiNewDog}/modifier`, {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${token}`, // Assurez-vous que `token` est bien défini
+            },
+            body: formData,
+          });
+    
+          const responseData = await response.json();
+          console.log("Réponse du serveur :", responseData);
+    
+          if (response.ok) {
+            // Mettre à jour l'état local de l'image si nécessaire
+            setDog((prevState) => ({
+              ...prevState,
+              uri: selectedImageUri, // Mettre à jour l'URI de l'image dans l'état
+            }));
+          } else {
+            console.error("Erreur serveur :", responseData);
+            alert("Erreur lors de la mise à jour. Veuillez réessayer.");
+          }
+        } catch (error) {
+          console.error("Erreur lors de l'envoi :", error.message);
+          alert("Erreur lors de la mise à jour. Veuillez vérifier votre connexion.");
+        }
+      }
+    };
+    
+       
+  
+        
+    
 
   return (
     <ImageBackground
@@ -72,12 +186,17 @@ export default function DogProfileScreen({ navigation }) {
       </TouchableOpacity>
       <ScrollView contentContainerStyle={{ flexGrow: 1, width: "100%", paddingBottom: 20 }}>
       <SafeAreaView style={styles.innerContainer}>
-        <Image
-          source={{
-            uri: dog.uri,
-          }}
-          style={styles.dogPic}
-        />
+        <TouchableOpacity  onPress={handleChooseImage}>
+          <Image
+            source={{
+              uri: dog.uri,
+            }}
+            style={styles.dogPic}
+          />
+          <View style={styles.updatePhoto}>
+            <FontAwesome name="pencil" size={15} color="#0639DB" />
+          </View>
+        </TouchableOpacity>
         <Text style={styles.name}>{dog.name}</Text>
         {/* Infos du carnet */}
         <View style={styles.infos}>
@@ -226,6 +345,17 @@ const styles = StyleSheet.create({
   demiBox: {
     flexDirection: "row",
     justifyContent: "space-between",
+  }, 
+  updatePhoto: {
+    backgroundColor: "white",
+    width: 30,
+    height: 30,
+    borderRadius: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    position: "absolute",
+    top: 170,
+    right: 0,
   },
   infoBox: {
     flexDirection: "row",
@@ -272,3 +402,9 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
 })
+
+export default () => (
+  <ActionSheetProvider>
+    <DogProfileScreen />
+  </ActionSheetProvider>
+)
