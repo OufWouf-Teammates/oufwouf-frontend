@@ -29,45 +29,19 @@ import * as ImagePicker from "expo-image-picker"
 import * as MediaLibrary from "expo-media-library"
 import { useNavigation } from '@react-navigation/native';
 
-export default function DogProfileScreen () {
+const DogProfileScreen = () => {
   const navigation = useNavigation();
   const token = useSelector((state) => state.user.value.token)
   const [dogsData, setDogsData] = useState([])
-  const [dog, setDog]= useState(null)
   const [info, setInfo] = useState("")
   const [personality, setPersonality] = useState("")
   const [focusedField, setFocusedField] = useState(null)
   const [visibleModalDog, setVisibleModalDog] = useState(null);
-  const [imageUri, setImageUri] = useState(null)
-  const [isUpdated, setIsUpdated] = useState(false)
-  const apiNewDog = `${process.env.EXPO_PUBLIC_BACKEND_URL}dogs`
-
-// gestion des options pour la phtoto de profil //
-
-const { showActionSheetWithOptions } = useActionSheet()
-
     //Nécessaire pour la configuration des fonts
     const [fontsLoaded] = useFonts({
       Lexend_400Regular,
       Lexend_700Bold,
     })
-
-    useEffect(() => {
-      const askPermissions = async () => {
-        try {
-          const cameraPermission = await ImagePicker.requestCameraPermissionsAsync();
-          const mediaPermission = await MediaLibrary.requestPermissionsAsync();
-  
-          if (cameraPermission.status !== "granted" || mediaPermission.status !== "granted") {
-  
-      }
-    } catch (error) {
-      console.error("Permission error:", error);
-    }
-  };
-  
-  askPermissions()
-    }, [])
 
     useEffect(() => {
       async function hideSplashScreen() {
@@ -93,9 +67,7 @@ const { showActionSheetWithOptions } = useActionSheet()
       setDogsData(data.dog)
     })();
 
-    }, [isUpdated, fontsLoaded, visibleModalDog])
-
-
+    }, [fontsLoaded, visibleModalDog])
   
     if (!fontsLoaded) {
       return null // Rien n'est affiché tant que les polices ne sont pas chargées
@@ -155,103 +127,16 @@ const { showActionSheetWithOptions } = useActionSheet()
             });
       }
 
-        const handleChooseImage = async (dogId) => {
-          const options = ["Prenez une photo", "Sélectionnez une photo", "Annuler"];
-          const cancelButtonIndex = options.length - 1;
-        
-          showActionSheetWithOptions(
-            { options, cancelButtonIndex },
-            async (buttonIndex) => {
-              let result = null;
-        
-              try {
-                if (buttonIndex === 0) {
-                  result = await ImagePicker.launchCameraAsync({
-                    mediaType: "photo",
-                    saveToPhotos: true,
-                  });
-                  handleImageSelection(result, dogId);
-                } else if (buttonIndex === 1) {
-                  result = await ImagePicker.launchImageLibraryAsync({
-                    mediaType: "photo",
-                    quality: 1,
-                    selectionLimit: 1,
-                  });
-                  handleImageSelection(result, dogId);
-                }
-              } catch (error) {
-                console.error("Erreur lors de la sélection d'image :", error.message);
-              }
-            }
-          );
-        };
-        
-        
-        const handleImageSelection = async (response, dogId) => {
-          if (response.assets && response.assets.length > 0) {
-            const selectedImageUri = response.assets[0].uri;
-            console.log("Image sélectionnée :", selectedImageUri);
-        
-            setImageUri(selectedImageUri); // Mettre à jour l'URI de l'image dans l'état local
-            console.log("ID du chien sélectionné :", dogId);
-            console.log(dogId)
-            try {
-              // Créer un formulaire avec uniquement l'image sélectionnée
-              const formData = new FormData();
-        
-              formData.append("photoFromFront", {
-                uri: selectedImageUri,  // Utiliser l'URI de l'image sélectionnée
-                type: "image/jpeg",      // Assurez-vous du type correct selon l'image
-                name: "dog_image.jpg",   // Le nom du fichier
-              });
-        
-              // Effectuer l'appel réseau pour mettre à jour l'image
-              const response = await fetch(`${apiNewDog}/modifier/${dogId}`, {
-                method: "PUT",
-                headers: {
-                  Authorization: `Bearer ${token}`, // Assurez-vous que `token` est bien défini
-                },
-                body: formData,
-              });
-        
-              const responseData = await response.json();
-              console.log("Réponse du serveur :", responseData);
-        
-              if (response.ok) {
-                // Mettre à jour l'état local de l'image si nécessaire
-                setDogsData((prevDogs) =>
-                  prevDogs.map((dog) =>
-                    dog._id === dogId ? { ...dog, uri: selectedImageUri } : dog
-                  )
-                );
-                
-              } else {
-                console.error("Erreur serveur :", responseData);
-                alert("Erreur lors de la mise à jour. Veuillez réessayer.");
-              }
-            } catch (error) {
-              console.error("Erreur lors de l'envoi :", error.message);
-              alert("Erreur lors de la mise à jour. Veuillez vérifier votre connexion.");
-            }
-          }
-        };
 
-      
-      const dogs = dogsData.map((data, i) => {
-        console.log(data?._id)
-        return (
-          <View key={i} style={[styles.innerContainer, { marginTop: 0 }]}>
-          <TouchableOpacity onPress={() => handleChooseImage(data?._id)}>
-            <Image
-              source={{
-                uri: data?.uri,
-              }}
-              style={styles.dogPic}
-            />
-            <View style={styles.updatePhoto}>
-              <FontAwesome name="pencil" size={15} color="#0639DB" />
-            </View>
-          </TouchableOpacity>
+    const dogs = dogsData.map((data, i) => {
+      return (
+        <View key={i} style={[styles.innerContainer, { marginTop: 0 }]}>
+          <Image
+          source={{
+            uri: data?.uri,
+          }}
+          style={styles.dogPic}
+        />
         <Text style={styles.name}>{data?.name}</Text>
         {/* Infos du carnet */}
         <View style={styles.infos}>
@@ -637,9 +522,3 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 })
-
-export default () => (
-  <ActionSheetProvider>
-    <DogProfileScreen />
-  </ActionSheetProvider>
-)
