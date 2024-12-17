@@ -26,308 +26,309 @@ import { useDispatch, useSelector } from "react-redux"
 import { connectUser, disconnectUser } from "../reducers/user"
 
 export default function SettingsScreen({ navigation }) {
-    const dispatch = useDispatch()
-    const token = useSelector((state) => state.user.value.token)
-    const [email, setEmail] = useState("")
-    const [emailCon, setEmailCon] = useState("")
-    const [dog, setDog] = useState({})
-    const [info, setInfo] = useState("")
-    const [personality, setPersonality] = useState("")
-    const [user, setUser] = useState({})
-    const [focusedField, setFocusedField] = useState(null)
-    const [modalSettingsVisible, setModalSettingsVisible] = useState(false)
-    const [modalInfoVisible, setModalInfoVisible] = useState(false)
-    useEffect(() => {
-        ;(async () => {
-            const response = await fetch(
-                `${process.env.EXPO_PUBLIC_BACKEND_URL}dogs`,
-                {
-                    headers: {
-                    Authorization: `Bearer ${token}`,
-                    },
-                }
-            )
-            const data = await response.json()
-            setUser(data.user)
-            setDog(data.dog)
-        })()
-    }, [])
-    //Nécessaire pour la configuration des fonts
-    const [fontsLoaded] = useFonts({
-        Lexend_400Regular,
-        Lexend_700Bold,
-    })
-    useEffect(() => {
-        async function hideSplashScreen() {
-            if (fontsLoaded) {
-                await SplashScreen.hideAsync()
-            }
-        }
-        hideSplashScreen()
-    }, [fontsLoaded])
-
-    if (!fontsLoaded) {
-        return null // Rien n'est affiché tant que les polices ne sont pas chargées
-    }
-    const deconnection = () => {
-        dispatch(disconnectUser())
-        setModalSettingsVisible(!modalSettingsVisible)
-        navigation.navigate("Connection")
-    }
-    // Fonction pour changer la couleur de l'input quand il est focus //
-    const handleFocus = (field) => {
-        setFocusedField(field)
-    }
-    
-    // Fonction pour gérer la perte de focus //
-    const handleBlur = () => {
-        setFocusedField(null)
-    }
-
-    const updateEmail = () => {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
-      if (!emailRegex.test(email)) {
-        Alert.alert("Veuillez entrer une adresse e-mail valide.");
-        return;
-      }
-      if (email !== emailCon) {
-          Alert.alert("Les deux e-mails ne sont pas identiques")
-          return 
-      }
-        fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}users`, {
-          method: "PUT",
+  const dispatch = useDispatch()
+  const token = useSelector((state) => state.user.value.token)
+  const [email, setEmail] = useState("")
+  const [emailCon, setEmailCon] = useState("")
+  const [dog, setDog] = useState({})
+  const [info, setInfo] = useState("")
+  const [personality, setPersonality] = useState("")
+  const [user, setUser] = useState({})
+  const [focusedField, setFocusedField] = useState(null)
+  const [modalSettingsVisible, setModalSettingsVisible] = useState(false)
+  const [modalInfoVisible, setModalInfoVisible] = useState(false)
+  useEffect(() => {
+    ;(async () => {
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_BACKEND_URL}dogs`,
+        {
           headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({email: email}),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.result) {
-              Alert.alert(`E-mail mise à jour: ${data.email}`)
-            }else{
-              Alert.alert(data.error)
-            }
-          })
-          .catch((error) => {
-            Alert.alert("Erreur de réseau ou serveur indisponible.");
-            console.error(error); // Logge l'erreur pour débogage
-          });
+        }
+      )
+      const data = await response.json()
+      setUser(data.user)
+      setDog(data.dog)
+    })()
+  }, [])
+  //Nécessaire pour la configuration des fonts
+  const [fontsLoaded] = useFonts({
+    Lexend_400Regular,
+    Lexend_700Bold,
+  })
+  useEffect(() => {
+    async function hideSplashScreen() {
+      if (fontsLoaded) {
+        await SplashScreen.hideAsync()
+      }
     }
+    hideSplashScreen()
+  }, [fontsLoaded])
 
-    const updateDog = () => {
+  if (!fontsLoaded) {
+    return null // Rien n'est affiché tant que les polices ne sont pas chargées
+  }
+  const deconnection = () => {
+    dispatch(disconnectUser())
+    setModalSettingsVisible(!modalSettingsVisible)
+    navigation.navigate("Connection")
+  }
+  // Fonction pour changer la couleur de l'input quand il est focus //
+  const handleFocus = (field) => {
+    setFocusedField(field)
+  }
 
+  // Fonction pour gérer la perte de focus //
+  const handleBlur = () => {
+    setFocusedField(null)
+  }
+
+  const updateEmail = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+    if (!emailRegex.test(email)) {
+      Alert.alert("Veuillez entrer une adresse e-mail valide.")
+      return
+    }
+    if (email !== emailCon) {
+      Alert.alert("Les deux e-mails ne sont pas identiques")
+      return
+    }
+    fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}users`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email: email }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          Alert.alert(`E-mail mise à jour: ${data.email}`)
+        } else {
+          Alert.alert(data.error)
+        }
+      })
+      .catch((error) => {
+        Alert.alert("Erreur de réseau ou serveur indisponible.")
+        console.error(error) // Logge l'erreur pour débogage
+      })
+  }
+
+  const updateDog = () => {
     // Vérification si au moins l'un des champs est rempli
     if (!personality && !info) {
-      Alert.alert("Veuillez remplir au moins un champ (personnalité ou informations).");
-      return;
+      Alert.alert(
+        "Veuillez remplir au moins un champ (personnalité ou informations)."
+      )
+      return
     }
     fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}dogs`, {
-          method: "PUT",
-          headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            personality: personality || undefined, 
-            infos: info || undefined 
-          }),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.result) {
-              Alert.alert(`Inforations mis à jour`)
-            }else{
-              Alert.alert(data.error)
-            }
-          })
-          .catch((error) => {
-            Alert.alert("Erreur de réseau ou serveur indisponible.");
-            console.error(error); // Logge l'erreur pour débogage
-          });
-    }
-    
-    return (
-        <ImageBackground
-        source={require("../assets/BG_App.png")}
-        style={styles.container}
-        >
-        <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={styles.iconBack}
-        >
-            <FontAwesome name="arrow-left" size={30} color="#0639DB" />
-        </TouchableOpacity>
-        <SafeAreaView style={styles.innerContainer}>
-            <View style={styles.in}>
-            <Image
-                source={{uri: dog?.uri}}
-                style={[styles.dogPic, { width: 150, height: 150 }]}
-            />
-            <Text style={styles.name}>{dog?.name}</Text>
-            <TouchableOpacity
-                style={styles.button}
-                activeOpacity={0.8}
-                onPress={() => setModalInfoVisible(true)}
-            >
-                <FontAwesome name="paw" size={25} color="#0639DB" />
-                <Text style={styles.textButton}>Information personal</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button} activeOpacity={0.8}>
-                <FontAwesome name="bell" size={25} color="#0639DB" />
-                <Text style={styles.textButton}>Notifications</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.button} activeOpacity={0.8}>
-                <FontAwesome name="calendar" size={25} color="#0639DB" />
-                <Text style={styles.textButton}>Agenda</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                style={styles.buttonParam}
-                activeOpacity={0.8}
-                onPress={() => setModalSettingsVisible(true)}
-            >
-                <FontAwesome name="gear" size={25} color="#FFF" />
-                <Text style={styles.textButtonParam}>Paramètres</Text>
-            </TouchableOpacity>
-            </View>
-        </SafeAreaView>
-        {/*Modal Settings*/}
-        <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalSettingsVisible}
-            onRequestClose={() => {
-            setModalSettingsVisible(!modalSettingsVisible)
-            }}
-        >
-            <View style={styles.settingsModal}>
-            <View style={styles.modalViewSettings}>
-                <TouchableOpacity
-                onPress={() => setModalSettingsVisible(!modalSettingsVisible)}
-                >
-                <FontAwesome name="close" size={25} color="#0639DB" />
-                </TouchableOpacity>
-                <TouchableOpacity
-                style={[styles.buttonModalSettings]}
-                onPress={() => deconnection()}
-                >
-                <Text style={styles.textStyleSettings}>Déconnexion</Text>
-                </TouchableOpacity>
-            </View>
-            </View>
-        </Modal>
-        {/*Modal Information personal*/}
-        <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalInfoVisible}
-            onRequestClose={() => {
-            setModalInfoVisible(!modalInfoVisible)
-            }}
-        >
-            <View style={styles.infoModal}>
-            <View style={styles.modalViewInfo}>
-                <TouchableOpacity
-                onPress={() => setModalInfoVisible(!modalInfoVisible)}
-                >
-                <FontAwesome
-                    name="close"
-                    size={25}
-                    color="#0639DB"
-                    style={styles.close}
-                />
-                </TouchableOpacity>
-                <KeyboardAvoidingView
-                    behavior={Platform.OS === "ios" ? "padding" : "height"}
-                    style={{ flex: 1 }}
-                >
-                    <ScrollView contentContainerStyle={{ flexGrow: 1 }} >
-                        <Text style={styles.textStyleInfo}>Information personal</Text>
-                        <Text style={styles.text}>Nouveau email </Text>
-                        <TextInput
-                            style={[
-                                styles.input,
-                                focusedField === "email" && styles.inputFocused,
-                            ]}
-                            onFocus={() => handleFocus("email")}
-                            onBlur={handleBlur}
-                            onChangeText={(value) => setEmail(value)}
-                            value={email}
-                            placeholder={user?.email}
-                            autoCapitalize="none" // Évite la capitalisation automatique
-                            keyboardType="email-address"
-                            autoComplete="email"
-                            textContentType="emailAddress"
-                        />
-                        <Text style={styles.text}>Confirmer le nouveau email</Text>
-                        <TextInput
-                            style={[
-                                styles.input,
-                                focusedField === "emailCon" && styles.inputFocused,
-                            ]}
-                            onFocus={() => handleFocus("emailCon")}
-                            onBlur={handleBlur}
-                            onChangeText={(value) => setEmailCon(value)}
-                            value={emailCon}
-                            placeholder={user?.email}
-                            autoCapitalize="none" // Évite la capitalisation automatique
-                            keyboardType="email-address"
-                            autoComplete="email"
-                            textContentType="emailAddress"
-                        />
-                        <TouchableOpacity
-                            style={[styles.buttonModalSettings]}
-                            onPress={() => {
-                              updateEmail()
-                              setModalInfoVisible(!modalInfoVisible)
-                            }}
-                        >
-                            <Text style={styles.textStyleSettings}>Modifier les informations du maitre</Text>
-                        </TouchableOpacity>
-                        <Text style={styles.textStyleInfo}>Information du chien</Text>
-                        <Text style={styles.text}>Information général </Text>
-                        <TextInput
-                        style={[
-                            styles.input,
-                            focusedField === "info" && styles.inputFocused,
-                        ]}
-                        onFocus={() => handleFocus("info")}
-                        onBlur={handleBlur}
-                        onChangeText={(value) => setInfo(value)}
-                        value={info}
-                        placeholder={dog?.infos}
-                        />
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        personality: personality || undefined,
+        infos: info || undefined,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.result) {
+          Alert.alert(`Inforations mis à jour`)
+        } else {
+          Alert.alert(data.error)
+        }
+      })
+      .catch((error) => {
+        Alert.alert("Erreur de réseau ou serveur indisponible.")
+        console.error(error) // Logge l'erreur pour débogage
+      })
+  }
 
-                        <Text style={styles.text}>Traits de personalité</Text>
-                        <TextInput
-                        style={[
-                            styles.input,
-                            focusedField === "personality" && styles.inputFocused,
-                        ]}
-                        onFocus={() => handleFocus("personality")}
-                        onBlur={handleBlur}
-                        onChangeText={(value) => setPersonality(value)}
-                        placeholder={dog?.personality}
-                        value={personality}
-                        />
-                        <TouchableOpacity
-                            style={[styles.buttonModalSettings]}
-                            onPress={() => {
-                              updateDog()
-                              setModalInfoVisible(!modalInfoVisible)
-                            }}
-                        >
-                            <Text style={styles.textStyleSettings}>Modifier les informations du chien</Text>
-                        </TouchableOpacity>
-                    </ScrollView>
-                </KeyboardAvoidingView>
-            </View>
-            </View>
-        </Modal>
+  return (
+    <ImageBackground
+      source={require("../assets/BG_App.png")}
+      style={styles.container}
+    >
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={styles.iconBack}
+      >
+        <FontAwesome name="arrow-left" size={30} color="#0639DB" />
+      </TouchableOpacity>
+      <SafeAreaView style={styles.innerContainer}>
+        <View style={styles.in}>
+          <Image
+            source={{ uri: dog?.uri }}
+            style={[styles.dogPic, { width: 150, height: 150 }]}
+          />
+          <Text style={styles.name}>{dog?.name}</Text>
+          <TouchableOpacity
+            style={styles.button}
+            activeOpacity={0.8}
+            onPress={() => setModalInfoVisible(true)}
+          >
+            <FontAwesome name="paw" size={25} color="#0639DB" />
+            <Text style={styles.textButton}>Information personal</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} activeOpacity={0.8}>
+            <FontAwesome name="bell" size={25} color="#0639DB" />
+            <Text style={styles.textButton}>Notifications</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.buttonParam}
+            activeOpacity={0.8}
+            onPress={() => setModalSettingsVisible(true)}
+          >
+            <FontAwesome name="gear" size={25} color="#FFF" />
+            <Text style={styles.textButtonParam}>Paramètres</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+      {/*Modal Settings*/}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalSettingsVisible}
+        onRequestClose={() => {
+          setModalSettingsVisible(!modalSettingsVisible)
+        }}
+      >
+        <View style={styles.settingsModal}>
+          <View style={styles.modalViewSettings}>
+            <TouchableOpacity
+              onPress={() => setModalSettingsVisible(!modalSettingsVisible)}
+            >
+              <FontAwesome name="close" size={25} color="#0639DB" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.buttonModalSettings]}
+              onPress={() => deconnection()}
+            >
+              <Text style={styles.textStyleSettings}>Déconnexion</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+      {/*Modal Information personal*/}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalInfoVisible}
+        onRequestClose={() => {
+          setModalInfoVisible(!modalInfoVisible)
+        }}
+      >
+        <View style={styles.infoModal}>
+          <View style={styles.modalViewInfo}>
+            <TouchableOpacity
+              onPress={() => setModalInfoVisible(!modalInfoVisible)}
+            >
+              <FontAwesome
+                name="close"
+                size={25}
+                color="#0639DB"
+                style={styles.close}
+              />
+            </TouchableOpacity>
+            <KeyboardAvoidingView
+              behavior={Platform.OS === "ios" ? "padding" : "height"}
+              style={{ flex: 1 }}
+            >
+              <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                <Text style={styles.textStyleInfo}>Information personal</Text>
+                <Text style={styles.text}>Nouveau email </Text>
+                <TextInput
+                  style={[
+                    styles.input,
+                    focusedField === "email" && styles.inputFocused,
+                  ]}
+                  onFocus={() => handleFocus("email")}
+                  onBlur={handleBlur}
+                  onChangeText={(value) => setEmail(value)}
+                  value={email}
+                  placeholder={user?.email}
+                  autoCapitalize="none" // Évite la capitalisation automatique
+                  keyboardType="email-address"
+                  autoComplete="email"
+                  textContentType="emailAddress"
+                />
+                <Text style={styles.text}>Confirmer le nouveau email</Text>
+                <TextInput
+                  style={[
+                    styles.input,
+                    focusedField === "emailCon" && styles.inputFocused,
+                  ]}
+                  onFocus={() => handleFocus("emailCon")}
+                  onBlur={handleBlur}
+                  onChangeText={(value) => setEmailCon(value)}
+                  value={emailCon}
+                  placeholder={user?.email}
+                  autoCapitalize="none" // Évite la capitalisation automatique
+                  keyboardType="email-address"
+                  autoComplete="email"
+                  textContentType="emailAddress"
+                />
+                <TouchableOpacity
+                  style={[styles.buttonModalSettings]}
+                  onPress={() => {
+                    updateEmail()
+                    setModalInfoVisible(!modalInfoVisible)
+                  }}
+                >
+                  <Text style={styles.textStyleSettings}>
+                    Modifier les informations du maitre
+                  </Text>
+                </TouchableOpacity>
+                <Text style={styles.textStyleInfo}>Information du chien</Text>
+                <Text style={styles.text}>Information général </Text>
+                <TextInput
+                  style={[
+                    styles.input,
+                    focusedField === "info" && styles.inputFocused,
+                  ]}
+                  onFocus={() => handleFocus("info")}
+                  onBlur={handleBlur}
+                  onChangeText={(value) => setInfo(value)}
+                  value={info}
+                  placeholder={dog?.infos}
+                />
+
+                <Text style={styles.text}>Traits de personalité</Text>
+                <TextInput
+                  style={[
+                    styles.input,
+                    focusedField === "personality" && styles.inputFocused,
+                  ]}
+                  onFocus={() => handleFocus("personality")}
+                  onBlur={handleBlur}
+                  onChangeText={(value) => setPersonality(value)}
+                  placeholder={dog?.personality}
+                  value={personality}
+                />
+                <TouchableOpacity
+                  style={[styles.buttonModalSettings]}
+                  onPress={() => {
+                    updateDog()
+                    setModalInfoVisible(!modalInfoVisible)
+                  }}
+                >
+                  <Text style={styles.textStyleSettings}>
+                    Modifier les informations du chien
+                  </Text>
+                </TouchableOpacity>
+              </ScrollView>
+            </KeyboardAvoidingView>
+          </View>
+        </View>
+      </Modal>
     </ImageBackground>
-    )
+  )
 }
 
 const styles = StyleSheet.create({
@@ -491,7 +492,7 @@ const styles = StyleSheet.create({
     width: "90%",
     borderBottomWidth: 1,
     fontFamily: "Lexend_400Regular",
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   inputFocused: {
     backgroundColor: "#F3E882",
