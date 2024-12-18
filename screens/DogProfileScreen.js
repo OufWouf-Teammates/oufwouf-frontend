@@ -317,31 +317,23 @@ const { showActionSheetWithOptions } = useActionSheet()
                 <View style={styles.demiBox}>
                   {/* Rappel */}
                   <View style={styles.infoDemiBox}>
-                    <Text style={styles.dogInfo}>
                       <FontAwesome
                         name="bell"
                         size={25}
                         color="#0639DB"
                         style={styles.iconsDemi}
                       />
-                      <View style={styles.dogInfo}>
-                      <Text>{e.rappel ? "oui" : "non"}</Text>
-                      </View>
-                    </Text>
+                      <Text style={styles.dogInfo}>{e.rappel ? "oui" : "non"}</Text>
                   </View>
                   {/* Date de Rappel */}
                   <View style={styles.infoDemiBox}>
-                    <Text>
                       <FontAwesome
                         name="calendar-check-o"
                         size={25}
                         color="#0639DB"
                         style={styles.iconsDemi}
                       />
-                      <View style={styles.dogInfo}>
-                      <Text>{e.date}</Text>
-                      </View>
-                    </Text>
+                      <Text style={styles.dogInfo}>{e.date}</Text>
                   </View>
                 </View>
               </View>

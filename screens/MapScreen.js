@@ -401,11 +401,7 @@ export default function MapScreen({ navigation }) {
               navigation={navigation}
             />
           </View>
-          <TouchableOpacity style={styles.button} onPress={centerOnUser}>
-            <View style={styles.buttonIcon}>
-              <View style={styles.buttonIconCore} />
-            </View>
-          </TouchableOpacity>
+
           <View style={styles.ScrollView}>
             <ScrollView
               horizontal
