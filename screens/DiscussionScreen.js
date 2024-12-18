@@ -2,114 +2,143 @@ import React, { useEffect, useState } from "react"
 import {
   SafeAreaView,
   StyleSheet,
-  View,
-  Image,
+  TextInput,
   TouchableOpacity,
   Text,
   ImageBackground,
-  ActivityIndicator,
   ScrollView,
-  Linking,
-  TextInput,
+  FlatList,
+  ActivityIndicator,
+  View
 } from "react-native"
-import { FlatList } from 'react-native';
-import FontAwesome from "react-native-vector-icons/FontAwesome"
 import {
-  useFonts,
-  Lexend_400Regular,
-  Lexend_700Bold,
-} from "@expo-google-fonts/lexend"
-import AppLoading from "expo-app-loading"
+    useFonts,
+    Lexend_400Regular,
+    Lexend_700Bold,
+  } from "@expo-google-fonts/lexend"
+import FontAwesome from "react-native-vector-icons/FontAwesome"
 import { useSelector } from "react-redux"
+import { useNavigation } from '@react-navigation/native';
 
-const DiscussionsScreen = ({ navigation, route }) => {
+const DiscussionsScreen = ({ navigation }) => {
   const [search, setSearch] = useState('')
-  const [friends, setFriends] = useState([]); 
-  const [filteredFriends, setFilteredFriends] = useState([]);
+  const [dogs, setDogs] = useState([]); 
+  const [filteredDogs, setFilteredDogs] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const apiFriend = `${process.env.EXPO_PUBLIC_BACKEND_URL}friends`;
-
+  const [isFocused, setIsFocused] = useState(false); // Track if TextInput is focused
+  const [debounceSearch, setDebounceSearch] = useState('');
+  const apiDog = `${process.env.EXPO_PUBLIC_BACKEND_URL}dogs/`;
   const userToken = useSelector((state) => state.user.value?.token)
-  console.log(userToken)
 
-    useEffect(() => {
-        const fetchFriends = async () => {
-          try {
-            const response = await fetch(apiFriend, {
-                headers: {
-                  Authorization: `Bearer ${userToken}`,
-                },
-              });
-            if (!response.ok) {
-              throw new Error(`Erreur HTTP ! Statut : ${response.status}`);
-            }
-            const data = await response.json();
-            setFriends(data); // Mettre à jour la liste complète
-            setFilteredFriends(data); // Initialiser la liste filtrée
-          } catch (error) {
-            console.error('Erreur lors de la récupération des amis :', error);
-          } finally {
-            setIsLoading(false); // Fin du chargement
-          }
-        };
-    
-        fetchFriends();
-      }, []);
+  const fetchDogs = async () => {
+    try {
+      const response = await fetch(`${apiDog}allDogs`, {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      });
 
-  // Gérer la recherche et filtrer la liste
-  const handleSearch = (text) => {
-    setSearch(text);
-    const filtered = friends.filter((friend) =>
-      friend.name.toLowerCase().includes(text.toLowerCase())
-    );
-    setFilteredFriends(filtered);
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP ! Statut : ${response.status}`);
+      }
+
+      const data = await response.json();
+      setDogs(data); // Mettre à jour la liste complète des chiens
+      setFilteredDogs(data); // Initialiser la liste filtrée avec tous les chiens au début
+    } catch (error) {
+      console.error('Erreur lors de la récupération des chiens :', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
+  // This function will be triggered when typing in TextInput
+  const handleSearch = (text) => {
+    setSearch(text);
+  };
+
+  // Perform the actual filtering after debouncing the search input
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebounceSearch(search);
+    }, 500); // Wait 500ms after the user stops typing
+
+    return () => clearTimeout(timer); // Clean up the timer on each render to prevent memory leaks
+  }, [search]);
+
+  // This effect filters the list based on the debounced search term
+  useEffect(() => {
+    if (debounceSearch) {
+      const filtered = dogs.filter((dog) =>
+        dog.name.toLowerCase().includes(debounceSearch.toLowerCase())
+      );
+      setFilteredDogs(filtered); // Mettre à jour filteredDogs avec les résultats filtrés
+    } else {
+      setFilteredDogs(dogs); // If search is empty, show all dogs
+    }
+  }, [debounceSearch, dogs]); // Trigger the filter when debounceSearch or dogs change
+
+  // Charger les chiens lorsque le composant est monté
+  useEffect(() => {
+    fetchDogs();
+  }, [userToken]);
+
+  const handleDogPress = (dogName) => {
+    navigation.navigate('userProfile', { dogName });  // Navigue vers le profil du chien avec l'ID
+  };
 
   return (
     <ImageBackground
       source={require("../assets/BG_App.png")}
       style={styles.container}
     >
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={styles.iconBack}
-      >
-        <FontAwesome name="arrow-left" size={30} color="#0639DB" />
-      </TouchableOpacity>
-      <ScrollView style={styles.discussions}>
-        <Text style={styles.discussionsTitle}>Social</Text>
-        <View>
-            <TextInput
-            placeholder="Rechercher un contact"
+      <SafeAreaView>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.iconBack}
+        >
+          <FontAwesome name="arrow-left" size={30} color="#0639DB" />
+        </TouchableOpacity>
+        
+          <Text style={styles.discussionsTitle}>Social</Text>
+        <View style={styles.discussions}>
+          <TextInput
+            placeholder="Rechercher un chien"
             style={styles.searchBar}
             value={search}
-            onChangeText={handleSearch}
-            />
-            <FlatList
-                data={filteredFriends}
-                keyExtractor={(item) => item.id.toString()} // Remplacez `id` par la clé unique de vos objets
+            onChangeText={handleSearch} 
+            onFocus={() => setIsFocused(true)} 
+            onBlur={() => setIsFocused(false)}
+          />
+
+          {isFocused && ( 
+            isLoading ? (
+                <ActivityIndicator size="large" color="#0639DB" style={styles.loader} />
+            ) : (
+                <FlatList
+                style={styles.dogList}
+                data={filteredDogs.slice(0, 5)}
+                keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
                 renderItem={({ item }) => (
-                <TouchableOpacity style={styles.item}>
-                    <Text>{item.name}</Text>
+                <TouchableOpacity onPress={() => handleDogPress(item.name)}>
+                    <Text style={styles.dogName}> <FontAwesome name="paw" size={15} color={'#0639DB'}/>   {item.name}</Text>
                 </TouchableOpacity>
                 )}
-            />
-        </View>
-        <View>
-            <TouchableOpacity style={styles.button}>
-                <FontAwesome name="plus" size={30} color="white" />
-            </TouchableOpacity>
-        </View>
-      </ScrollView>
+              />
+            )
+          )}
+          </View>
+        <ScrollView style={styles.discussions}>
+            <Text>Bonjour</Text>
+        </ScrollView>
+      </SafeAreaView>
     </ImageBackground>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: -10,
   },
   iconBack: {
     position: "absolute",
@@ -118,13 +147,17 @@ const styles = StyleSheet.create({
     zIndex: 50,
   },
   discussions: {
-    justifyContent: 'space-around',
-    width: '100%'
+    width: '100%',
+    paddingHorizontal: 30,
+
   },
   discussionsTitle: {
     fontSize: 36,
     textAlign: 'left',
-    color: "#0639DB"
+    color: "#0639DB",
+    fontFamily: "Lexend_700Bold",
+    padding: 30,
+    marginTop: 70
   },
   searchBar: {
     width: "100%",
@@ -132,7 +165,37 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: 'white',
     paddingHorizontal: 10,
+    color: '#000000',
+    placeholderTextColor: '#999999',
   },
-})
+  emptyText: {
+    fontSize: 16,
+    color: "gray",
+    textAlign: 'center',
+    marginTop: 20,
+  },
+  item: {
+    padding: 15,
+    backgroundColor: '#fff',
+    marginVertical: 5,
+    borderRadius: 5,
+    elevation: 3,
+  },
+  dogName: {
+    flexDirection: 'row',
+    fontSize: 18,
+    color: '#4D4D4D',
+    fontFamily: 'Lexend_400Regular',
+    paddingVertical: 5
+  },
+  loader: {
+    marginTop: 20,
+  },
+  dogList: {
+    backgroundColor: 'white',
+    padding: 15,
+    color: '#0639DB'
+  }
+});
 
-export default DiscussionsScreen
+export default DiscussionsScreen;
