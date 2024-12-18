@@ -75,7 +75,7 @@ const UserProfileScreen = ({ navigation, route }) => {
           style={styles.profilePicture}
         />
 
-        <Text style={styles.name}>{userData?.name}</Text>
+        <Text style={styles.name}>{userData?.dogs[0].name}</Text>
         <Text style={styles.email}>{userData?.email}</Text>
       </ScrollView>
     </ImageBackground>
