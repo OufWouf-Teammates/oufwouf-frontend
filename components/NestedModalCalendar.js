@@ -157,7 +157,7 @@ if (!fontsLoaded) {
 
   return (
     <View>
-      <TouchableOpacity style={styles.buttonModalSettings} onPress={showOuterModal}><Text style={styles.textStyleSettings}>Ajouter un vaccin</Text></TouchableOpacity>
+      <TouchableOpacity style={styles.buttonModalSettings} onPress={showOuterModal}><Text style={styles.textStyleSettings}>Ajouter un vaccin à {props.name}</Text></TouchableOpacity>
 
       <Portal>
         <Modal visible={isOuterModalVisible} onDismiss={hideOuterModal} contentContainerStyle={styles.modalContainer}>
