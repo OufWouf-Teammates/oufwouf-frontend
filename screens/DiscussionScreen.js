@@ -84,7 +84,7 @@ const DiscussionsScreen = ({ navigation }) => {
   const handleDogPress = (dogName) => {
     console.log("Coucou");
     
-    // navigation.navigate('userProfile', { dogName });
+    navigation.navigate('userProfile', { dogName });
   };
 
   return (
@@ -110,31 +110,22 @@ const DiscussionsScreen = ({ navigation }) => {
             onFocus={() => setIsFocused(true)} 
             onBlur={() => setIsFocused(false)}
           />
-
-          {isFocused && (
-            isLoading ? (
-                <ActivityIndicator size="large" color="#0639DB" style={styles.loader} />
-            ) : filteredDogs.length === 0 ? (
-                <Text style={styles.emptyText}>Aucun chien trouvé</Text>
-            ) : (
-                <FlatList
-                  style={styles.dogList}
-                  data={filteredDogs.slice(0, 5)}
-                  dogList={(item, index) => item.id ? item.id.toString() : index.toString()}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      onPress={() => handleDogPress(item.name)}
-                      style={styles.dogItem}
-                    >
-                        <FontAwesome name="paw" size={15} color="#0639DB" /> 
-                      <Text style={styles.dogName}>
-                        {item.name}
-                      </Text>
-                    </TouchableOpacity>
-                  )}
-                />
-            )
-          )}
+            <FlatList
+                style={styles.dogList}
+                data={filteredDogs.slice(0, 5)}
+                dogList={(item, index) => item.id ? item.id.toString() : index.toString()}
+                renderItem={({ item }) => (
+                <TouchableOpacity
+                    onPress={() => handleDogPress(item.name)}
+                    style={styles.dogItem}
+                >
+                    <FontAwesome name="paw" size={15} color="#0639DB" /> 
+                    <Text style={styles.dogName}>
+                    {item.name}
+                    </Text>
+                </TouchableOpacity>
+                )}
+            />
         </View>
         <ScrollView style={styles.discussions}>
             <Text>Bonjour</Text>
