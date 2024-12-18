@@ -84,7 +84,7 @@ const DiscussionsScreen = ({ navigation }) => {
   }, [userToken]);
 
   const handleDogPress = (dogName) => {
-    navigation.navigate('DogProfileScreen', { dogName });  // Navigue vers le profil du chien avec l'ID
+    navigation.navigate('userProfile', { dogName });  // Navigue vers le profil du chien avec l'ID
   };
 
   return (
