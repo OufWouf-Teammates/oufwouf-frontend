@@ -70,13 +70,24 @@ const UserProfileScreen = ({ navigation, route }) => {
       <ScrollView contentContainerStyle={styles.innerContainer}>
         <Image
           source={{
-            uri: userData?.profilePicture || "https://via.placeholder.com/150",
+            uri: userData?.dogs[0].uri || "https://via.placeholder.com/150",
           }}
           style={styles.profilePicture}
         />
 
         <Text style={styles.name}>{userData?.dogs[0].name}</Text>
         <Text style={styles.email}>{userData?.email}</Text>
+
+        <Text style={styles.galleryTitle}>Galerie de photos</Text>
+        <View style={styles.photoGallery}>
+          {userData.photos.map((e, i) => (
+            <Image
+              key={i}
+              source={{ uri: e.uri }}
+              style={styles.galleryPhoto}
+            />
+          ))}
+        </View>
       </ScrollView>
     </ImageBackground>
   )
@@ -128,6 +139,26 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: "Lexend_400Regular",
     color: "#4D4D4D",
+  },
+  galleryTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    fontFamily: "Lexend_700Bold",
+    color: "#0639DB",
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  photoGallery: {
+    width: "90%",
+    flexDirection: "row",
+    flexWrap: "wrap", // Permet aux images de se placer sur plusieurs lignes
+    justifyContent: "space-between", // Espace entre les images
+  },
+  galleryPhoto: {
+    width: "48%", // La largeur des images pour remplir deux colonnes
+    aspectRatio: 1, // Les images sont carrées
+    borderRadius: 10,
+    marginBottom: 10,
   },
 })
 
