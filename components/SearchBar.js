@@ -106,7 +106,7 @@ const SearchBar = ({ gotToLatLng, createRedPoint, navigation }) => {
           onPress={() => navigation.navigate("Discussions")}
         >
           <FontAwesome
-            name="user"
+            name="envelope"
             size={16}
             color="#0639DB"
             style={styles.icon}
