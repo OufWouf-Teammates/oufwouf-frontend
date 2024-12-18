@@ -216,7 +216,8 @@ const styles = StyleSheet.create({
   titleBox: {
     justifyContent: "center",
     alignItems: "center",
-    height: 200,
+    marginTop: 50,
+    marginBottom: 30,
   },
   title: {
     color: "blue",
