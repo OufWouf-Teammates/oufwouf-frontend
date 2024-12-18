@@ -80,7 +80,7 @@ const UserProfileScreen = ({ navigation, route }) => {
 
         <Text style={styles.galleryTitle}>Galerie de photos</Text>
         <View style={styles.photoGallery}>
-          {userData.photos.map((e, i) => (
+          {userData.photos && userData?.photos.map((e, i) => (
             <Image
               key={i}
               source={{ uri: e.uri }}
