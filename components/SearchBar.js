@@ -103,7 +103,7 @@ const SearchBar = ({ gotToLatLng, createRedPoint, navigation }) => {
       <View style={styles.buttons}>
         <TouchableOpacity
           style={styles.buttonSocial}
-          onPress={() => goToSettings()}
+          onPress={() => navigation.navigate("Discussions")}
         >
           <FontAwesome
             name="user"
