@@ -12,13 +12,12 @@ import {
   View
 } from "react-native"
 import {
-    useFonts,
-    Lexend_400Regular,
-    Lexend_700Bold,
-  } from "@expo-google-fonts/lexend"
+  useFonts,
+  Lexend_400Regular,
+  Lexend_700Bold,
+} from "@expo-google-fonts/lexend"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import { useSelector } from "react-redux"
-import { useNavigation } from '@react-navigation/native';
 
 const DiscussionsScreen = ({ navigation }) => {
   const [search, setSearch] = useState('')
@@ -57,7 +56,6 @@ const DiscussionsScreen = ({ navigation }) => {
     setSearch(text);
   };
 
-  // Perform the actual filtering after debouncing the search input
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebounceSearch(search);
@@ -66,17 +64,17 @@ const DiscussionsScreen = ({ navigation }) => {
     return () => clearTimeout(timer); // Clean up the timer on each render to prevent memory leaks
   }, [search]);
 
-  // This effect filters the list based on the debounced search term
+
   useEffect(() => {
     if (debounceSearch) {
       const filtered = dogs.filter((dog) =>
         dog.name.toLowerCase().includes(debounceSearch.toLowerCase())
       );
-      setFilteredDogs(filtered); // Mettre à jour filteredDogs avec les résultats filtrés
+      setFilteredDogs(filtered); 
     } else {
-      setFilteredDogs(dogs); // If search is empty, show all dogs
+      setFilteredDogs(dogs);
     }
-  }, [debounceSearch, dogs]); // Trigger the filter when debounceSearch or dogs change
+  }, [debounceSearch, dogs]); 
 
   // Charger les chiens lorsque le composant est monté
   useEffect(() => {
@@ -84,7 +82,9 @@ const DiscussionsScreen = ({ navigation }) => {
   }, [userToken]);
 
   const handleDogPress = (dogName) => {
-    navigation.navigate('userProfile', { dogName });  // Navigue vers le profil du chien avec l'ID
+    console.log("Coucou");
+    
+    navigation.navigate('userProfile', { dogName });
   };
 
   return (
@@ -100,7 +100,7 @@ const DiscussionsScreen = ({ navigation }) => {
           <FontAwesome name="arrow-left" size={30} color="#0639DB" />
         </TouchableOpacity>
         
-          <Text style={styles.discussionsTitle}>Social</Text>
+        <Text style={styles.discussionsTitle}>Social</Text>
         <View style={styles.discussions}>
           <TextInput
             placeholder="Rechercher un chien"
@@ -110,24 +110,23 @@ const DiscussionsScreen = ({ navigation }) => {
             onFocus={() => setIsFocused(true)} 
             onBlur={() => setIsFocused(false)}
           />
-
-          {isFocused && ( 
-            isLoading ? (
-                <ActivityIndicator size="large" color="#0639DB" style={styles.loader} />
-            ) : (
-                <FlatList
+            <FlatList
                 style={styles.dogList}
                 data={filteredDogs.slice(0, 5)}
-                keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
+                dogList={(item, index) => item.id ? item.id.toString() : index.toString()}
                 renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => handleDogPress(item.name)}>
-                    <Text style={styles.dogName}> <FontAwesome name="paw" size={15} color={'#0639DB'}/>   {item.name}</Text>
+                <TouchableOpacity
+                    onPress={() => handleDogPress(item.name)}
+                    style={styles.dogItem}
+                >
+                    <FontAwesome name="paw" size={15} color="#0639DB" /> 
+                    <Text style={styles.dogName}>
+                    {item.name}
+                    </Text>
                 </TouchableOpacity>
                 )}
-              />
-            )
-          )}
-          </View>
+            />
+        </View>
         <ScrollView style={styles.discussions}>
             <Text>Bonjour</Text>
         </ScrollView>
@@ -149,7 +148,6 @@ const styles = StyleSheet.create({
   discussions: {
     width: '100%',
     paddingHorizontal: 30,
-
   },
   discussionsTitle: {
     fontSize: 36,
@@ -174,27 +172,32 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
   },
-  item: {
-    padding: 15,
-    backgroundColor: '#fff',
+  dogItem: {
+    flexDirection: 'row',
+    paddingVertical: 15,
+    paddingHorizontal: 20, 
+    backgroundColor: 'red',
     marginVertical: 5,
     borderRadius: 5,
     elevation: 3,
+    width: '100%',
+    zIndex: 1000
   },
   dogName: {
     flexDirection: 'row',
-    fontSize: 18,
+    fontSize: 20,
     color: '#4D4D4D',
     fontFamily: 'Lexend_400Regular',
-    paddingVertical: 5
   },
   loader: {
     marginTop: 20,
   },
   dogList: {
     backgroundColor: 'white',
+    width: '100%',
     padding: 15,
-    color: '#0639DB'
+    color: '#0639DB',
+    zIndex: 50
   }
 });
 

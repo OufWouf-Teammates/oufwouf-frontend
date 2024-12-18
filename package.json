@@ -53,6 +53,7 @@
     "react-native-calendar-picker": "^8.0.5",
     "react-native-calendars": "^1.1307.0",
     "react-native-dotenv": "^3.4.11",
+    "react-native-dropdown-picker": "^5.4.6",
     "react-native-element-dropdown": "^2.12.2",
     "react-native-gesture-handler": "^2.21.2",
     "react-native-get-random-values": "^1.11.0",
