@@ -45,7 +45,7 @@ const UserProfileScreen = ({ navigation, route }) => {
 
       console.log(response)
 
-      setUserData(response)
+      setUserData(response.user)
     })()
   }, [])
 
@@ -75,12 +75,8 @@ const UserProfileScreen = ({ navigation, route }) => {
           style={styles.profilePicture}
         />
 
-        <Text style={styles.name}>
-          {userData?.name || "Nom non disponible"}
-        </Text>
-        <Text style={styles.email}>
-          {userData?.email || "Email non disponible"}
-        </Text>
+        <Text style={styles.name}>{userData?.name}</Text>
+        <Text style={styles.email}>{userData?.email}</Text>
       </ScrollView>
     </ImageBackground>
   )
