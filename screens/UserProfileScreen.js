@@ -64,6 +64,7 @@ const UserProfileScreen = ({ navigation, route }) => {
       >
         <FontAwesome name="arrow-left" size={30} color="#0639DB" />
       </TouchableOpacity>
+      <Text>{route.dogName}</Text>
       <ScrollView
         contentContainerStyle={{
           flexGrow: 1,
