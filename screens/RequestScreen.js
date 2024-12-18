@@ -11,6 +11,7 @@ import {
   ScrollView,
   Linking,
   Alert,
+  RefreshControl
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
@@ -20,7 +21,7 @@ const RequestScreen = () => {
   const navigation = useNavigation();
   const token = useSelector((state) => state.user.value.token);
   const [request, setRequest] = useState([]);
-  const [refresh, setRefresh ] = useState(false)
+  const [refreshing, setRefreshing ] = React.useState(false)
 
   const fetchRequest = async () => {
     const response = await fetch(
@@ -37,8 +38,15 @@ const RequestScreen = () => {
   };
 
   useEffect(() => {
-    fetchRequest();
-  }, [refresh]);
+   if(!refreshing){ fetchRequest();}
+  }, [refreshing]);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   const handleAccept = async (id) => {
     try {
@@ -56,7 +64,6 @@ const RequestScreen = () => {
 
       const data = await response.json();
       Alert.alert("Succès !", "Nouveau Woofer dans vos amis!");
-      setRefresh(!refresh)
     } catch (error) {
       console.error(error);
     }
@@ -77,7 +84,6 @@ const RequestScreen = () => {
       console.log("response =>", response);
       const data = await response.json();
       Alert.alert(data.message);
-      setRefresh(!refresh)
     } catch (error) {
       console.error(error);
     }
@@ -94,6 +100,10 @@ const RequestScreen = () => {
       >
         <FontAwesome name="arrow-left" size={30} color="#0639DB" />
       </TouchableOpacity>
+      <ScrollView
+          contentContainerStyle={styles.scrollView}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
       <SafeAreaView>
         <View style={styles.titleBox}>
           <Text style={styles.title}>Demandes</Text>
@@ -137,7 +147,9 @@ const RequestScreen = () => {
             );
           })}
         </ScrollView>
+        
       </SafeAreaView>
+      </ScrollView>
     </ImageBackground>
   );
 };
