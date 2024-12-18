@@ -88,8 +88,16 @@ const DiscussionsScreen = ({ navigation, route }) => {
           </View>
           {messages &&
             messages.map((e, i) => (
-              <View key={i} style={styles.message}>
-                <Text>{e.content}</Text>
+              <View
+                key={i}
+                style={[
+                  styles.message,
+                  e?.isSentByUser ? styles.messageSent : null,
+                ]}
+              >
+                <Text style={e?.isSentByUser ? { color: "white" } : null}>
+                  {e.content}
+                </Text>
               </View>
             ))}
         </ScrollView>
@@ -121,13 +129,25 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 150,
   },
-  messages: {},
+  messages: {
+    flex: 1,
+    width: "100%",
+    paddingHorizontal: 10,
+    paddingTop: 20,
+  },
   message: {
-    backgroundColor: "white",
+    maxWidth: "70%",
     padding: 10,
-    margin: 20,
+    marginBottom: 10,
     borderRadius: 10,
     textAlign: "justify",
+    alignSelf: "flex-start",
+    backgroundColor: "#f0f0f0",
+  },
+  messageSent: {
+    alignSelf: "flex-end",
+    backgroundColor: "#0639DB",
+    color: "white",
   },
   iconBack: {
     position: "absolute",
