@@ -12,13 +12,12 @@ import {
   View
 } from "react-native"
 import {
-    useFonts,
-    Lexend_400Regular,
-    Lexend_700Bold,
-  } from "@expo-google-fonts/lexend"
+  useFonts,
+  Lexend_400Regular,
+  Lexend_700Bold,
+} from "@expo-google-fonts/lexend"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import { useSelector } from "react-redux"
-import { useNavigation } from '@react-navigation/native';
 
 const DiscussionsScreen = ({ navigation }) => {
   const [search, setSearch] = useState('')
@@ -84,7 +83,7 @@ const DiscussionsScreen = ({ navigation }) => {
   }, [userToken]);
 
   const handleDogPress = (dogName) => {
-    navigation.navigate('userProfile', { dogName });  // Navigue vers le profil du chien avec l'ID
+    navigation.navigate('userProfile', { dogName });
   };
 
   return (
@@ -100,7 +99,7 @@ const DiscussionsScreen = ({ navigation }) => {
           <FontAwesome name="arrow-left" size={30} color="#0639DB" />
         </TouchableOpacity>
         
-          <Text style={styles.discussionsTitle}>Social</Text>
+        <Text style={styles.discussionsTitle}>Social</Text>
         <View style={styles.discussions}>
           <TextInput
             placeholder="Rechercher un chien"
@@ -111,23 +110,30 @@ const DiscussionsScreen = ({ navigation }) => {
             onBlur={() => setIsFocused(false)}
           />
 
-          {isFocused && ( 
+          {isFocused && (
             isLoading ? (
                 <ActivityIndicator size="large" color="#0639DB" style={styles.loader} />
+            ) : filteredDogs.length === 0 ? (
+                <Text style={styles.emptyText}>Aucun chien trouvé</Text>
             ) : (
                 <FlatList
-                style={styles.dogList}
-                data={filteredDogs.slice(0, 5)}
-                keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
-                renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => handleDogPress(item.name)}>
-                    <Text style={styles.dogName}> <FontAwesome name="paw" size={15} color={'#0639DB'}/>   {item.name}</Text>
-                </TouchableOpacity>
-                )}
-              />
+                  style={styles.dogList}
+                  data={filteredDogs.slice(0, 5)}
+                  dogList={(item, index) => item.id ? item.id.toString() : index.toString()}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      onPress={() => handleDogPress(item.name)}
+                      style={styles.dogItem}
+                    >
+                      <Text style={styles.dogName}>
+                        <FontAwesome name="paw" size={15} color="#0639DB" /> {item.name}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                />
             )
           )}
-          </View>
+        </View>
         <ScrollView style={styles.discussions}>
             <Text>Bonjour</Text>
         </ScrollView>
@@ -149,7 +155,6 @@ const styles = StyleSheet.create({
   discussions: {
     width: '100%',
     paddingHorizontal: 30,
-
   },
   discussionsTitle: {
     fontSize: 36,
@@ -174,25 +179,27 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
   },
-  item: {
-    padding: 15,
-    backgroundColor: '#fff',
+  dogItem: {
+    paddingVertical: 15, // Augmentez le padding vertical pour rendre la zone de clic plus grande
+    paddingHorizontal: 20, // Ajoutez du padding horizontal pour étendre la zone
+    backgroundColor: 'red',
     marginVertical: 5,
     borderRadius: 5,
     elevation: 3,
+    width: '100%',
   },
   dogName: {
     flexDirection: 'row',
-    fontSize: 18,
+    fontSize: 20,
     color: '#4D4D4D',
     fontFamily: 'Lexend_400Regular',
-    paddingVertical: 5
   },
   loader: {
     marginTop: 20,
   },
   dogList: {
     backgroundColor: 'white',
+    width: '100%',
     padding: 15,
     color: '#0639DB'
   }
