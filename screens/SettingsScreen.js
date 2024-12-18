@@ -173,11 +173,11 @@ export default function SettingsScreen({ navigation }) {
                 onPress={() => setModalInfoVisible(true)}
             >
                 <FontAwesome name="paw" size={25} color="#0639DB" />
-                <Text style={styles.textButton}>Information personal</Text>
+                <Text style={styles.textButton}>Informations personnelles</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} activeOpacity={0.8}>
+            <TouchableOpacity style={styles.button} activeOpacity={0.8} onPress={() => navigation.navigate("Request")}>
                 <FontAwesome name="bell" size={25} color="#0639DB" />
-                <Text style={styles.textButton}>Notifications</Text>
+                <Text style={styles.textButton}>Demandes</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.button} activeOpacity={0.8}>
                 <FontAwesome name="calendar" size={25} color="#0639DB" />
@@ -244,7 +244,7 @@ export default function SettingsScreen({ navigation }) {
                     style={{ flex: 1 }}
                 >
                     <ScrollView contentContainerStyle={{ flexGrow: 1 }} >
-                        <Text style={styles.textStyleInfo}>Information personal</Text>
+                        <Text style={styles.textStyleInfo}>Informations personnelles</Text>
                         <Text style={styles.text}>Nouveau email </Text>
                         <TextInput
                             style={[
