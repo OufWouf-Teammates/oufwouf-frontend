@@ -109,23 +109,24 @@ const DiscussionsScreen = ({ navigation }) => {
             onFocus={() => setIsFocused(true)} 
             onBlur={() => setIsFocused(false)}
           />
-                <FlatList
-                  style={styles.dogList}
-                  data={filteredDogs.slice(0, 5)}
-                  dogList={(item, index) => item.id ? item.id.toString() : index.toString()}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity
-                      onPress={() => handleDogPress(item.name)}
-                      style={styles.dogItem}
-                    >
-                        <FontAwesome name="paw" size={15} color="#0639DB" /> 
-                      <Text style={styles.dogName}>
-                        {item.name}
-                      </Text>
-                    </TouchableOpacity>
-                  )}
-                />
-
+          {isFocused && (
+            <FlatList
+                style={styles.dogList}
+                data={filteredDogs.slice(0, 5)}
+                dogList={(item, index) => item.id ? item.id.toString() : index.toString()}
+                renderItem={({ item }) => (
+                <TouchableOpacity
+                    onPress={() => handleDogPress(item.name)}
+                    style={styles.dogItem}
+                >
+                    <FontAwesome name="paw" size={15} color="#0639DB" /> 
+                    <Text style={styles.dogName}>
+                    {item.name}
+                    </Text>
+                </TouchableOpacity>
+                )}
+            />
+         )}
         </View>
         <ScrollView style={styles.discussions}>
             <Text>Bonjour</Text>
