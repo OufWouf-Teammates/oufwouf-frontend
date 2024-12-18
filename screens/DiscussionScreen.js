@@ -56,7 +56,6 @@ const DiscussionsScreen = ({ navigation }) => {
     setSearch(text);
   };
 
-  // Perform the actual filtering after debouncing the search input
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebounceSearch(search);
@@ -65,17 +64,17 @@ const DiscussionsScreen = ({ navigation }) => {
     return () => clearTimeout(timer); // Clean up the timer on each render to prevent memory leaks
   }, [search]);
 
-  // This effect filters the list based on the debounced search term
+
   useEffect(() => {
     if (debounceSearch) {
       const filtered = dogs.filter((dog) =>
         dog.name.toLowerCase().includes(debounceSearch.toLowerCase())
       );
-      setFilteredDogs(filtered); // Mettre à jour filteredDogs avec les résultats filtrés
+      setFilteredDogs(filtered); 
     } else {
-      setFilteredDogs(dogs); // If search is empty, show all dogs
+      setFilteredDogs(dogs);
     }
-  }, [debounceSearch, dogs]); // Trigger the filter when debounceSearch or dogs change
+  }, [debounceSearch, dogs]); 
 
   // Charger les chiens lorsque le composant est monté
   useEffect(() => {
@@ -83,7 +82,9 @@ const DiscussionsScreen = ({ navigation }) => {
   }, [userToken]);
 
   const handleDogPress = (dogName) => {
-    navigation.navigate('userProfile', { dogName });
+    console.log("Coucou");
+    
+    // navigation.navigate('userProfile', { dogName });
   };
 
   return (
@@ -125,8 +126,9 @@ const DiscussionsScreen = ({ navigation }) => {
                       onPress={() => handleDogPress(item.name)}
                       style={styles.dogItem}
                     >
+                        <FontAwesome name="paw" size={15} color="#0639DB" /> 
                       <Text style={styles.dogName}>
-                        <FontAwesome name="paw" size={15} color="#0639DB" /> {item.name}
+                        {item.name}
                       </Text>
                     </TouchableOpacity>
                   )}
@@ -180,13 +182,15 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   dogItem: {
-    paddingVertical: 15, // Augmentez le padding vertical pour rendre la zone de clic plus grande
-    paddingHorizontal: 20, // Ajoutez du padding horizontal pour étendre la zone
+    flexDirection: 'row',
+    paddingVertical: 15,
+    paddingHorizontal: 20, 
     backgroundColor: 'red',
     marginVertical: 5,
     borderRadius: 5,
     elevation: 3,
     width: '100%',
+    zIndex: 1000
   },
   dogName: {
     flexDirection: 'row',
@@ -201,7 +205,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     width: '100%',
     padding: 15,
-    color: '#0639DB'
+    color: '#0639DB',
+    zIndex: 50
   }
 });
 
