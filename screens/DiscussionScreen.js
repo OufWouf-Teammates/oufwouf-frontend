@@ -22,14 +22,12 @@ import {
 import AppLoading from "expo-app-loading"
 import { useSelector } from "react-redux"
 
-const InterestPoint = ({ navigation, route }) => {
-  const { markerData } = route.params
+const DiscussionsScreen = ({ navigation, route }) => {
   const [search, setSearch] = useState('')
   const [friends, setFriends] = useState([]); 
   const [filteredFriends, setFilteredFriends] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const apiFriend = `${process.env.EXPO_PUBLIC_BACKEND_URL}friends`;
-  console.log(markerData)
 
   const userToken = useSelector((state) => state.user.value?.token)
   console.log(userToken)
@@ -137,4 +135,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default InterestPoint
+export default DiscussionsScreen
