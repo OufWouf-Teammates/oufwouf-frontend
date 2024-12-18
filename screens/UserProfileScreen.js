@@ -33,12 +33,13 @@ import NestedModalCalendar from "../components/NestedModalCalendar"
 
 const UserProfileScreen = ({ navigation, route }) => {
   const token = useSelector((state) => state.user.value.token)
+  const { dogName } = route.params
   const [userData, setUserData] = useState(null)
   const apiGetUser = `${process.env.EXPO_PUBLIC_BACKEND_URL}users/dogname`
 
   useEffect(() => {
     ;(async () => {
-      const getDog = await fetch(`${apiGetUser}?name=${route.name}`)
+      const getDog = await fetch(`${apiGetUser}?name=${dogName}`)
 
       const response = await getDog.json()
 
