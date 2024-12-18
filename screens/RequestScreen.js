@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
   ScrollView,
   Linking,
+  Alert,
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
@@ -19,6 +20,7 @@ const RequestScreen = () => {
   const navigation = useNavigation();
   const token = useSelector((state) => state.user.value.token);
   const [request, setRequest] = useState([]);
+  const [refresh, setRefresh ] = useState(false)
 
   const fetchRequest = async () => {
     const response = await fetch(
@@ -36,15 +38,50 @@ const RequestScreen = () => {
 
   useEffect(() => {
     fetchRequest();
-  }, []);
+  }, [refresh]);
 
-  const handleAccept = (id) => {
+  const handleAccept = async (id) => {
+    try {
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_BACKEND_URL}friends/addFriend/${id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ decision: "accepted" }),
+        }
+      );
+      console.log("response =>", response);
 
-  }
+      const data = await response.json();
+      Alert.alert("Succès !", "Nouveau Woofer dans vos amis!");
+      setRefresh(!refresh)
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-  const handleDecline = (id) => {
-    
-  }
+  const handleDecline = async (id) => {
+    try {
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_BACKEND_URL}/friends/addFriend/${id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ decision: "rejected" }),
+        }
+      );
+      console.log("response =>", response);
+      const data = await response.json();
+      Alert.alert(data.message);
+      setRefresh(!refresh)
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <ImageBackground
@@ -65,10 +102,10 @@ const RequestScreen = () => {
           {request.map((requestItem) => {
             const { from, _id } = requestItem;
             const profileImage =
-              (from.dogs && from.dogs[0] ? from.dogs[0].uri : "")
+              from.dogs && from.dogs[0] ? from.dogs[0].uri : "";
             const name =
               from.dogs && from.dogs[0] ? from.dogs[0].name : "Sans nom";
-console.log(from.dogs[0])
+            console.log(from.dogs[0]);
             return (
               <View key={_id} style={styles.requestContainer}>
                 <View style={styles.header}>
