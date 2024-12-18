@@ -32,7 +32,6 @@ import { Provider as PaperProvider } from "react-native-paper"
 import NestedModalCalendar from "../components/NestedModalCalendar"
 
 const UserProfileScreen = ({ navigation, route }) => {
-  const navigation = useNavigation()
   const token = useSelector((state) => state.user.value.token)
   const [dogData, setDogData] = useState([])
   const apiGetUser = `${process.env.EXPO_PUBLIC_BACKEND_URL}`
