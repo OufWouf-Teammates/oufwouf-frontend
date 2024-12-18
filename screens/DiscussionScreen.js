@@ -82,8 +82,7 @@ const DiscussionsScreen = ({ navigation }) => {
   }, [userToken]);
 
   const handleDogPress = (dogName) => {
-    console.log("Coucou");
-    
+
     navigation.navigate('userProfile', { dogName });
   };
 
@@ -126,6 +125,7 @@ const DiscussionsScreen = ({ navigation }) => {
                     </TouchableOpacity>
                   )}
                 />
+
         </View>
         <ScrollView style={styles.discussions}>
             <Text>Bonjour</Text>
@@ -176,7 +176,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingVertical: 15,
     paddingHorizontal: 20, 
-    backgroundColor: 'red',
     marginVertical: 5,
     borderRadius: 5,
     elevation: 3,
