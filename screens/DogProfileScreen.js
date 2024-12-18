@@ -207,7 +207,7 @@ const { showActionSheetWithOptions } = useActionSheet()
               });
         
               // Effectuer l'appel réseau pour mettre à jour l'image
-              const response = await fetch(`${apiNewDog}modifier/${dogId}`, {
+              const response = await fetch(`${apiNewDog}/modifier/${dogId}`, {
                 method: "PUT",
                 headers: {
                   Authorization: `Bearer ${token}`, // Assurez-vous que `token` est bien défini
