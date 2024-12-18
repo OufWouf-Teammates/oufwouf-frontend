@@ -28,6 +28,8 @@ import {
 import * as ImagePicker from "expo-image-picker"
 import * as MediaLibrary from "expo-media-library"
 import { useNavigation } from '@react-navigation/native';
+import { Provider as PaperProvider } from 'react-native-paper';
+import NestedModalCalendar from '../components/NestedModalCalendar';
 
 const DogProfileScreen = () => {
   const navigation = useNavigation();
@@ -95,6 +97,9 @@ const { showActionSheetWithOptions } = useActionSheet()
 
     }, [isUpdated, fontsLoaded, visibleModalDog])
 
+    const handleUpdate = () => {
+      setIsUpdated(!isUpdated); // Vous pouvez changer la valeur pour forcer la mise à jour
+    };
 
   
     if (!fontsLoaded) {
@@ -378,6 +383,7 @@ const { showActionSheetWithOptions } = useActionSheet()
                 <FontAwesome name="paw" size={25} color="#0639DB" />
                 <Text style={styles.textStyleSettings}>Modifier les  informations de {data?.name}</Text>
             </TouchableOpacity>
+            <NestedModalCalendar dog={data?.ID} onUpdate={handleUpdate} />
             
         </View>
         {/*Modal modification du chien*/}
@@ -462,9 +468,11 @@ const { showActionSheetWithOptions } = useActionSheet()
         <FontAwesome name="arrow-left" size={30} color="#0639DB" />
       </TouchableOpacity>
       <ScrollView contentContainerStyle={{ flexGrow: 1, width: "100%", paddingBottom: 20 }}>
+      <PaperProvider>
       <SafeAreaView style={styles.innerContainer}>
         {dogs}
       </SafeAreaView>
+      </PaperProvider>
       </ScrollView>
     </ImageBackground>
   )
@@ -491,7 +499,7 @@ const styles = StyleSheet.create({
     borderRadius: 500,
   },
   infos: {
-    width: "80%",
+    width: "90%",
     gap: 20,
   },
   demiBox: {
