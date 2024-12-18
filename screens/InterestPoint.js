@@ -17,7 +17,6 @@ import {
   Lexend_400Regular,
   Lexend_700Bold,
 } from "@expo-google-fonts/lexend"
-import AppLoading from "expo-app-loading"
 import { useSelector } from "react-redux"
 
 const InterestPoint = ({ navigation, route }) => {
