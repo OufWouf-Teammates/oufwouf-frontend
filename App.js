@@ -16,6 +16,7 @@ import SettingsScreen from "./screens/SettingsScreen"
 import BookmarksScreen from "./screens/BookmarksScreen.js"
 import DiscussionsScreen from "./screens/DiscussionScreen.js"
 import ChatScreen from "./screens/ChatScreen.js"
+import UserProfileScreen from "./screens/UserProfileScreen.js"
 
 import { persistStore, persistReducer } from "redux-persist"
 import { PersistGate } from "redux-persist/integration/react"
@@ -102,6 +103,12 @@ export default function App() {
             <Stack.Screen
               name="Chat"
               component={ChatScreen}
+              options={{ headerShown: false }}
+            />
+
+            <Stack.Screen
+              name="userProfile"
+              component={UserProfileScreen}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>
