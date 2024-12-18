@@ -2,15 +2,10 @@ import {
   StyleSheet,
   Text,
   View,
-  SafeAreaView,
   ImageBackground,
   Image,
-  TextInput,
   TouchableOpacity,
   ScrollView,
-  Modal,
-  KeyboardAvoidingView,
-  Platform,
 } from "react-native"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import {
@@ -18,42 +13,29 @@ import {
   Lexend_400Regular,
   Lexend_700Bold,
 } from "@expo-google-fonts/lexend"
-import * as SplashScreen from "expo-splash-screen"
 import { useEffect, useState } from "react"
-import { useSelector } from "react-redux"
-import {
-  ActionSheetProvider,
-  useActionSheet,
-} from "@expo/react-native-action-sheet"
-import * as ImagePicker from "expo-image-picker"
-import * as MediaLibrary from "expo-media-library"
-import { useNavigation } from "@react-navigation/native"
-import { Provider as PaperProvider } from "react-native-paper"
-import NestedModalCalendar from "../components/NestedModalCalendar"
 
 const UserProfileScreen = ({ navigation, route }) => {
-  const token = useSelector((state) => state.user.value.token)
   const { dogName } = route.params
   const [userData, setUserData] = useState(null)
+  const [galerie, setGalerie] = useState(null)
   const apiGetUser = `${process.env.EXPO_PUBLIC_BACKEND_URL}users/dogname`
-
-  useEffect(() => {
-    ;(async () => {
-      const getDog = await fetch(`${apiGetUser}?name=${dogName}`)
-
-      const response = await getDog.json()
-
-      console.log(response)
-
-      setUserData(response.user)
-    })()
-  }, [])
 
   //Nécessaire pour la configuration des fonts
   const [fontsLoaded] = useFonts({
     Lexend_400Regular,
     Lexend_700Bold,
   })
+
+  useEffect(() => {
+    ;(async () => {
+      const getDog = await fetch(`${apiGetUser}?name=${dogName}`)
+
+      const response = await getDog.json()
+      setUserData(response?.user)
+      setGalerie(response?.photos)
+    })()
+  }, [])
 
   return (
     <ImageBackground
@@ -80,13 +62,14 @@ const UserProfileScreen = ({ navigation, route }) => {
 
         <Text style={styles.galleryTitle}>Galerie de photos</Text>
         <View style={styles.photoGallery}>
-          {userData.photos && userData?.photos.map((e, i) => (
-            <Image
-              key={i}
-              source={{ uri: e.uri }}
-              style={styles.galleryPhoto}
-            />
-          ))}
+          {galerie &&
+            galerie.map((e, i) => (
+              <Image
+                key={i}
+                source={{ uri: e.uri }}
+                style={styles.galleryPhoto}
+              />
+            ))}
         </View>
       </ScrollView>
     </ImageBackground>
@@ -151,12 +134,13 @@ const styles = StyleSheet.create({
   photoGallery: {
     width: "90%",
     flexDirection: "row",
-    flexWrap: "wrap", // Permet aux images de se placer sur plusieurs lignes
-    justifyContent: "space-between", // Espace entre les images
+    flexWrap: "wrap",
+    justifyContent: "space-between",
   },
   galleryPhoto: {
-    width: "48%", // La largeur des images pour remplir deux colonnes
-    aspectRatio: 1, // Les images sont carrées
+    width: "48%",
+    height: 100,
+    aspectRatio: 1,
     borderRadius: 10,
     marginBottom: 10,
   },
