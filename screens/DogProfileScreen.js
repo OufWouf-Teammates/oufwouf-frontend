@@ -375,7 +375,7 @@ const { showActionSheetWithOptions } = useActionSheet()
                 <FontAwesome name="paw" size={25} color="#0639DB" />
                 <Text style={styles.textStyleSettings}>Modifier les  informations de {data?.name}</Text>
             </TouchableOpacity>
-            <NestedModalCalendar dog={data?.ID} onUpdate={handleUpdate} />
+            <NestedModalCalendar dog={data?.ID} name={data?.name} onUpdate={handleUpdate} />
             
         </View>
         {/*Modal modification du chien*/}
