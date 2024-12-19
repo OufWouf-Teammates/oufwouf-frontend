@@ -39,8 +39,6 @@ const DiscussionsScreen = ({ navigation }) => {
       })
       const response = await getRooms.json()
 
-      console.log(response)
-
       setRooms(response.rooms)
     })()
   }, [])
@@ -143,19 +141,23 @@ const DiscussionsScreen = ({ navigation }) => {
         </View>
         <ScrollView style={styles.discussions}>
           {rooms &&
-            rooms.map((room, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.chatCard}
-                onPress={() => navigation.navigate("Chat", { dogName: "Chat" })}
-              >
-                <Text style={styles.chatId}>{room._id}</Text>
-                <Text style={styles.chatPreview}>
-                  {/* Exemple : Ajoute un aperçu du dernier message */}
-                  Dernier message... (exemple)
-                </Text>
-              </TouchableOpacity>
-            ))}
+            rooms.map((room, index) => {
+              return (
+                <TouchableOpacity
+                  key={index}
+                  style={styles.chatCard}
+                  onPress={() =>
+                    navigation.navigate("Chat", { roomId: room._id })
+                  }
+                >
+                  <Text style={styles.chatId}>{room.name[0]}</Text>
+                  <Text style={styles.chatPreview}>
+                    {/* Exemple : Ajoute un aperçu du dernier message */}
+                    Dernier message... (exemple)
+                  </Text>
+                </TouchableOpacity>
+              )
+            })}
         </ScrollView>
       </SafeAreaView>
     </ImageBackground>
