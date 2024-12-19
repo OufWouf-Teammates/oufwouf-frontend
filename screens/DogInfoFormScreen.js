@@ -324,7 +324,7 @@ const DogInfoFormScreen = () => {
       console.log("ResponseData", responseData);
       
       if (responseData.result) {
-        dispatch(getDogName(responseData.name)) 
+        dispatch(getDogName({name: responseData.name})) 
         console.log('seData')
       }else{
         console.log('response')
