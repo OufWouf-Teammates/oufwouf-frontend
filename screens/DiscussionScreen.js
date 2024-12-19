@@ -139,7 +139,7 @@ const DiscussionsScreen = ({ navigation }) => {
             />
           )}
         </View>
-        {/*<ScrollView style={styles.discussions}>
+        <ScrollView style={styles.discussions}>
           {rooms &&
             rooms.map((room, index) => {
               return (
@@ -152,13 +152,13 @@ const DiscussionsScreen = ({ navigation }) => {
                 >
                   <Text style={styles.chatId}>{room.name[0]}</Text>
                   <Text style={styles.chatPreview}>
-                    { Exemple : Ajoute un aperçu du dernier message }
+                    { /*Exemple : Ajoute un aperçu du dernier message */}
                     Dernier message... (exemple)
                   </Text>
                 </TouchableOpacity>
               )
             })}
-        </ScrollView>*/}
+        </ScrollView>
       </SafeAreaView>
     </ImageBackground>
   )
