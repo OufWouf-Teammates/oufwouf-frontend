@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   ScrollView,
+  RefreshControl,
 } from "react-native"
 import {
   useFonts,
@@ -19,7 +20,7 @@ import {
 import * as SplashScreen from "expo-splash-screen"
 
 import { useIsFocused } from "@react-navigation/native"
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { useNavigation } from "@react-navigation/native"
 
@@ -33,6 +34,7 @@ function Gallery() {
   const [editedDescription, setEditedDescription] = useState("")
   const [selectedUri, setSelectedUri] = useState(null)
   const isFocused = useIsFocused()
+  const [refreshing, setRefreshing] = React.useState(false);
 
   const fetchGalerie = async () => {
     try {
@@ -53,7 +55,14 @@ function Gallery() {
 
   useEffect(() => {
     fetchGalerie()
-  }, [isFocused])
+  }, [isFocused, refreshing])
+  
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
   const handleDescription = async (uri) => {
     try {
@@ -135,7 +144,10 @@ function Gallery() {
         <View style={styles.titleBox}>
           <Text style={styles.title}>Gallerie</Text>
         </View>
-        <ScrollView style={styles.scroll}>
+        <ScrollView style={styles.scroll}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
           {galerie &&
             galerie.map((e) => (
               <View key={e._id} style={styles.card}>
