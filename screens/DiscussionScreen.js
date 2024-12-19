@@ -24,8 +24,7 @@ const DiscussionsScreen = ({ navigation }) => {
   const [dogs, setDogs] = useState([])
   const [rooms, setRooms] = useState([])
   const [filteredDogs, setFilteredDogs] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [isFocused, setIsFocused] = useState(false) // Track if TextInput is focused
+  const [isFocused, setIsFocused] = useState(false)
   const [debounceSearch, setDebounceSearch] = useState("")
   const apiDog = `${process.env.EXPO_PUBLIC_BACKEND_URL}dogs/`
   const apiRoom = `${process.env.EXPO_PUBLIC_BACKEND_URL}rooms/all`
@@ -33,9 +32,14 @@ const DiscussionsScreen = ({ navigation }) => {
 
   useEffect(() => {
     ;(async () => {
-      const getRooms = await fetch(apiRoom)
-
+      const getRooms = await fetch(apiRoom, {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      })
       const response = await getRooms.json()
+
+      console.log(response)
 
       setRooms(response.rooms)
     })()
@@ -115,8 +119,8 @@ const DiscussionsScreen = ({ navigation }) => {
             placeholder="Rechercher un chien"
             style={styles.searchBar}
             value={search}
-            onChangeText={handleSearch} 
-            onFocus={() => setIsFocused(true)} 
+            onChangeText={handleSearch}
+            onFocus={() => setIsFocused(true)}
           />
           {isFocused && (
             <FlatList
@@ -139,10 +143,18 @@ const DiscussionsScreen = ({ navigation }) => {
         </View>
         <ScrollView style={styles.discussions}>
           {rooms &&
-            rooms.map((e, i) => (
-              <View key={i}>
-                <Text>{e.name}</Text>
-              </View>
+            rooms.map((room, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.chatCard}
+                onPress={() => navigation.navigate("Chat", { dogName: "Chat" })}
+              >
+                <Text style={styles.chatId}>{room._id}</Text>
+                <Text style={styles.chatPreview}>
+                  {/* Exemple : Ajoute un aperçu du dernier message */}
+                  Dernier message... (exemple)
+                </Text>
+              </TouchableOpacity>
             ))}
         </ScrollView>
       </SafeAreaView>
@@ -161,6 +173,7 @@ const styles = StyleSheet.create({
     zIndex: 50,
   },
   discussions: {
+    padding: 10,
     width: "100%",
     paddingHorizontal: 30,
   },
@@ -212,6 +225,27 @@ const styles = StyleSheet.create({
     padding: 15,
     color: "#0639DB",
     zIndex: 50,
+  },
+  chatCard: {
+    backgroundColor: "#ffffff",
+    borderRadius: 8,
+    padding: 15,
+    marginBottom: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  chatId: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  chatPreview: {
+    marginTop: 5,
+    fontSize: 14,
+    color: "#555",
   },
 })
 
