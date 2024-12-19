@@ -24,6 +24,7 @@
         ],
         "NSCameraUsageDescription": "Cette application a besoin d'accéder à votre woof caméra.",
         "NSPhotoLibraryUsageDescription": "Cette application a besoin d'accéder à votre woof gallery.",
+        "NSMicrophoneUsageDescription": "Cette application a besoin d'accéder à votre microphone pour enregistrer des messages audio.",
         "supportsTablet": true,
         "config": {
           "googleMapsApiKey": "AIzaSyBSQzGQfgR1VmOHpO0CY_S1tadFwViMQc8"
@@ -43,7 +44,8 @@
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE",
         "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION"
+        "ACCESS_COARSE_LOCATION",
+        "RECORD_AUDIO"
       ],
       "package": "com.lacapsule.oufwouf"
     },

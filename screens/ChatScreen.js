@@ -23,26 +23,31 @@ import AppLoading from "expo-app-loading"
 import { useSelector } from "react-redux"
 
 const DiscussionsScreen = ({ navigation, route }) => {
+  const { roomId } = route.params
   const [search, setSearch] = useState("")
-  const [dogName, setDogName] = useState(route.dogName)
   const [messages, setMessages] = useState([])
   const apiRoom = `${process.env.EXPO_PUBLIC_BACKEND_URL}rooms`
   const apiMessage = `${process.env.EXPO_PUBLIC_BACKEND_URL}messages`
   const userToken = useSelector((state) => state.user.value?.token)
-  console.log(userToken)
+  const [toggle, setToggle] = useState(false)
 
   useEffect(() => {
     ;(async () => {
-      const getMessages = await fetch(`${apiRoom}?name=${dogName}`)
+      const getMessages = await fetch(`${apiRoom}?room=${roomId}`, {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+          "Content-Type": "application/json",
+        },
+      })
 
       const response = await getMessages.json()
 
       setMessages(response.messages)
     })()
-  }, [])
+  }, [toggle])
 
   const sendMessage = async () => {
-    const send = await fetch(`${apiMessage}?name=${dogName}`, {
+    const send = await fetch(`${apiMessage}?room=${roomId}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${userToken}`,
@@ -54,6 +59,9 @@ const DiscussionsScreen = ({ navigation, route }) => {
     })
 
     const response = await send.json()
+
+    setToggle((prev) => !prev)
+    setSearch("")
   }
 
   return (
@@ -67,32 +75,19 @@ const DiscussionsScreen = ({ navigation, route }) => {
       >
         <FontAwesome name="arrow-left" size={30} color="#0639DB" />
       </TouchableOpacity>
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.content}>
         <View style={styles.header}></View>
-        <ScrollView style={styles.messages}>
-          <View style={styles.message}>
-            <Text>
-              voil voila voilavoilavoila voilavoilavoilavoilavoilavoilavoila
-              voila voila voila voila voilavoilavoila voilavoila voila
-              voilavoilaa
-            </Text>
-          </View>
-          <View style={styles.message}>
-            <Text>voila</Text>
-          </View>
-          <View style={styles.message}>
-            <Text>voila</Text>
-          </View>
-          <View style={styles.message}>
-            <Text>voila</Text>
-          </View>
+        <ScrollView
+          contentContainerStyle={styles.messages}
+          style={styles.messages}
+        >
           {messages &&
             messages.map((e, i) => (
               <View
                 key={i}
                 style={[
                   styles.message,
-                  e?.isSentByUser ? styles.messageSent : null,
+                  // e?.isSentByUser ? styles.messageSent : null,
                 ]}
               >
                 <Text style={e?.isSentByUser ? { color: "white" } : null}>
@@ -112,7 +107,7 @@ const DiscussionsScreen = ({ navigation, route }) => {
             style={styles.iconSearch}
             onPress={() => sendMessage()}
           >
-            <FontAwesome name="arrow-right" size={25} color="#0639DB" />
+            <FontAwesome name="paper-plane" size={25} color="#0639DB" />
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -123,6 +118,12 @@ const DiscussionsScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    width: "100%",
+    alignItems: "center",
+  },
+  content: {
+    flex: 1,
+    width: "100%",
     alignItems: "center",
   },
   header: {
@@ -142,12 +143,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     textAlign: "justify",
     alignSelf: "flex-start",
-    backgroundColor: "#f0f0f0",
-  },
-  messageSent: {
-    alignSelf: "flex-end",
-    backgroundColor: "#0639DB",
-    color: "white",
+    backgroundColor: "white",
   },
   iconBack: {
     position: "absolute",

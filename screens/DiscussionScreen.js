@@ -37,11 +37,7 @@ const DiscussionsScreen = ({ navigation }) => {
           Authorization: `Bearer ${userToken}`,
         },
       })
-
       const response = await getRooms.json()
-
-      console.log(response)
-      console.log(userToken)
 
       setRooms(response.rooms)
     })()
@@ -145,11 +141,23 @@ const DiscussionsScreen = ({ navigation }) => {
         </View>
         <ScrollView style={styles.discussions}>
           {rooms &&
-            rooms.map((e, i) => (
-              <View key={i}>
-                <Text>{e.name}</Text>
-              </View>
-            ))}
+            rooms.map((room, index) => {
+              return (
+                <TouchableOpacity
+                  key={index}
+                  style={styles.chatCard}
+                  onPress={() =>
+                    navigation.navigate("Chat", { roomId: room._id })
+                  }
+                >
+                  <Text style={styles.chatId}>{room.name[0]}</Text>
+                  <Text style={styles.chatPreview}>
+                    {/* Exemple : Ajoute un aperçu du dernier message */}
+                    Dernier message... (exemple)
+                  </Text>
+                </TouchableOpacity>
+              )
+            })}
         </ScrollView>
       </SafeAreaView>
     </ImageBackground>
@@ -167,6 +175,7 @@ const styles = StyleSheet.create({
     zIndex: 50,
   },
   discussions: {
+    padding: 10,
     width: "100%",
     paddingHorizontal: 30,
   },
@@ -218,6 +227,27 @@ const styles = StyleSheet.create({
     padding: 15,
     color: "#0639DB",
     zIndex: 50,
+  },
+  chatCard: {
+    backgroundColor: "#ffffff",
+    borderRadius: 8,
+    padding: 15,
+    marginBottom: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  chatId: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  chatPreview: {
+    marginTop: 5,
+    fontSize: 14,
+    color: "#555",
   },
 })
 
