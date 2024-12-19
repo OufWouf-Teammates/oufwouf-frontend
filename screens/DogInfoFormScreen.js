@@ -30,12 +30,14 @@ import {
   ActionSheetProvider,
   useActionSheet,
 } from "@expo/react-native-action-sheet"
-import { useSelector } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import { useNavigation } from "@react-navigation/native"
 import pako from 'pako';
+import { getDogName } from "../reducers/dog"
 
 const DogInfoFormScreen = () => {
+  const dispatch = useDispatch()
   const navigation = useNavigation()
   const userToken = useSelector((state) => state.user.value.token)
 
@@ -322,6 +324,7 @@ const DogInfoFormScreen = () => {
       console.log("ResponseData", responseData);
       
       if (responseData.result) {
+        dispatch(getDogName(responseData.name)) 
         console.log('seData')
       }else{
         console.log('response')
