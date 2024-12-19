@@ -230,6 +230,7 @@ const { showActionSheetWithOptions } = useActionSheet()
                     dog._id === dogId ? { ...dog, uri: imageUri } : dog
                   )
                 );
+                setIsUpdated(!isUpdated);
                 
               } else {
                 console.error("Erreur serveur :", responseData);

@@ -101,6 +101,9 @@ function BookmarksScreen() {
         <FontAwesome name="arrow-left" size={30} color="#0639DB" />
       </TouchableOpacity>
       <SafeAreaView style={styles.content}>
+        <View style={styles.titleBox}>
+          <Text style={styles.title}>Bookmarks</Text>
+        </View>
         <ScrollView style={styles.scroll}>
           {bookmarks &&
             bookmarks.map((e, i) => (
@@ -144,7 +147,8 @@ const styles = StyleSheet.create({
     zIndex: 50,
   },
   scroll: {
-    marginTop: 80,
+    marginBottom: 20,
+    paddingBottom: 20,
   },
   textFont: {
     fontSize: 18,
@@ -153,7 +157,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   content: {
-    width: "100%",
+    flex: 1,
   },
   cardInfos: {
     flexDirection: "row",
@@ -190,6 +194,17 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 10,
     borderTopLeftRadius: 10,
     marginBottom: 10,
+  },
+  titleBox: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 50,
+    marginBottom: 30,
+  },
+  title: {
+    color: "blue",
+    fontWeight: "bold",
+    fontSize: 35,
   },
 })
 
