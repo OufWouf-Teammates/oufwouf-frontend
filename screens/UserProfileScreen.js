@@ -6,36 +6,65 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
-} from "react-native"
-import FontAwesome from "react-native-vector-icons/FontAwesome"
+  Alert
+} from "react-native";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 import {
   useFonts,
   Lexend_400Regular,
   Lexend_700Bold,
-} from "@expo-google-fonts/lexend"
-import { useEffect, useState } from "react"
+} from "@expo-google-fonts/lexend";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 const UserProfileScreen = ({ navigation, route }) => {
-  const { dogName } = route.params
-  const [userData, setUserData] = useState(null)
-  const [galerie, setGalerie] = useState(null)
-  const apiGetUser = `${process.env.EXPO_PUBLIC_BACKEND_URL}users/dogname`
+  const { dogName } = route.params;
+  const [userData, setUserData] = useState(null);
+  const [galerie, setGalerie] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const apiGetUser = `${process.env.EXPO_PUBLIC_BACKEND_URL}users/dogname`;
+  const token = useSelector((state) => state.user.value.token);
 
   //Nécessaire pour la configuration des fonts
   const [fontsLoaded] = useFonts({
     Lexend_400Regular,
     Lexend_700Bold,
-  })
+  });
 
   useEffect(() => {
-    ;(async () => {
-      const getDog = await fetch(`${apiGetUser}?name=${dogName}`)
+    (async () => {
+      const getDog = await fetch(`${apiGetUser}?name=${dogName}`);
 
-      const response = await getDog.json()
-      setUserData(response?.user)
-      setGalerie(response?.photos)
-    })()
-  }, [])
+      const response = await getDog.json();
+      setUserData(response?.user);
+      setGalerie(response?.photos);
+    })();
+  }, []);
+
+  const sendFriendRequest = async (receiverId) => {
+    try {
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_BACKEND_URL}friends/request/${token}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ receiverId }),
+        }
+      );
+      console.log("response =>", response);
+
+      const data = await response.json();
+      if(data.result){
+        Alert.alert("Succès !", "Demande de Woof envoyée !");
+      } else {
+        Alert.alert("Demande de Woof déjà envoyée !");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <ImageBackground
@@ -48,7 +77,6 @@ const UserProfileScreen = ({ navigation, route }) => {
       >
         <FontAwesome name="arrow-left" size={30} color="#0639DB" />
       </TouchableOpacity>
-
       <ScrollView contentContainerStyle={styles.innerContainer}>
         <Image
           source={{
@@ -56,7 +84,17 @@ const UserProfileScreen = ({ navigation, route }) => {
           }}
           style={styles.profilePicture}
         />
-
+        <TouchableOpacity
+          style={[styles.button, loading && styles.buttonDisabled]} // Si loading, applique le style désactivé
+          onPress={() => sendFriendRequest(userData?._id)}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator size="small" color="#fff" /> // Afficher un loader pendant l'envoi
+          ) : (
+            <Text style={styles.buttonText}>Ajouter</Text>
+          )}
+        </TouchableOpacity>
         <Text style={styles.name}>{userData?.dogs[0].name}</Text>
         <Text style={styles.email}>{userData?.email}</Text>
 
@@ -73,8 +111,8 @@ const UserProfileScreen = ({ navigation, route }) => {
         </View>
       </ScrollView>
     </ImageBackground>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -144,6 +182,33 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
   },
-})
+  buttonContainer: {
+    width: "100%",
+    marginVertical: 10,
+  },
+  button: {
+    backgroundColor: "#EAD32A",
+    paddingVertical: 15,
+    paddingHorizontal: 25,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+  },
+  buttonText: {
+    color: "#fff", // Couleur du texte en blanc
+    fontSize: 16, // Taille du texte
+    fontWeight: "bold", // Mettre le texte en gras
+  },
+  buttonDisabled: {
+    backgroundColor: "#B0BEC5", // Couleur gris clair pour un bouton désactivé
+    elevation: 0, // Pas d'ombre pour un bouton désactivé
+    shadowOpacity: 0, // Pas d'ombre
+  },
+});
 
-export default UserProfileScreen
+export default UserProfileScreen;
