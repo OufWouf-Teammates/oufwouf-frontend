@@ -40,7 +40,6 @@ export default function ConnectionScreen({ navigation }) {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data)
           if (data.result) {
             navigation.navigate("Map")
           } else {
@@ -78,10 +77,10 @@ export default function ConnectionScreen({ navigation }) {
   }
 
   const connectToAccount = (objConn) => {
-    console.log(`${process.env.EXPO_PUBLIC_BACKEND_URL}users/signin`)
+
 
     if (objConn.email && objConn.password) {
-      console.log(`${process.env.EXPO_PUBLIC_BACKEND_URL}users/signin`)
+
 
       fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}users/signin`, {
         method: "POST",
@@ -93,7 +92,6 @@ export default function ConnectionScreen({ navigation }) {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data)
           if (data.result) {
             dispatch(
               connectUser({
@@ -108,12 +106,10 @@ export default function ConnectionScreen({ navigation }) {
         })
         .catch((error) => console.error(error))
 
-      console.log(objConn)
     }
   }
 
   const createAccount = (objConn) => {
-    console.log(`${process.env.EXPO_PUBLIC_BACKEND_URL}users/signup`)
 
     fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}users/signup`, {
       method: "POST",
@@ -125,7 +121,6 @@ export default function ConnectionScreen({ navigation }) {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("le log des data:", data.data.token)
         if (data.result) {
           dispatch(
             connectUser({ email: data.data.email, token: data.data.token })
@@ -137,7 +132,6 @@ export default function ConnectionScreen({ navigation }) {
       })
       .catch((error) => console.error(error))
 
-    console.log(objConn)
   }
 
   return (
