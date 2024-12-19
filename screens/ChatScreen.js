@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"
 import {
   SafeAreaView,
   StyleSheet,
@@ -11,73 +11,35 @@ import {
   ScrollView,
   Linking,
   TextInput,
-} from "react-native";
-import { FlatList } from "react-native";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
+} from "react-native"
+import { FlatList } from "react-native"
+import FontAwesome from "react-native-vector-icons/FontAwesome"
 import {
   useFonts,
   Lexend_400Regular,
   Lexend_700Bold,
-} from "@expo-google-fonts/lexend";
-import AppLoading from "expo-app-loading";
-import { useSelector } from "react-redux";
-import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+} from "@expo-google-fonts/lexend"
+import AppLoading from "expo-app-loading"
+import { useSelector } from "react-redux"
 
 const DiscussionsScreen = ({ navigation, route }) => {
-  const [search, setSearch] = useState("");
-  const [dogName, setDogName] = useState(route.dogName);
-  const [messages, setMessages] = useState([]);
-  const apiRoom = `${process.env.EXPO_PUBLIC_BACKEND_URL}rooms`;
-  const apiMessage = `${process.env.EXPO_PUBLIC_BACKEND_URL}messages`;
-  const userToken = useSelector((state) => state.user.value?.token);
-  console.log(userToken);
-
-  //--------------------------------------test audio------------------------------------//
-  const [hasAudioPermission, setHasAudioPermission] = useState(false);
-  const [ recording, setRecording] = useState(false);
-  const [recordingUri, setRecordingUri] = useState(null);
-  const [sound, setSound] = useState(null);
-
-  const AudioRecorderPlayer = new AudioRecorderPlayer()
-
-
+  const [search, setSearch] = useState("")
+  const [dogName, setDogName] = useState(route.dogName)
+  const [messages, setMessages] = useState([])
+  const apiRoom = `${process.env.EXPO_PUBLIC_BACKEND_URL}rooms`
+  const apiMessage = `${process.env.EXPO_PUBLIC_BACKEND_URL}messages`
+  const userToken = useSelector((state) => state.user.value?.token)
+  console.log(userToken)
 
   useEffect(() => {
-    const requestPermissions = async () => {
-      try {
-        const { status } = await Audio.requestPermissionsAsync();
-        if (status === "granted") {
-          setHasAudioPermission(true);
-        } else {
-          Alert.alert("Permission audio refusée, pas de woof audio");
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
+    ;(async () => {
+      const getMessages = await fetch(`${apiRoom}?name=${dogName}`)
 
-    requestPermissions();
-  }, []);
+      const response = await getMessages.json()
 
-  useEffect(() => {
-    if (sound) {
-      return () => sound.unloadAsync();
-    }
-  }, [sound]);
-
-
-  
-  //--------------------------------------test audio------------------------------------//
-
-  useEffect(() => {
-    (async () => {
-      const getMessages = await fetch(`${apiRoom}?name=${dogName}`);
-
-      const response = await getMessages.json();
-
-      setMessages(response.messages);
-    })();
-  }, []);
+      setMessages(response.messages)
+    })()
+  }, [])
 
   const sendMessage = async () => {
     const send = await fetch(`${apiMessage}?name=${dogName}`, {
@@ -89,10 +51,10 @@ const DiscussionsScreen = ({ navigation, route }) => {
       body: JSON.stringify({
         message: search,
       }),
-    });
+    })
 
-    const response = await send.json();
-  };
+    const response = await send.json()
+  }
 
   return (
     <ImageBackground
@@ -126,16 +88,8 @@ const DiscussionsScreen = ({ navigation, route }) => {
           </View>
           {messages &&
             messages.map((e, i) => (
-              <View
-                key={i}
-                style={[
-                  styles.message,
-                  e?.isSentByUser ? styles.messageSent : null,
-                ]}
-              >
-                <Text style={e?.isSentByUser ? { color: "white" } : null}>
-                  {e.content}
-                </Text>
+              <View key={i} style={styles.message}>
+                <Text>{e.content}</Text>
               </View>
             ))}
         </ScrollView>
@@ -152,21 +106,11 @@ const DiscussionsScreen = ({ navigation, route }) => {
           >
             <FontAwesome name="arrow-right" size={25} color="#0639DB" />
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              if (hasAudioPermission) {
-              } else {
-                Alert.alert("Permission audio refusée, pas de woof audio");
-              }
-            }}
-          >
-            <FontAwesome name="mic" size={25} color="#0639DB" />
-          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </ImageBackground>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -177,25 +121,13 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 150,
   },
-  messages: {
-    flex: 1,
-    width: "100%",
-    paddingHorizontal: 10,
-    paddingTop: 20,
-  },
+  messages: {},
   message: {
-    maxWidth: "70%",
+    backgroundColor: "white",
     padding: 10,
-    marginBottom: 10,
+    margin: 20,
     borderRadius: 10,
     textAlign: "justify",
-    alignSelf: "flex-start",
-    backgroundColor: "#f0f0f0",
-  },
-  messageSent: {
-    alignSelf: "flex-end",
-    backgroundColor: "#0639DB",
-    color: "white",
   },
   iconBack: {
     position: "absolute",
@@ -214,6 +146,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
   },
-});
+})
 
-export default DiscussionsScreen;
+export default DiscussionsScreen

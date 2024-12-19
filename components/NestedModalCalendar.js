@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Button, Modal, Portal, Text } from 'react-native-paper';
 import { Calendar } from 'react-native-calendars';
-import { format } from 'date-fns';
+import { format, setDate } from 'date-fns';
 import {
     SafeAreaView,
     ImageBackground,
@@ -132,18 +132,12 @@ if (!fontsLoaded) {
             rappel: selectedRappel,
             date: selectedVaccin,
           }),
-        });
-        console.log({
-            dogId: props.dog,
-            name: vaccination,
-            rappel: selectedRappel,
-            date: selectedVaccin,
-          });
-        
-      
+        });      
         const data = await vaccinResponse.json();
         if (vaccinResponse.ok) {
-          console.log('Vaccin ajouté avec succès:', data);
+          setVaccination('')
+          setSelectedRappel(false)
+          setSelectedVaccin('')
           props.onUpdate();
         } else {
           console.error('Erreur lors de l\'ajout du vaccin:', data.error);

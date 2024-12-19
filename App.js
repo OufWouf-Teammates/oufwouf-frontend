@@ -15,19 +15,21 @@ import InterestPoint from "./screens/InterestPoint"
 import SettingsScreen from "./screens/SettingsScreen"
 import BookmarksScreen from "./screens/BookmarksScreen.js"
 import DiscussionsScreen from "./screens/DiscussionScreen.js"
-import RequestScreen from './screens/RequestScreen.js'
+import RequestScreen from "./screens/RequestScreen.js"
 import ChatScreen from "./screens/ChatScreen.js"
 import UserProfileScreen from "./screens/UserProfileScreen.js"
-
+import ChatScreenCopy from "./screens/ChatScreenCopy.js"
 
 import { persistStore, persistReducer } from "redux-persist"
 import { PersistGate } from "redux-persist/integration/react"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { Provider } from "react-redux"
 import { combineReducers, configureStore } from "@reduxjs/toolkit"
+import { LogBox } from 'react-native';
 
 import user from "./reducers/user.js"
-const reducers = combineReducers({ user })
+import dog from "./reducers/dog.js"
+const reducers = combineReducers({ user, dog })
 const persistConfig = { key: "oufwouf", storage: AsyncStorage }
 const store = configureStore({
   reducer: persistReducer(persistConfig, reducers),
@@ -35,7 +37,7 @@ const store = configureStore({
     getDefaultMiddleware({ serializableCheck: false }),
 })
 const persistor = persistStore(store)
-
+LogBox.ignoreAllLogs();//Ignore all log notifications
 export default function App() {
   return (
     <Provider store={store}>
@@ -109,7 +111,7 @@ export default function App() {
             />
             <Stack.Screen
               name="Chat"
-              component={ChatScreen}
+              component={ChatScreenCopy} //ChatScreen
               options={{ headerShown: false }}
             />
 

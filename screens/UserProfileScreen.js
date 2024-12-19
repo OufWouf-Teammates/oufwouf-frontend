@@ -53,7 +53,6 @@ const UserProfileScreen = ({ navigation, route }) => {
           body: JSON.stringify({ receiverId }),
         }
       );
-      console.log("response =>", response);
 
       const data = await response.json();
       if(data.result){

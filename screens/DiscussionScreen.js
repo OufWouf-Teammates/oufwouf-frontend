@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -10,40 +10,39 @@ import {
   FlatList,
   ActivityIndicator,
   View,
-} from "react-native"
+} from "react-native";
 import {
   useFonts,
   Lexend_400Regular,
   Lexend_700Bold,
-} from "@expo-google-fonts/lexend"
-import FontAwesome from "react-native-vector-icons/FontAwesome"
-import { useSelector } from "react-redux"
+} from "@expo-google-fonts/lexend";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { useSelector } from "react-redux";
 
 const DiscussionsScreen = ({ navigation }) => {
-  const [search, setSearch] = useState("")
-  const [dogs, setDogs] = useState([])
-  const [rooms, setRooms] = useState([])
-  const [filteredDogs, setFilteredDogs] = useState([])
-  const [isFocused, setIsFocused] = useState(false)
-  const [debounceSearch, setDebounceSearch] = useState("")
-  const apiDog = `${process.env.EXPO_PUBLIC_BACKEND_URL}dogs/`
-  const apiRoom = `${process.env.EXPO_PUBLIC_BACKEND_URL}rooms/all`
-  const userToken = useSelector((state) => state.user.value?.token)
+  const [search, setSearch] = useState("");
+  const [dogs, setDogs] = useState([]);
+  const [rooms, setRooms] = useState([]);
+  const [filteredDogs, setFilteredDogs] = useState([]);
+  const [isFocused, setIsFocused] = useState(false);
+  const [debounceSearch, setDebounceSearch] = useState("");
+  const apiDog = `${process.env.EXPO_PUBLIC_BACKEND_URL}dogs/`;
+  const apiRoom = `${process.env.EXPO_PUBLIC_BACKEND_URL}rooms/all`;
+  const userToken = useSelector((state) => state.user.value?.token);
+  const dogName = useSelector((state) => state.dog.value?.name);
 
   useEffect(() => {
-    ;(async () => {
+    (async () => {
       const getRooms = await fetch(apiRoom, {
         headers: {
           Authorization: `Bearer ${userToken}`,
         },
-      })
-      const response = await getRooms.json()
+      });
+      const response = await getRooms.json();
 
-      console.log(response)
-
-      setRooms(response.rooms)
-    })()
-  }, [])
+      setRooms(response.rooms);
+    })();
+  }, []);
 
   const fetchDogs = async () => {
     try {
@@ -51,54 +50,54 @@ const DiscussionsScreen = ({ navigation }) => {
         headers: {
           Authorization: `Bearer ${userToken}`,
         },
-      })
+      });
 
       if (!response.ok) {
-        throw new Error(`Erreur HTTP ! Statut : ${response.status}`)
+        throw new Error(`Erreur HTTP ! Statut : ${response.status}`);
       }
 
-      const data = await response.json()
-      setDogs(data) // Mettre à jour la liste complète des chiens
-      setFilteredDogs(data) // Initialiser la liste filtrée avec tous les chiens au début
+      const data = await response.json();
+      setDogs(data); // Mettre à jour la liste complète des chiens
+      setFilteredDogs(data); // Initialiser la liste filtrée avec tous les chiens au début
     } catch (error) {
-      console.error("Erreur lors de la récupération des chiens :", error)
+      console.error("Erreur lors de la récupération des chiens :", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   // This function will be triggered when typing in TextInput
   const handleSearch = (text) => {
-    setSearch(text)
-  }
+    setSearch(text);
+  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebounceSearch(search)
-    }, 500) // Wait 500ms after the user stops typing
+      setDebounceSearch(search);
+    }, 500); // Wait 500ms after the user stops typing
 
-    return () => clearTimeout(timer) // Clean up the timer on each render to prevent memory leaks
-  }, [search])
+    return () => clearTimeout(timer); // Clean up the timer on each render to prevent memory leaks
+  }, [search]);
 
   useEffect(() => {
     if (debounceSearch) {
       const filtered = dogs.filter((dog) =>
         dog.name.toLowerCase().includes(debounceSearch.toLowerCase())
-      )
-      setFilteredDogs(filtered)
+      );
+      setFilteredDogs(filtered);
     } else {
-      setFilteredDogs(dogs)
+      setFilteredDogs(dogs);
     }
-  }, [debounceSearch, dogs])
+  }, [debounceSearch, dogs]);
 
   // Charger les chiens lorsque le composant est monté
   useEffect(() => {
-    fetchDogs()
-  }, [userToken])
+    fetchDogs();
+  }, [userToken]);
 
   const handleDogPress = (dogName) => {
-    navigation.navigate("userProfile", { dogName })
-  }
+    navigation.navigate("userProfile", { dogName });
+  };
 
   return (
     <ImageBackground
@@ -143,24 +142,28 @@ const DiscussionsScreen = ({ navigation }) => {
         </View>
         <ScrollView style={styles.discussions}>
           {rooms &&
-            rooms.map((room, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.chatCard}
-                onPress={() => navigation.navigate("Chat", { dogName: "Chat" })}
-              >
-                <Text style={styles.chatId}>{room._id}</Text>
-                <Text style={styles.chatPreview}>
-                  {/* Exemple : Ajoute un aperçu du dernier message */}
-                  Dernier message... (exemple)
-                </Text>
-              </TouchableOpacity>
-            ))}
+            rooms.map((room, index) => {
+              return (
+                <TouchableOpacity
+                  key={index}
+                  style={styles.chatCard}
+                  onPress={() =>
+                    navigation.navigate("Chat", { roomName: room.name })
+                  }
+                >
+                  <Text style={styles.chatId}>{room.name}</Text>
+                  <Text style={styles.chatPreview}>
+                    {/*Exemple : Ajoute un aperçu du dernier message */}
+                    Dernier message... (exemple)
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
         </ScrollView>
       </SafeAreaView>
     </ImageBackground>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -247,6 +250,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#555",
   },
-})
+});
 
-export default DiscussionsScreen
+export default DiscussionsScreen;

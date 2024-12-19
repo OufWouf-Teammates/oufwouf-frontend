@@ -63,7 +63,6 @@ const RequestScreen = () => {
           body: JSON.stringify({ decision: "accepted" }),
         }
       );
-      console.log("response =>", response);
 
       const data = await response.json();
       Alert.alert("Succès !", "Nouveau Woofer dans vos amis!");
@@ -84,7 +83,7 @@ const RequestScreen = () => {
           body: JSON.stringify({ decision: "rejected" }),
         }
       );
-      console.log("response =>", response);
+
       const data = await response.json();
       Alert.alert(data.message);
     } catch (error) {
@@ -120,7 +119,7 @@ const RequestScreen = () => {
                 from.dogs && from.dogs[0] ? from.dogs[0].uri : "";
               const name =
                 from.dogs && from.dogs[0] ? from.dogs[0].name : "Sans nom";
-              console.log(from.dogs[0]);
+
               return (
                 <View key={_id} style={styles.requestContainer}>
                   <View style={styles.header}>
