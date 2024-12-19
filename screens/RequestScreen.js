@@ -11,17 +11,18 @@ import {
   ScrollView,
   Linking,
   Alert,
-  RefreshControl
+  RefreshControl,
 } from "react-native";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 
 const RequestScreen = () => {
+
   const navigation = useNavigation();
   const token = useSelector((state) => state.user.value.token);
   const [request, setRequest] = useState([]);
-  const [refreshing, setRefreshing ] = React.useState(false)
+  const [refreshing, setRefreshing] = React.useState(false);
 
   const fetchRequest = async () => {
     const response = await fetch(
@@ -38,7 +39,9 @@ const RequestScreen = () => {
   };
 
   useEffect(() => {
-   if(!refreshing){ fetchRequest();}
+    if (!refreshing) {
+      fetchRequest();
+    }
   }, [refreshing]);
 
   const onRefresh = React.useCallback(() => {
@@ -101,54 +104,55 @@ const RequestScreen = () => {
         <FontAwesome name="arrow-left" size={30} color="#0639DB" />
       </TouchableOpacity>
       <ScrollView
-          contentContainerStyle={styles.scrollView}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}>
-      <SafeAreaView>
-        <View style={styles.titleBox}>
-          <Text style={styles.title}>Demandes</Text>
-        </View>
-        <ScrollView style={styles.scroll}>
-          {request.map((requestItem) => {
-            const { from, _id } = requestItem;
-            const profileImage =
-              from.dogs && from.dogs[0] ? from.dogs[0].uri : "";
-            const name =
-              from.dogs && from.dogs[0] ? from.dogs[0].name : "Sans nom";
-            console.log(from.dogs[0]);
-            return (
-              <View key={_id} style={styles.requestContainer}>
-                <View style={styles.header}>
-                  <Image
-                    source={{ uri: profileImage || "url_par_defaut" }}
-                    style={styles.profileImage}
-                  />
-                  <Text style={styles.name}>{name}</Text>
-                </View>
-                <Text style={styles.requestText}>
-                  Vous a envoyé une demande d'ami.
-                </Text>
+        contentContainerStyle={styles.scrollView}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <SafeAreaView>
+          <View style={styles.titleBox}>
+            <Text style={styles.title}>Demandes</Text>
+          </View>
+          <ScrollView style={styles.scroll}>
+            {request.map((requestItem) => {
+              const { from, _id } = requestItem;
+              const profileImage =
+                from.dogs && from.dogs[0] ? from.dogs[0].uri : "";
+              const name =
+                from.dogs && from.dogs[0] ? from.dogs[0].name : "Sans nom";
+              console.log(from.dogs[0]);
+              return (
+                <View key={_id} style={styles.requestContainer}>
+                  <View style={styles.header}>
+                    <Image
+                      source={{ uri: profileImage || "url_par_defaut" }}
+                      style={styles.profileImage}
+                    />
+                    <Text style={styles.name}>{name}</Text>
+                  </View>
+                  <Text style={styles.requestText}>
+                    Vous a envoyé une demande d'ami.
+                  </Text>
 
-                <View style={styles.buttonContainer}>
-                  <TouchableOpacity
-                    style={[styles.button, { backgroundColor: "#0639DB" }]}
-                    onPress={() => handleAccept(_id)}
-                  >
-                    <Text style={styles.buttonText}>Accepter</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[styles.button, { backgroundColor: "#EAD32A" }]}
-                    onPress={() => handleDecline(_id)}
-                  >
-                    <Text style={styles.buttonText}>Refuser</Text>
-                  </TouchableOpacity>
+                  <View style={styles.buttonContainer}>
+                    <TouchableOpacity
+                      style={[styles.button, { backgroundColor: "#0639DB" }]}
+                      onPress={() => handleAccept(_id)}
+                    >
+                      <Text style={styles.buttonText}>Accepter</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.button, { backgroundColor: "#EAD32A" }]}
+                      onPress={() => handleDecline(_id)}
+                    >
+                      <Text style={styles.buttonText}>Refuser</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
-              </View>
-            );
-          })}
-        </ScrollView>
-        
-      </SafeAreaView>
+              );
+            })}
+          </ScrollView>
+        </SafeAreaView>
       </ScrollView>
     </ImageBackground>
   );
