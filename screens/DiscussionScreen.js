@@ -33,9 +33,16 @@ const DiscussionsScreen = ({ navigation }) => {
 
   useEffect(() => {
     ;(async () => {
-      const getRooms = await fetch(apiRoom)
+      const getRooms = await fetch(apiRoom, {
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+      })
 
       const response = await getRooms.json()
+
+      console.log(response)
+      console.log(userToken)
 
       setRooms(response.rooms)
     })()
@@ -115,8 +122,8 @@ const DiscussionsScreen = ({ navigation }) => {
             placeholder="Rechercher un chien"
             style={styles.searchBar}
             value={search}
-            onChangeText={handleSearch} 
-            onFocus={() => setIsFocused(true)} 
+            onChangeText={handleSearch}
+            onFocus={() => setIsFocused(true)}
           />
           {isFocused && (
             <FlatList
