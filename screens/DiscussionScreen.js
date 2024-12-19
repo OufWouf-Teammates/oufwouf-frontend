@@ -20,12 +20,6 @@ import FontAwesome from "react-native-vector-icons/FontAwesome"
 import { useSelector } from "react-redux"
 
 const DiscussionsScreen = ({ navigation }) => {
-  const [search, setSearch] = useState('')
-  const [dogs, setDogs] = useState([]); 
-  const [filteredDogs, setFilteredDogs] = useState([]);
-  const [isFocused, setIsFocused] = useState(false); 
-  const [debounceSearch, setDebounceSearch] = useState('');
-  const apiDog = `${process.env.EXPO_PUBLIC_BACKEND_URL}dogs/`;
   const [search, setSearch] = useState("")
   const [dogs, setDogs] = useState([])
   const [rooms, setRooms] = useState([])
@@ -123,9 +117,6 @@ const DiscussionsScreen = ({ navigation }) => {
             value={search}
             onChangeText={handleSearch} 
             onFocus={() => setIsFocused(true)} 
-            onChangeText={handleSearch}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
           />
           {isFocused && (
             <FlatList
