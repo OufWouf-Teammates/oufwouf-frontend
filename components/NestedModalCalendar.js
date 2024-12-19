@@ -135,7 +135,6 @@ if (!fontsLoaded) {
         });      
         const data = await vaccinResponse.json();
         if (vaccinResponse.ok) {
-          console.log('Vaccin ajouté avec succès:', data);
           setVaccination('')
           setSelectedRappel(false)
           setSelectedVaccin('')

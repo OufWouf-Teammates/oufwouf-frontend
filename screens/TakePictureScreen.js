@@ -85,9 +85,7 @@ export default function TakePictureScreen({ navigation }) {
         })
 
         const responseData = await response.json()
-        console.log(responseData)
-      } else {
-        console.log("pas de nouvelle photo")
+
       }
     } catch (error) {
       console.error("Error taking picture:", error.message)

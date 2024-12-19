@@ -270,7 +270,7 @@ export default function MapScreen({ navigation }) {
         }));
 
         setPlaces(formattedPictures);
-        console.log("Places mises à jour :", formattedPictures);
+
       }
     }
   };

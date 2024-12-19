@@ -26,10 +26,10 @@ const InterestPoint = ({ navigation, route }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  console.log(markerData)
+
 
   const userToken = useSelector((state) => state.user.value?.token)
-  console.log(userToken)
+
 
   useEffect(() => {
     const fetchInterestPoint = async () => {
@@ -147,7 +147,7 @@ const InterestPoint = ({ navigation, route }) => {
         .then((response) => response.json())
         .then((data) => {
           if (data.result) {
-            console.log("Favoris ajoutés avec succès", data.newFavorite)
+
             setIsBookmarked(true)
           } else {
             console.error("Erreur lors de l'ajout des favoris", data.error)
@@ -172,7 +172,7 @@ const InterestPoint = ({ navigation, route }) => {
         const data = await response.json()
 
         if (response.ok && data.result) {
-          console.log("Favori supprimé avec succès")
+
           setIsBookmarked(false)
         } else {
           console.error(

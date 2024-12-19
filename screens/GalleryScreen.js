@@ -76,7 +76,7 @@ function Gallery() {
       })
 
       const data = await response.json()
-      console.log(data)
+
 
       if (data.result) {
         setGalerie((prevGalerie) =>
@@ -86,10 +86,8 @@ function Gallery() {
         )
         setEditedDescription("")
         setSelectedUri(null)
-        console.log("yaay new des")
-      } else {
-        console.log("nauur no new des")
-      }
+
+      } 
     } catch (error) {
       console.error(error.message)
     }
@@ -100,14 +98,9 @@ function Gallery() {
       const response = await fetch(`${apiPicture}/delete/${id}`, {
         method: "DELETE",
       })
-      if (response.result) {
-        console.log("bouhhh tu sais pas supp")
-      } else {
-        fetchGalerie()
-        console.log("ca y est cest supp")
-      }
+
     } catch (error) {
-      console.log(error.message)
+      console.error(error.message)
     }
   }
 
