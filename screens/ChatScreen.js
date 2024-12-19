@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -11,35 +11,73 @@ import {
   ScrollView,
   Linking,
   TextInput,
-} from "react-native"
-import { FlatList } from "react-native"
-import FontAwesome from "react-native-vector-icons/FontAwesome"
+} from "react-native";
+import { FlatList } from "react-native";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
 import {
   useFonts,
   Lexend_400Regular,
   Lexend_700Bold,
-} from "@expo-google-fonts/lexend"
-import AppLoading from "expo-app-loading"
-import { useSelector } from "react-redux"
+} from "@expo-google-fonts/lexend";
+import AppLoading from "expo-app-loading";
+import { useSelector } from "react-redux";
+import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 
 const DiscussionsScreen = ({ navigation, route }) => {
-  const [search, setSearch] = useState("")
-  const [dogName, setDogName] = useState(route.dogName)
-  const [messages, setMessages] = useState([])
-  const apiRoom = `${process.env.EXPO_PUBLIC_BACKEND_URL}rooms`
-  const apiMessage = `${process.env.EXPO_PUBLIC_BACKEND_URL}messages`
-  const userToken = useSelector((state) => state.user.value?.token)
-  console.log(userToken)
+  const [search, setSearch] = useState("");
+  const [dogName, setDogName] = useState(route.dogName);
+  const [messages, setMessages] = useState([]);
+  const apiRoom = `${process.env.EXPO_PUBLIC_BACKEND_URL}rooms`;
+  const apiMessage = `${process.env.EXPO_PUBLIC_BACKEND_URL}messages`;
+  const userToken = useSelector((state) => state.user.value?.token);
+  console.log(userToken);
+
+  //--------------------------------------test audio------------------------------------//
+  const [hasAudioPermission, setHasAudioPermission] = useState(false);
+  const [ recording, setRecording] = useState(false);
+  const [recordingUri, setRecordingUri] = useState(null);
+  const [sound, setSound] = useState(null);
+
+  const AudioRecorderPlayer = new AudioRecorderPlayer()
+
+
 
   useEffect(() => {
-    ;(async () => {
-      const getMessages = await fetch(`${apiRoom}?name=${dogName}`)
+    const requestPermissions = async () => {
+      try {
+        const { status } = await Audio.requestPermissionsAsync();
+        if (status === "granted") {
+          setHasAudioPermission(true);
+        } else {
+          Alert.alert("Permission audio refusée, pas de woof audio");
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-      const response = await getMessages.json()
+    requestPermissions();
+  }, []);
 
-      setMessages(response.messages)
-    })()
-  }, [])
+  useEffect(() => {
+    if (sound) {
+      return () => sound.unloadAsync();
+    }
+  }, [sound]);
+
+
+  
+  //--------------------------------------test audio------------------------------------//
+
+  useEffect(() => {
+    (async () => {
+      const getMessages = await fetch(`${apiRoom}?name=${dogName}`);
+
+      const response = await getMessages.json();
+
+      setMessages(response.messages);
+    })();
+  }, []);
 
   const sendMessage = async () => {
     const send = await fetch(`${apiMessage}?name=${dogName}`, {
@@ -51,10 +89,10 @@ const DiscussionsScreen = ({ navigation, route }) => {
       body: JSON.stringify({
         message: search,
       }),
-    })
+    });
 
-    const response = await send.json()
-  }
+    const response = await send.json();
+  };
 
   return (
     <ImageBackground
@@ -114,11 +152,21 @@ const DiscussionsScreen = ({ navigation, route }) => {
           >
             <FontAwesome name="arrow-right" size={25} color="#0639DB" />
           </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              if (hasAudioPermission) {
+              } else {
+                Alert.alert("Permission audio refusée, pas de woof audio");
+              }
+            }}
+          >
+            <FontAwesome name="mic" size={25} color="#0639DB" />
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </ImageBackground>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -166,6 +214,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
   },
-})
+});
 
-export default DiscussionsScreen
+export default DiscussionsScreen;
