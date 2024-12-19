@@ -18,43 +18,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 
 const RequestScreen = () => {
-  //--------------------------------------test audio------------------------------------//
-  const [hasAudioPermission, setHasAudioPermission] = useState(false);
 
-  useEffect(() => {
-    const requestPermissions = async () => {
-      try {
-        const { status } = await Audio.requestPermissionsAsync();
-        if (status === "granted") {
-          setHasAudioPermission(true);
-        } else {
-          Alert.alert("Permission audio refusée, pas de woof audio");
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    requestPermissions();
-  }, []);
-
-  return (
-    <View>
-      <TouchableOpacity
-        onPress={() => {
-          if (hasAudioPermission) {
-          } else {
-            Alert.alert("Permission audio refusée, pas de woof audio");
-          }
-        }}
-      >
-        <FontAwesome name="mic" size={25} color="#0639DB" />
-        <Text style={styles.textButton}>Agenda</Text>
-      </TouchableOpacity>
-    </View>
-  );
-
-  //--------------------------------------test audio------------------------------------//
   const navigation = useNavigation();
   const token = useSelector((state) => state.user.value.token);
   const [request, setRequest] = useState([]);
