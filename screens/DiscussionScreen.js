@@ -24,8 +24,7 @@ const DiscussionsScreen = ({ navigation }) => {
   const [dogs, setDogs] = useState([])
   const [rooms, setRooms] = useState([])
   const [filteredDogs, setFilteredDogs] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [isFocused, setIsFocused] = useState(false) // Track if TextInput is focused
+  const [isFocused, setIsFocused] = useState(false)
   const [debounceSearch, setDebounceSearch] = useState("")
   const apiDog = `${process.env.EXPO_PUBLIC_BACKEND_URL}dogs/`
   const apiRoom = `${process.env.EXPO_PUBLIC_BACKEND_URL}rooms/all`
