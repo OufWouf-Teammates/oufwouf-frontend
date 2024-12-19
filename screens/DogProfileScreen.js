@@ -196,11 +196,9 @@ const { showActionSheetWithOptions } = useActionSheet()
         const handleImageSelection = async (response, dogId) => {
           if (response.assets && response.assets.length > 0) {
             const selectedImageUri = response.assets[0].uri;
-            console.log("Image sélectionnée :", selectedImageUri);
+
         
             setImageUri(selectedImageUri); // Mettre à jour l'URI de l'image dans l'état local
-            console.log("ID du chien sélectionné :", dogId);
-            console.log(dogId)
             try {
               // Créer un formulaire avec uniquement l'image sélectionnée
               const formData = new FormData();
@@ -221,7 +219,6 @@ const { showActionSheetWithOptions } = useActionSheet()
               });
         
               const responseData = await response.json();
-              console.log("Réponse du serveur :", responseData);
         
               if (response.ok) {
                 // Mettre à jour l'état local de l'image si nécessaire
@@ -230,6 +227,7 @@ const { showActionSheetWithOptions } = useActionSheet()
                     dog._id === dogId ? { ...dog, uri: imageUri } : dog
                   )
                 );
+                setIsUpdated(!isUpdated);
                 
               } else {
                 console.error("Erreur serveur :", responseData);
@@ -244,7 +242,7 @@ const { showActionSheetWithOptions } = useActionSheet()
 
       
       const dogs = dogsData.map((data, i) => {
-        console.log(data?._id)
+
         return (
           <View key={i} style={[styles.innerContainer, { marginTop: 0 }]}>
           <TouchableOpacity onPress={() => handleChooseImage(data?._id)}>
@@ -369,7 +367,7 @@ const { showActionSheetWithOptions } = useActionSheet()
                 activeOpacity={0.8}
                 onPress={() => {
                   openModal(data?.ID)
-                  console.log(data)
+
                 }}
             >
                 <FontAwesome name="paw" size={25} color="#0639DB" />

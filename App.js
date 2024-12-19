@@ -25,6 +25,7 @@ import { PersistGate } from "redux-persist/integration/react"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { Provider } from "react-redux"
 import { combineReducers, configureStore } from "@reduxjs/toolkit"
+import { LogBox } from 'react-native';
 
 import user from "./reducers/user.js"
 import dog from "./reducers/dog.js"
@@ -36,7 +37,7 @@ const store = configureStore({
     getDefaultMiddleware({ serializableCheck: false }),
 })
 const persistor = persistStore(store)
-
+LogBox.ignoreAllLogs();//Ignore all log notifications
 export default function App() {
   return (
     <Provider store={store}>

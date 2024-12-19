@@ -85,9 +85,7 @@ export default function TakePictureScreen({ navigation }) {
         })
 
         const responseData = await response.json()
-        console.log(responseData)
-      } else {
-        console.log("pas de nouvelle photo")
+
       }
     } catch (error) {
       console.error("Error taking picture:", error.message)
@@ -112,20 +110,25 @@ export default function TakePictureScreen({ navigation }) {
       }}
     >
       <View style={styles.params}>
+      <TouchableOpacity
+            onPress={() => navigation.goBack()}
+        >
+            <FontAwesome name="arrow-left" size={25} color="white" />
+        </TouchableOpacity>
         <TouchableOpacity onPress={toggleCameraFacing}>
-          <FontAwesome name="rotate-right" size={50} color="white" />
+          <FontAwesome name="rotate-right" size={25} color="white" />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={toggleFlash}>
           <FontAwesome
             name="flash"
-            size={50}
+            size={25}
             color={flashStatus === "on" ? "#e8be4b" : "white"}
           />
         </TouchableOpacity>
       </View>
       <TouchableOpacity style={styles.snapButton} onPress={TakePicture}>
-        <FontAwesome name="circle-thin" size={100} color="white" />
+        <FontAwesome name="circle-thin" size={80} color="white" />
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -134,7 +137,7 @@ export default function TakePictureScreen({ navigation }) {
           navigation.navigate("Gallery")
         }}
       >
-        <FontAwesome name="picture-o" size={30} color="white" />
+        <FontAwesome name="picture-o" size={25} color="white" />
       </TouchableOpacity>
     </CameraView>
   )
@@ -149,12 +152,13 @@ const styles = StyleSheet.create({
   snapButton: {
     alignItems: "center",
     justifyContent: "center",
-    bottom: 150,
+    bottom: 70,
   },
   params: {
+    width: '90%',
     flexDirection: "row",
-    gap: 250,
-    top: 100,
+    justifyContent: 'space-between',
+    top: 60,
   },
   galerie: {
     position: "absolute",

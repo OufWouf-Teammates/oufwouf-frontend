@@ -153,7 +153,7 @@ const DiscussionsScreen = ({ navigation }) => {
                 >
                   <Text style={styles.chatId}>{room.name}</Text>
                   <Text style={styles.chatPreview}>
-                    {/* Exemple : Ajoute un aperçu du dernier message */}
+                    { /*Exemple : Ajoute un aperçu du dernier message */}
                     Dernier message... (exemple)
                   </Text>
                 </TouchableOpacity>

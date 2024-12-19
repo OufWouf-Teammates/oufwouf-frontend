@@ -70,17 +70,12 @@ const SearchBar = ({ gotToLatLng, createRedPoint, navigation }) => {
 
   const fetchPlaces = async (text) => {
     setQuery(text)
-    console.log(text)
+
     let theResult = await lookLatLongAddFromText(text)
     setResults(theResult)
   }
 
   const lookLatLongAddFromText = async (text) => {
-    console.log(
-      `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(
-        text
-      )}&key=${GOOGLE_MAP_PLATEFORM_API_KEY}&language=fr&components=country:fr`
-    )
     if (text.length > 2) {
       const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(
         text

@@ -120,14 +120,13 @@ const DogInfoFormScreen = () => {
   // fonction pour fetch les suggestions de vaccin et race //
 
   const fetchSuggestionsVaccins = async (query) => {
-    console.log(1);
+
     if (!query) {
       setSuggestionVaccin([])
       return
     }
-    console.log("Fetching suggestions from URL:", `${apiRace}?search=${query}`);
     setLoadingVaccin(true)
-    console.log(2);
+
 
     try {
       const response = await fetch(`${apiVaccins}?search=${query}`)
@@ -141,7 +140,6 @@ const DogInfoFormScreen = () => {
         setSuggestionVaccin([])
       }
     } catch (error) {
-      console.log(3);
       console.error("ERROR pour afficher les suggestions", error.message)
     } finally {
       setLoadingVaccin(false)
@@ -149,7 +147,7 @@ const DogInfoFormScreen = () => {
   }
 
   const fetchSuggestionsRace = async (query) => {
-    console.log(query);
+
     if (!query) {
       setSuggestionRace([])
       return;
@@ -157,7 +155,6 @@ const DogInfoFormScreen = () => {
     setLoadingRace(true)
 
     try {
-      console.log(`${apiRace}?search=${query}`);
       const response = await fetch(`${apiRace}?search=${query}`)
 
       if (!response.ok) {
@@ -261,7 +258,7 @@ const DogInfoFormScreen = () => {
 
   const handleImageSelection = (response) => {
     if (response.didCancel) {
-      console.log("User cancelled image picker")
+
     } else if (response.errorCode) {
       console.error("Error:", response.errorMessage)
     } else if (response.assets && response.assets[0].uri) {
@@ -300,7 +297,7 @@ const DogInfoFormScreen = () => {
         })
       )
       if (imageUri) {
-        console.log("Append");
+
         
         formData.append("photoFromFront", {
           uri: imageUri,
@@ -308,7 +305,7 @@ const DogInfoFormScreen = () => {
           name: "dog_image.jpg",
         })
       }
-      console.log('hola', apiNewDog)
+
 
       const response = await fetch(apiNewDog, {
         method: "POST",
@@ -317,20 +314,16 @@ const DogInfoFormScreen = () => {
         },
         body: formData,
       })
-      console.log(response);
+
       
       const responseData = await response.json()
 
-      console.log("ResponseData", responseData);
+
       
       if (responseData.result) {
         dispatch(getDogName({name: responseData.name})) 
-        console.log('seData')
-      }else{
-        console.log('response')
       }
 
-      console.log('tac')
       if (isChecked2) {
         const vaccinResponse = await fetch(apiNewVaccins, {
           method: "POST",
@@ -346,13 +339,7 @@ const DogInfoFormScreen = () => {
           }),
         })
         const data = await vaccinResponse.json()
-        if (data.result) {
-          console.log("YAY new vaccins")
-        } else {
-          console.log("nauuur no new vaccins")
-        }
       }
-      console.log(formData)
       setName("")
       setRace("")
       setRobe("")

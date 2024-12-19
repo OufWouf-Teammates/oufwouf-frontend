@@ -179,10 +179,6 @@ export default function SettingsScreen({ navigation }) {
                 <FontAwesome name="bell" size={25} color="#0639DB" />
                 <Text style={styles.textButton}>Demandes</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button} activeOpacity={0.8}>
-                <FontAwesome name="calendar" size={25} color="#0639DB" />
-                <Text style={styles.textButton}>Agenda</Text>
-            </TouchableOpacity>
             <TouchableOpacity
                 style={styles.buttonParam}
                 activeOpacity={0.8}
