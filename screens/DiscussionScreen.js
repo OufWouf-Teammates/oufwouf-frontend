@@ -23,8 +23,7 @@ const DiscussionsScreen = ({ navigation }) => {
   const [search, setSearch] = useState('')
   const [dogs, setDogs] = useState([]); 
   const [filteredDogs, setFilteredDogs] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isFocused, setIsFocused] = useState(false); // Track if TextInput is focused
+  const [isFocused, setIsFocused] = useState(false); 
   const [debounceSearch, setDebounceSearch] = useState('');
   const apiDog = `${process.env.EXPO_PUBLIC_BACKEND_URL}dogs/`;
   const userToken = useSelector((state) => state.user.value?.token)
@@ -107,7 +106,6 @@ const DiscussionsScreen = ({ navigation }) => {
             value={search}
             onChangeText={handleSearch} 
             onFocus={() => setIsFocused(true)} 
-            onBlur={() => setIsFocused(false)}
           />
           {isFocused && (
             <FlatList
