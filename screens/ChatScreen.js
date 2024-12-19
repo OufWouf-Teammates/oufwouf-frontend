@@ -30,6 +30,7 @@ const DiscussionsScreen = ({ navigation, route }) => {
   const apiMessage = `${process.env.EXPO_PUBLIC_BACKEND_URL}messages`
   const userToken = useSelector((state) => state.user.value?.token)
   const [toggle, setToggle] = useState(false)
+  const [userid, setuserid] = useState("")
 
   useEffect(() => {
     ;(async () => {
@@ -43,6 +44,7 @@ const DiscussionsScreen = ({ navigation, route }) => {
       const response = await getMessages.json()
 
       setMessages(response.messages)
+      setuserid(response.userID)
     })()
   }, [toggle])
 
@@ -87,7 +89,10 @@ const DiscussionsScreen = ({ navigation, route }) => {
                 key={i}
                 style={[
                   styles.message,
-                  // e?.isSentByUser ? styles.messageSent : null,
+
+                  e.sender === userid
+                    ? styles.messageSent
+                    : styles.messageReceived,
                 ]}
               >
                 <Text style={e?.isSentByUser ? { color: "white" } : null}>
@@ -151,6 +156,16 @@ const styles = StyleSheet.create({
     left: 30,
     zIndex: 50,
   },
+
+  messageSent: {
+    alignSelf: "flex-end",
+    backgroundColor: "#0639DB",
+    color: "white",
+  },
+  messageReceived: {
+    alignSelf: "flex-start",
+    backgroundColor: "#f0f0f0",
+  },
   sender: {
     flexDirection: "row",
     backgroundColor: "white",
@@ -159,7 +174,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 20,
     justifyContent: "space-between",
-    alignItems: "center",
+    alignSelf: "flex-end",
     padding: 10,
   },
 })

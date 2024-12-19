@@ -29,6 +29,7 @@ const DiscussionsScreen = ({ navigation }) => {
   const apiDog = `${process.env.EXPO_PUBLIC_BACKEND_URL}dogs/`
   const apiRoom = `${process.env.EXPO_PUBLIC_BACKEND_URL}rooms/all`
   const userToken = useSelector((state) => state.user.value?.token)
+  const dogName = useSelector((state) => state.dog.value?.name)
 
   useEffect(() => {
     ;(async () => {
@@ -150,7 +151,7 @@ const DiscussionsScreen = ({ navigation }) => {
                     navigation.navigate("Chat", { roomId: room._id })
                   }
                 >
-                  <Text style={styles.chatId}>{room.name[0]}</Text>
+                  <Text style={styles.chatId}>{room.name}</Text>
                   <Text style={styles.chatPreview}>
                     {/* Exemple : Ajoute un aperçu du dernier message */}
                     Dernier message... (exemple)
