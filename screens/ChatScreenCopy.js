@@ -10,21 +10,13 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-<<<<<<< HEAD
+  ImageBackground,
 } from "react-native"
 
 import { Audio } from "expo-av"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import Pusher from "pusher-js/react-native"
-=======
-  ImageBackground,
-} from "react-native";
-
-import { Audio } from "expo-av";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import Pusher from "pusher-js/react-native";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
->>>>>>> 86294698bc0f3e661c88745fa6bad46d58b540eb
+import FontAwesome from "react-native-vector-icons/FontAwesome"
 
 const BACKEND_ADDRESS = process.env.EXPO_PUBLIC_BACKEND_URL
 
@@ -215,26 +207,69 @@ export default function ChatScreen({ navigation, route: { params } }) {
       source={require("../assets/BG_App.png")}
       style={styles.container}
     >
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-      <View style={styles.banner}>
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={styles.iconBack}
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <FontAwesome name="arrow-left" size={30} color="#0639DB" />
-      </TouchableOpacity>
-        <Text style={styles.greetingText}>
-         {roomName}  🐾
-        </Text>
-      </View>
+        <View style={styles.banner}>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.iconBack}
+          >
+            <FontAwesome name="arrow-left" size={30} color="#0639DB" />
+          </TouchableOpacity>
+          <Text style={styles.greetingText}>{roomName} 🐾</Text>
+        </View>
 
-      <View style={styles.inset}>
-        <ScrollView style={styles.scroller}>
-          {messageArchive &&
-            messageArchive.map((message, i) => (
+        <View style={styles.inset}>
+          <ScrollView style={styles.scroller}>
+            {messageArchive &&
+              messageArchive.map((message, i) => (
+                <View
+                  key={i}
+                  style={[
+                    styles.messageWrapper,
+                    {
+                      ...(message.username === username
+                        ? styles.messageSent
+                        : styles.messageRecieved),
+                    },
+                  ]}
+                >
+                  <View
+                    style={[
+                      styles.message,
+                      {
+                        ...(message.username === username
+                          ? styles.messageSentBg
+                          : styles.messageRecievedBg),
+                      },
+                    ]}
+                  >
+                    {message.type === "audio" ? (
+                      <TouchableOpacity
+                        onPress={() => playRecording(message.url)}
+                      >
+                        <MaterialIcons
+                          name="multitrack-audio"
+                          size={24}
+                          style={styles.messageText}
+                        />
+                      </TouchableOpacity>
+                    ) : (
+                      <Text style={styles.messageText}>{message.text}</Text>
+                    )}
+                  </View>
+                  <Text style={styles.timeText}>
+                    {new Date(message.createdAt).getHours()}:
+                    {String(new Date(message.createdAt).getMinutes()).padStart(
+                      2,
+                      "0"
+                    )}
+                  </Text>
+                </View>
+              ))}
+            {messages.map((message, i) => (
               <View
                 key={i}
                 style={[
@@ -279,83 +314,36 @@ export default function ChatScreen({ navigation, route: { params } }) {
                 </Text>
               </View>
             ))}
-          {messages.map((message, i) => (
-            <View
-              key={i}
-              style={[
-                styles.messageWrapper,
-                {
-                  ...(message.username === username
-                    ? styles.messageSent
-                    : styles.messageRecieved),
-                },
-              ]}
-            >
-              <View
-                style={[
-                  styles.message,
-                  {
-                    ...(message.username === username
-                      ? styles.messageSentBg
-                      : styles.messageRecievedBg),
-                  },
-                ]}
-              >
-                {message.type === "audio" ? (
-                  <TouchableOpacity onPress={() => playRecording(message.url)}>
-                    <MaterialIcons
-                      name="multitrack-audio"
-                      size={24}
-                      style={styles.messageText}
-                    />
-                  </TouchableOpacity>
-                ) : (
-                  <Text style={styles.messageText}>{message.text}</Text>
-                )}
-              </View>
-              <Text style={styles.timeText}>
-                {new Date(message.createdAt).getHours()}:
-                {String(new Date(message.createdAt).getMinutes()).padStart(
-                  2,
-                  "0"
-                )}
-              </Text>
-            </View>
-          ))}
-        </ScrollView>
+          </ScrollView>
 
-        <View style={styles.inputContainer}>
-          {recording ? (
-            <TextInput value="Recording..." style={styles.input} />
-          ) : (
-            <TextInput
-              onChangeText={(value) => setMessageText(value)}
-              value={recordingUri ? "Audio message" : messageText}
-              style={styles.input}
-            />
-          )}
-          <TouchableOpacity
-            onPressIn={() => startRecording()}
-            onPressOut={() => stopRecording()}
-            style={styles.recordButton}
-          >
-            <MaterialIcons name="mic" color="#ffffff" size={25} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => handleSendMessage()}
-            style={styles.sendButton}
-          >
-            <MaterialIcons name="send" color="#ffffff" size={25} />
-          </TouchableOpacity>
+          <View style={styles.inputContainer}>
+            {recording ? (
+              <TextInput value="Recording..." style={styles.input} />
+            ) : (
+              <TextInput
+                onChangeText={(value) => setMessageText(value)}
+                value={recordingUri ? "Audio message" : messageText}
+                style={styles.input}
+              />
+            )}
+            <TouchableOpacity
+              onPressIn={() => startRecording()}
+              onPressOut={() => stopRecording()}
+              style={styles.recordButton}
+            >
+              <MaterialIcons name="mic" color="#ffffff" size={25} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => handleSendMessage()}
+              style={styles.sendButton}
+            >
+              <MaterialIcons name="send" color="#ffffff" size={25} />
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </KeyboardAvoidingView>
-<<<<<<< HEAD
-  )
-=======
+      </KeyboardAvoidingView>
     </ImageBackground>
-  );
->>>>>>> 86294698bc0f3e661c88745fa6bad46d58b540eb
+  )
 }
 
 const styles = StyleSheet.create({
@@ -417,7 +405,6 @@ const styles = StyleSheet.create({
   },
   messageSentBg: {
     backgroundColor: "#EAD32A",
-
   },
   messageRecievedBg: {
     backgroundColor: "#0639DB",
