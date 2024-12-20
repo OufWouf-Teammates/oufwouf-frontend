@@ -205,17 +205,17 @@ export default function ChatScreen({ navigation, route: { params } }) {
       source={require("../assets/BG_App.png")}
       style={styles.container}
     >
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
-        <View style={styles.banner}>
           <TouchableOpacity
             onPress={() => navigation.goBack()}
             style={styles.iconBack}
           >
             <FontAwesome name="arrow-left" size={30} color="#0639DB" />
           </TouchableOpacity>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <View style={styles.banner}>
           <Text style={styles.greetingText}>{roomName} 🐾</Text>
         </View>
 
@@ -355,6 +355,13 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingTop: 20,
     position: "relative",
+  },
+  
+  iconBack: {
+    position: "absolute",
+    top: 60,
+    left: 30,
+    zIndex: 50,
   },
   banner: {
     width: "100%",
