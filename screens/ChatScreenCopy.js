@@ -10,11 +10,21 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+<<<<<<< HEAD
 } from "react-native"
 
 import { Audio } from "expo-av"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import Pusher from "pusher-js/react-native"
+=======
+  ImageBackground,
+} from "react-native";
+
+import { Audio } from "expo-av";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import Pusher from "pusher-js/react-native";
+import FontAwesome from "react-native-vector-icons/FontAwesome";
+>>>>>>> 86294698bc0f3e661c88745fa6bad46d58b540eb
 
 const BACKEND_ADDRESS = process.env.EXPO_PUBLIC_BACKEND_URL
 
@@ -201,19 +211,23 @@ export default function ChatScreen({ navigation, route: { params } }) {
   }
 
   return (
+    <ImageBackground
+      source={require("../assets/BG_App.png")}
+      style={styles.container}
+    >
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <View style={styles.banner}>
-        <MaterialIcons
-          name="keyboard-backspace"
-          color="#ffffff"
-          size={24}
-          onPress={() => navigation.goBack()}
-        />
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={styles.iconBack}
+      >
+        <FontAwesome name="arrow-left" size={30} color="#0639DB" />
+      </TouchableOpacity>
         <Text style={styles.greetingText}>
-          Room: {roomName} | Welcome {username} 👋
+         {roomName}  🐾
         </Text>
       </View>
 
@@ -325,18 +339,23 @@ export default function ChatScreen({ navigation, route: { params } }) {
             onPressOut={() => stopRecording()}
             style={styles.recordButton}
           >
-            <MaterialIcons name="mic" color="#ffffff" size={24} />
+            <MaterialIcons name="mic" color="#ffffff" size={25} />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => handleSendMessage()}
             style={styles.sendButton}
           >
-            <MaterialIcons name="send" color="#ffffff" size={24} />
+            <MaterialIcons name="send" color="#ffffff" size={25} />
           </TouchableOpacity>
         </View>
       </View>
     </KeyboardAvoidingView>
+<<<<<<< HEAD
   )
+=======
+    </ImageBackground>
+  );
+>>>>>>> 86294698bc0f3e661c88745fa6bad46d58b540eb
 }
 
 const styles = StyleSheet.create({
@@ -344,22 +363,12 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "space-between",
-    backgroundColor: "#000",
   },
   inset: {
     flex: 1,
-    borderTopLeftRadius: 50,
-    borderTopRightRadius: 50,
-    backgroundColor: "#ffffff",
     width: "100%",
     paddingTop: 20,
     position: "relative",
-    borderTopColor: "#ffe099",
-    borderLeftColor: "#ffe099",
-    borderRightColor: "#ffe099",
-    borderTopWidth: 4,
-    borderRightWidth: 0.1,
-    borderLeftWidth: 0.1,
   },
   banner: {
     width: "100%",
@@ -371,7 +380,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   greetingText: {
-    color: "#fff",
+    color: "#0639DB",
     fontWeight: "bold",
     fontSize: 18,
     marginLeft: 15,
@@ -398,22 +407,23 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     marginBottom: 20,
   },
-  messageRecieved: {
+  messageSent: {
     alignSelf: "flex-end",
     alignItems: "flex-end",
   },
-  messageSent: {
+  messageRecieved: {
     alignSelf: "flex-start",
     alignItems: "flex-start",
   },
   messageSentBg: {
-    backgroundColor: "#ffad99",
+    backgroundColor: "#EAD32A",
+
   },
   messageRecievedBg: {
-    backgroundColor: "#d6fff9",
+    backgroundColor: "#0639DB",
   },
   messageText: {
-    color: "#506568",
+    color: "#FFF",
     fontWeight: "400",
   },
   timeText: {
@@ -451,7 +461,7 @@ const styles = StyleSheet.create({
   recordButton: {
     borderRadius: 50,
     padding: 16,
-    backgroundColor: "#ff5c5c",
+    backgroundColor: "#0639DB",
     marginLeft: 12,
     alignItems: "center",
     justifyContent: "center",
@@ -467,7 +477,7 @@ const styles = StyleSheet.create({
   sendButton: {
     borderRadius: 50,
     padding: 16,
-    backgroundColor: "#ffe099",
+    backgroundColor: "#EAD32A",
     marginLeft: 12,
     alignItems: "center",
     justifyContent: "center",
