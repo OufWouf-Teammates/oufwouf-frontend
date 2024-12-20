@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react"
+import { useSelector } from "react-redux"
 
 import {
   KeyboardAvoidingView,
@@ -10,33 +10,47 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-} from "react-native";
+} from "react-native"
 
-import { Audio } from "expo-av";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import Pusher from "pusher-js/react-native";
+import { Audio } from "expo-av"
+import MaterialIcons from "react-native-vector-icons/MaterialIcons"
+import Pusher from "pusher-js/react-native"
 
-const BACKEND_ADDRESS = process.env.EXPO_PUBLIC_BACKEND_URL;
+const BACKEND_ADDRESS = process.env.EXPO_PUBLIC_BACKEND_URL
 
 export default function ChatScreen({ navigation, route: { params } }) {
-  const { roomName } = params;
-  const [username, setUsername] = useState("");
-  const [messages, setMessages] = useState([]);
-  const [messageText, setMessageText] = useState("");
-  const [recording, setRecording] = useState(null);
-  const [recordingUri, setRecordingUri] = useState(null);
-  const [sound, setSound] = useState(null);
+  const { roomName } = params
+  const [username, setUsername] = useState("")
+  const [messageArchive, setMessageArchive] = useState([])
+  const [messages, setMessages] = useState([])
+  const [messageText, setMessageText] = useState("")
+  const [recording, setRecording] = useState(null)
+  const [recordingUri, setRecordingUri] = useState(null)
+  const [sound, setSound] = useState(null)
+  const messageApi = `${BACKEND_ADDRESS}roomName/${roomName}`
 
-  const token = useSelector((state) => state.user.value?.token);
+  const token = useSelector((state) => state.user.value?.token)
 
-  const channelName = `room-${roomName.replace(/\s+/g, "-").toLowerCase()}`;
-  const newUser = `${username.replace(/\s+/g, "-").toLowerCase()}`;
+  const channelName = `room-${roomName.replace(/\s+/g, "-").toLowerCase()}`
+  const newUser = `${username.replace(/\s+/g, "-").toLowerCase()}`
+
+  useEffect(() => {
+    ;(async () => {
+      const response = await fetch(messageApi)
+
+      const data = await response.json()
+
+      console.log(data.messages)
+
+      setMessageArchive(data.messages)
+    })()
+  }, [])
 
   const getUserName = async () => {
     try {
-      const response = await fetch(`${BACKEND_ADDRESS}dogName/${token}`);
-      const data = await response.json();
-      setUsername(data?.dogName);
+      const response = await fetch(`${BACKEND_ADDRESS}dogName/${token}`)
+      const data = await response.json()
+      setUsername(data?.dogName)
 
       if (data.dogName) {
         const joinRes = await fetch(
@@ -46,19 +60,19 @@ export default function ChatScreen({ navigation, route: { params } }) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ roomName }),
           }
-        );
+        )
 
         if (!joinRes.ok) {
-          console.error("Erreur lors de la jonction de la salle");
+          console.error("Erreur lors de la jonction de la salle")
         }
       }
     } catch (error) {
-      console.error("Erreur dans getUserName :", error);
+      console.error("Erreur dans getUserName :", error)
     }
-  };
+  }
 
   useEffect(() => {
-    getUserName();
+    getUserName()
 
     // Cleanup on unmount
     return async () => {
@@ -67,58 +81,58 @@ export default function ChatScreen({ navigation, route: { params } }) {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ roomName }),
-        });
+        })
       } catch (error) {
-        console.error("Erreur lors du nettoyage :", error);
+        console.error("Erreur lors du nettoyage :", error)
       }
-      subscription.unsubscribe();
-    };
-  }, [username]);
+      subscription.unsubscribe()
+    }
+  }, [username])
 
   useEffect(() => {
-    const pusher = new Pusher("33b9c1445a837cef17f5", { cluster: "eu" });
+    const pusher = new Pusher("33b9c1445a837cef17f5", { cluster: "eu" })
 
     // Subscribe to Pusher channel
-    const subscription = pusher.subscribe(channelName);
+    const subscription = pusher.subscribe(channelName)
     subscription.bind("pusher:subscription_succeeded", () => {
       subscription.bind("message", (data) => {
-        handleReceiveMessage(data);
-      });
-    });
+        handleReceiveMessage(data)
+      })
+    })
 
     return () => {
-      pusher.unsubscribe(channelName);
-    };
-  }, []);
+      pusher.unsubscribe(channelName)
+    }
+  }, [])
 
   useEffect(() => {
-    (async () => {
-      await Audio.requestPermissionsAsync();
+    ;(async () => {
+      await Audio.requestPermissionsAsync()
       await Audio.setAudioModeAsync({
         allowsRecordingIOS: true,
         playsInSilentModeIOS: true,
-      });
-    })();
-  }, []);
+      })
+    })()
+  }, [])
 
   useEffect(() => {
     if (sound) {
-      return () => sound.unloadAsync();
+      return () => sound.unloadAsync()
     }
-  }, [sound]);
+  }, [sound])
 
   const handleReceiveMessage = (data) => {
-    console.log("data received =>", data);
-    setMessages((messages) => [...messages, data]);
-  };
+    console.log("data received =>", data)
+    setMessages((messages) => [...messages, data])
+  }
 
   const handleSendMessage = () => {
     if (!messageText && !recordingUri) {
-      return;
+      return
     }
 
-    let payload = {};
-    let headers = {};
+    let payload = {}
+    let headers = {}
 
     if (messageText) {
       payload = JSON.stringify({
@@ -127,22 +141,22 @@ export default function ChatScreen({ navigation, route: { params } }) {
         createdAt: new Date(),
         type: "text",
         roomName,
-      });
+      })
 
-      headers = { "Content-Type": "application/json" };
+      headers = { "Content-Type": "application/json" }
     } else if (recordingUri) {
-      payload = new FormData();
+      payload = new FormData()
 
       payload.append("audio", {
         uri: recordingUri,
         name: "audio.m4a",
         type: "audio/m4a",
-      });
+      })
 
-      payload.append("username", username);
-      payload.append("createdAt", new Date().toISOString());
-      payload.append("type", "audio");
-      payload.append("roomName", roomName);
+      payload.append("username", username)
+      payload.append("createdAt", new Date().toISOString())
+      payload.append("type", "audio")
+      payload.append("roomName", roomName)
     }
 
     fetch(`${BACKEND_ADDRESS}message`, {
@@ -153,38 +167,38 @@ export default function ChatScreen({ navigation, route: { params } }) {
       .then((response) => response.json())
       .then((data) => {
         if (data.result) {
-          setMessageText("");
-          setRecordingUri(null);
+          setMessageText("")
+          setRecordingUri(null)
         }
-      });
-  };
+      })
+  }
 
   const startRecording = async () => {
     const { recording } = await Audio.Recording.createAsync(
       Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
-    );
-    setRecording(recording);
-  };
+    )
+    setRecording(recording)
+  }
 
   const stopRecording = async () => {
     if (recording) {
-      await recording.stopAndUnloadAsync();
-      const uri = recording.getURI();
+      await recording.stopAndUnloadAsync()
+      const uri = recording.getURI()
 
-      setRecordingUri(uri);
-      setRecording(null);
+      setRecordingUri(uri)
+      setRecording(null)
     }
-  };
+  }
 
   const playRecording = async (uri) => {
     const { sound } = await Audio.Sound.createAsync({
       uri,
       overrideFileExtensionAndroid: "m4a",
-    });
-    setSound(sound);
+    })
+    setSound(sound)
 
-    await sound.playAsync();
-  };
+    await sound.playAsync()
+  }
 
   return (
     <KeyboardAvoidingView
@@ -205,6 +219,52 @@ export default function ChatScreen({ navigation, route: { params } }) {
 
       <View style={styles.inset}>
         <ScrollView style={styles.scroller}>
+          {messageArchive &&
+            messageArchive.map((message, i) => (
+              <View
+                key={i}
+                style={[
+                  styles.messageWrapper,
+                  {
+                    ...(message.username === username
+                      ? styles.messageSent
+                      : styles.messageRecieved),
+                  },
+                ]}
+              >
+                <View
+                  style={[
+                    styles.message,
+                    {
+                      ...(message.username === username
+                        ? styles.messageSentBg
+                        : styles.messageRecievedBg),
+                    },
+                  ]}
+                >
+                  {message.type === "audio" ? (
+                    <TouchableOpacity
+                      onPress={() => playRecording(message.url)}
+                    >
+                      <MaterialIcons
+                        name="multitrack-audio"
+                        size={24}
+                        style={styles.messageText}
+                      />
+                    </TouchableOpacity>
+                  ) : (
+                    <Text style={styles.messageText}>{message.text}</Text>
+                  )}
+                </View>
+                <Text style={styles.timeText}>
+                  {new Date(message.createdAt).getHours()}:
+                  {String(new Date(message.createdAt).getMinutes()).padStart(
+                    2,
+                    "0"
+                  )}
+                </Text>
+              </View>
+            ))}
           {messages.map((message, i) => (
             <View
               key={i}
@@ -276,7 +336,7 @@ export default function ChatScreen({ navigation, route: { params } }) {
         </View>
       </View>
     </KeyboardAvoidingView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -429,4 +489,4 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
   },
-});
+})
