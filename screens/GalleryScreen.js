@@ -137,6 +137,10 @@ function Gallery() {
         <View style={styles.titleBox}>
           <Text style={styles.title}>Gallerie</Text>
         </View>
+        <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
         <ScrollView style={styles.scroll}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -197,6 +201,7 @@ function Gallery() {
               </View>
             ))}
         </ScrollView>
+      </KeyboardAvoidingView>
       </SafeAreaView>
     </ImageBackground>
   )
