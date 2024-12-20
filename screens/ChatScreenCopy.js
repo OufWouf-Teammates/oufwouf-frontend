@@ -199,7 +199,7 @@ export default function ChatScreen({ navigation, route: { params } }) {
           onPress={() => navigation.goBack()}
         />
         <Text style={styles.greetingText}>
-          Room: {roomName} | Welcome {username} 👋
+         {roomName}  🐾
         </Text>
       </View>
 
