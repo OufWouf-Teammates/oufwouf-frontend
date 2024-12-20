@@ -42,7 +42,6 @@ export default function ChatScreen({ navigation, route: { params } }) {
 
       const data = await response.json()
 
-      console.log(data.messages)
 
       setMessageArchive(data.messages)
     })()
@@ -124,7 +123,6 @@ export default function ChatScreen({ navigation, route: { params } }) {
   }, [sound])
 
   const handleReceiveMessage = (data) => {
-    console.log("data received =>", data)
     setMessages((messages) => [...messages, data])
   }
 
